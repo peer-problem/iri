@@ -85,7 +85,7 @@ class ToyTokenizer:
 
 
 def test_only_assistant_tokens_contribute_to_loss_and_real_eos_is_kept():
-    encoded = encode_row(training_row(), ToyTokenizer(), False, 10)
+    encoded = encode_row(training_row(), ToyTokenizer(), 10)
     assert encoded["labels"] == [-100, -100, -100, 7, 9]
     longer = {"input_ids": [1] * 7, "attention_mask": [1] * 7, "labels": [1] * 7}
     padded = pad_batch([encoded, longer], pad_token_id=9)
@@ -95,7 +95,7 @@ def test_only_assistant_tokens_contribute_to_loss_and_real_eos_is_kept():
 
 def test_oversized_training_example_is_not_silently_truncated():
     with pytest.raises(ValueError, match="context limit"):
-        encode_row(training_row(), ToyTokenizer(), False, 4)
+        encode_row(training_row(), ToyTokenizer(), 4)
 
 
 def test_unexpected_template_boundary_rejected():
@@ -104,7 +104,7 @@ def test_unexpected_template_boundary_rejected():
             return [1, 2, 3] if add_generation_prompt else [4, 5, 6, 7]
 
     with pytest.raises(ValueError, match="assistant boundary"):
-        encode_row(training_row(), BrokenTokenizer(), False, 10)
+        encode_row(training_row(), BrokenTokenizer(), 10)
 
 
 def test_bundle_excludes_secrets_docs_models_and_symlinks(tmp_path):

@@ -35,8 +35,6 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("runs", type=Path, nargs="+")
     args = parser.parse_args()
-    if len(args.runs) < 2:
-        parser.error("Provide at least two run directories")
     print(compare(args.runs))
 
 

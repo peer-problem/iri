@@ -132,10 +132,11 @@ def test_comparison_rejects_different_data(tmp_path):
 
 
 def test_gpu_launcher_uses_pinned_revision_local_bind_and_no_key_in_command():
-    settings = configuration(model_profile="gemma")
+    settings = configuration(model_serve_port=8123)
     command = build_command(settings, "/path/to/vllm")
     assert command[command.index("--revision") + 1] == settings.model_revision
     assert command[command.index("--host") + 1] == "127.0.0.1"
-    assert "--language-model-only" in command
+    assert command[command.index("--port") + 1] == "8123"
+    assert command[command.index("--dtype") + 1] == "bfloat16"
     assert "--no-enable-log-requests" in command
     assert settings.model_api_key.get_secret_value() not in " ".join(command)

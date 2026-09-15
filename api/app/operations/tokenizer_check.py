@@ -6,14 +6,13 @@ import re
 from pathlib import Path
 
 from app.operations.data import load_scenarios
-from app.provider import format_messages
 from app.service import generation_messages
 from app.settings import ROOT
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--profile", choices=["kanana", "gemma"], required=True)
+    parser.add_argument("--profile", choices=["kanana"], required=True)
     parser.add_argument("--revision", required=True)
     parser.add_argument("--output", type=Path, default=Path("runs/tokenizer-preflight.json"))
     args = parser.parse_args()
@@ -26,10 +25,7 @@ def main():
     rows = load_scenarios([ROOT / "data/dev.jsonl"])
     lengths, boundaries = [], []
     for row in rows:
-        messages = format_messages(
-            generation_messages(row.age_band, [{"role": "user", "content": row.inputs[0]}]),
-            profile["fold_system"],
-        )
+        messages = generation_messages(row.age_band, [{"role": "user", "content": row.inputs[0]}])
         prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
         full = tokenizer.apply_chat_template(
             [*messages, {"role": "assistant", "content": "안전하게 함께 생각해 보자."}],

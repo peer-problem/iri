@@ -9,7 +9,7 @@ def main():
     content = (
         f"SANDBOX_API_KEY={secrets.token_urlsafe(32)}\n"
         f"MODEL_API_KEY={secrets.token_urlsafe(32)}\n"
-        "MODEL_BASE_URL=http://127.0.0.1:8001/v1\n"
+        "MODEL_BASE_URL=http://127.0.0.1:8002/v1\n"
         "MODEL_PROFILE=kanana\n"
         "MODEL_REVISION=\n"
         "HF_TOKEN=\n"

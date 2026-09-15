@@ -7,16 +7,6 @@ class ModelUnavailable(Exception):
     """Public handlers must not return the upstream error body."""
 
 
-def format_messages(messages: list[dict[str, str]], fold_system: bool) -> list[dict[str, str]]:
-    result = [dict(message) for message in messages]
-    if fold_system and result[0]["role"] == "system":
-        system = result.pop(0)["content"]
-        if not result or result[0]["role"] != "user":
-            raise ModelUnavailable("Invalid message sequence")
-        result[0]["content"] = f"{system}\n\n사용자 입력:\n{result[0]['content']}"
-    return result
-
-
 class ModelProvider:
     def __init__(self, settings: Settings, client: httpx.AsyncClient):
         self.settings = settings
@@ -27,7 +17,7 @@ class ModelProvider:
         return {"Authorization": f"Bearer {self.settings.model_api_key.get_secret_value()}"}
 
     def prepare_messages(self, messages: list[dict[str, str]]) -> list[dict[str, str]]:
-        return format_messages(messages, self.settings.profile["fold_system"])
+        return [dict(message) for message in messages]
 
     async def ready(self) -> bool:
         if not self.settings.configured:

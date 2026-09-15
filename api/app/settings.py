@@ -16,8 +16,9 @@ class Settings(BaseSettings):
 
     sandbox_api_key: SecretStr = SecretStr("")
     model_api_key: SecretStr = SecretStr("")
-    model_base_url: str = "http://127.0.0.1:8001/v1"
-    model_profile: Literal["kanana", "gemma"] = "kanana"
+    model_base_url: str = "http://127.0.0.1:8002/v1"
+    model_serve_port: int = Field(default=8002, ge=1024, le=65535)
+    model_profile: Literal["kanana"] = "kanana"
     model_revision: str = ""
     request_timeout_seconds: float = Field(default=90, gt=0, le=300)
     max_waiting: int = Field(default=5, ge=0, le=20)

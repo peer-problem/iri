@@ -10,7 +10,7 @@ from app.settings import ROOT
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("profile", choices=["kanana", "gemma"])
+    parser.add_argument("profile", choices=["kanana"])
     args = parser.parse_args()
     model_id = json.loads((ROOT / "configs/models.json").read_text())[args.profile]["model_id"]
     response = httpx.get(f"https://huggingface.co/api/models/{model_id}", timeout=20)

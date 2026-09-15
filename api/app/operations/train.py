@@ -68,7 +68,6 @@ def main():
         AutoModelForCausalLM,
         AutoTokenizer,
         BitsAndBytesConfig,
-        Gemma3ForConditionalGeneration,
         Trainer,
         TrainerCallback,
         TrainingArguments,
@@ -85,21 +84,10 @@ def main():
         tokenizer.pad_token = tokenizer.eos_token
     if args.smoke:
         train, validation = train[:50], validation[:10]
-    encoded_train = [
-        encode_row(row, tokenizer, settings.profile["fold_system"], args.max_length)
-        for row in train
-    ]
-    encoded_validation = [
-        encode_row(row, tokenizer, settings.profile["fold_system"], args.max_length)
-        for row in validation
-    ]
+    encoded_train = [encode_row(row, tokenizer, args.max_length) for row in train]
+    encoded_validation = [encode_row(row, tokenizer, args.max_length) for row in validation]
     dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
-    model_class = (
-        Gemma3ForConditionalGeneration
-        if settings.model_profile == "gemma"
-        else AutoModelForCausalLM
-    )
-    model = model_class.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         settings.profile["model_id"],
         revision=settings.model_revision,
         quantization_config=BitsAndBytesConfig(
@@ -114,13 +102,7 @@ def main():
     model.config.use_cache = False
     model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
     projection_names = {"q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"}
-    targets = [
-        name
-        for name, _ in model.named_modules()
-        if name.split(".")[-1] in projection_names
-        and "vision" not in name
-        and "multi_modal" not in name
-    ]
+    targets = [name for name, _ in model.named_modules() if name.split(".")[-1] in projection_names]
     if not targets:
         raise ValueError("No supported language projection modules found")
     model = get_peft_model(

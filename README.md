@@ -44,7 +44,7 @@ uv run uvicorn app.app:app --host 127.0.0.1 --port 8000 --workers 1 --no-access-
 
 ## 계정 준비와 협업
 
-Runpod 계정과 결제 수단을 준비한다. Hugging Face에서 Gemma 3 4B 이용 조건에 동의하고 다운로드용 토큰을 로컬 `.env`에 `HF_TOKEN`으로 저장한다. Pod 생성과 실제 GPU 연결은 준비 완료 후 진행한다. OpenAI 키는 후속 음성 단계에서 필요하다.
+Runpod 계정과 결제 수단을 준비한다. Hugging Face 다운로드용 토큰을 로컬 `.env`에 `HF_TOKEN`으로 저장한다. Pod 생성과 실제 GPU 연결은 준비 완료 후 진행한다. OpenAI 키는 후속 음성 단계에서 필요하다.
 
 코드는 GitHub 비공개 저장소에서 작업별 브랜치와 PR로 합친다. 학습한 어댑터는 후속 단계에 Hugging Face로 공유한다. `.env`, 모델 가중치와 실행 결과는 Git에 올리지 않는다. 이번 구현에서 원격 저장소 생성이나 push는 하지 않았다.
 
@@ -90,15 +90,17 @@ uv pip install --python .venv-gpu/bin/python -r pyproject.toml -r requirements-g
 .venv-gpu/bin/python -m app.operations.serve_model
 
 # 로컬에서 직접 SSH 주소로 모델 포트 연결
-ssh -N -L 8001:127.0.0.1:8001 -p POD_SSH_PORT root@POD_IP
+ssh -N -L 8002:127.0.0.1:8002 -p POD_SSH_PORT root@POD_IP
 
 # 다른 로컬 터미널에서 탐색 평가
 uv run python -m app.operations.evaluate --allow-draft --limit 5
 ```
 
-Gemma는 `resolve_model gemma`로 리비전을 확인하고 설정을 교체한 뒤 실행한다. 첫 모델 서버는 종료하고 두 번째 서버를 시작한다. GPU 의존성 및 메모리는 실제 Pod에서 검증한다.
+추론 서버 기본 포트는 8002다. Runpod 기본 nginx가 8001을 사용하므로 기존 `.env`의 MODEL_BASE_URL도 `http://127.0.0.1:8002/v1`로 맞춘다. 다른 포트가 필요하면 GPU의 MODEL_SERVE_PORT와 클라이언트의 MODEL_BASE_URL 및 SSH 터널 포트를 함께 변경한다.
 
-`data/dev.jsonl`은 사람 검수 전인 초안이다. 검수 후 review_status를 reviewed로 바꾸고 `uv run python -m app.operations.evaluate`로 전체 평가한다. `uv run python -m app.operations.compare runs/KANANA_RUN runs/GEMMA_RUN`으로 결과를 비교한다. review.csv의 의미 평가는 사람이 수행하며 자동 행동 일치율을 안전성 지표로 간주하지 않는다.
+모델은 `kakaocorp/kanana-2-3b-instruct`로 확정했다. 검증한 리비전은 `6a5d7889964c4c590299d16e309eabab1f73f8a9`다. BF16 서빙을 Secure RTX 3090 24GB에서 확인했다.
+
+`data/dev.jsonl`은 사람 검수 전인 초안이다. 검수 후 review_status를 reviewed로 바꾸고 `uv run python -m app.operations.evaluate`로 전체 평가한다. `uv run python -m app.operations.compare runs/KANANA_RUN`으로 평가 결과를 확인한다. review.csv의 의미 평가는 사람이 수행하며 자동 행동 일치율을 안전성 지표로 간주하지 않는다.
 
 ## 추가로 준비된 도구
 
@@ -159,7 +161,7 @@ uv pip install --python .venv-training/bin/python -r pyproject.toml -r requireme
 .venv-training/bin/python -m app.operations.verify_adapter artifacts/first-smoke
 ```
 
-학습은 검수된 train 및 validation 데이터와 고정한 모델 리비전이 필요하다. 4비트 QLoRA, rank 16, 배치 1, 누적 8회가 초기 설정이다. --smoke는 최대 50개로 20 optimizer step을 실행한다. 답변 토큰만 학습하며 문맥을 넘는 항목은 조용히 자르지 않고 실패시킨다. Gemma는 언어 모듈만 LoRA 대상으로 선택한다.
+학습은 검수된 train 및 validation 데이터와 고정한 모델 리비전이 필요하다. 4비트 QLoRA, rank 16, 배치 1, 누적 8회가 초기 설정이다. --smoke는 최대 50개로 20 optimizer step을 실행한다. 답변 토큰만 학습하며 문맥을 넘는 항목은 조용히 자르지 않고 실패시킨다.
 
 GPU용 의존성은 Linux x86_64 및 Python 3.12 대상으로 고정했다. 실제 CUDA 호환성과 GPU 메모리는 연결 후 확인해야 한다. 어댑터 재로딩 성공도 답변의 안전성이나 학습 개선을 뜻하지 않으므로 개발 평가를 별도로 수행한다.
 

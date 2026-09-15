@@ -8,7 +8,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from app.operations.data import load_scenarios
-from app.provider import format_messages
 from app.service import POLICY, generation_messages
 from app.settings import ENV_FILE, Settings
 
@@ -45,18 +44,12 @@ def main():
         AutoModelForCausalLM,
         AutoTokenizer,
         BitsAndBytesConfig,
-        Gemma3ForConditionalGeneration,
     )
 
     if not torch.cuda.is_available():
         parser.error("Use the NVIDIA training environment")
     dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
-    cls = (
-        Gemma3ForConditionalGeneration
-        if settings.model_profile == "gemma"
-        else AutoModelForCausalLM
-    )
-    base = cls.from_pretrained(
+    base = AutoModelForCausalLM.from_pretrained(
         settings.profile["model_id"],
         revision=settings.model_revision,
         quantization_config=BitsAndBytesConfig(
@@ -73,9 +66,8 @@ def main():
     examples = load_scenarios([Path("data/dev.jsonl")])[:5]
     responses = []
     for example in examples:
-        messages = format_messages(
-            generation_messages(example.age_band, [{"role": "user", "content": example.inputs[0]}]),
-            settings.profile["fold_system"],
+        messages = generation_messages(
+            example.age_band, [{"role": "user", "content": example.inputs[0]}]
         )
         inputs = tokenizer.apply_chat_template(
             messages, tokenize=True, add_generation_prompt=True, return_tensors="pt"

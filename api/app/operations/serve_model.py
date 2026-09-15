@@ -26,7 +26,7 @@ def build_command(settings: Settings, executable: str) -> list[str]:
         "--host",
         "127.0.0.1",
         "--port",
-        "8001",
+        str(settings.model_serve_port),
         "--max-model-len",
         "4096",
         "--max-num-seqs",
@@ -34,14 +34,12 @@ def build_command(settings: Settings, executable: str) -> list[str]:
         "--gpu-memory-utilization",
         "0.80",
         "--dtype",
-        "half",
+        "bfloat16",
         "--generation-config",
         "vllm",
         "--enforce-eager",
         "--no-enable-log-requests",
     ]
-    if settings.model_profile == "gemma":
-        command.append("--language-model-only")
     return command
 
 
@@ -85,6 +83,9 @@ def main():
     )
     (run_dir / "gpu-packages.txt").write_text("\n".join(packages) + "\n")
     os.environ["VLLM_API_KEY"] = settings.model_api_key.get_secret_value()
+    # Absolute Python invocation does not activate its virtual environment.
+    # vLLM's JIT build subprocesses still need that environment's ninja binary.
+    os.environ["PATH"] = str(Path(executable).parent) + os.pathsep + os.environ.get("PATH", "")
     os.environ.setdefault("HF_HOME", "/workspace/hf-cache")
     os.environ.setdefault("VLLM_LOGGING_LEVEL", "WARNING")
     print(f"Starting {settings.served_model}. Environment record: {run_dir}", flush=True)

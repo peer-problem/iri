@@ -5,7 +5,6 @@ from pathlib import Path
 
 from app.operations.prepare_training import TrainingRow
 from app.operations.source_square import normalized
-from app.provider import format_messages
 from app.service import generation_messages
 
 
@@ -35,10 +34,8 @@ def load_training(train_path: Path, validation_path: Path):
     return splits
 
 
-def encode_row(row: TrainingRow, tokenizer, fold_system: bool, max_length: int) -> dict:
-    messages = format_messages(
-        generation_messages(row.age_band, [{"role": "user", "content": row.question}]), fold_system
-    )
+def encode_row(row: TrainingRow, tokenizer, max_length: int) -> dict:
+    messages = generation_messages(row.age_band, [{"role": "user", "content": row.question}])
     prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
     full = tokenizer.apply_chat_template(
         [*messages, {"role": "assistant", "content": row.answer}],

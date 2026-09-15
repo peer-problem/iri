@@ -75,7 +75,7 @@ async def evaluate(args):
             "model_id": settings.profile["model_id"],
             "revision": settings.model_revision,
             "profile": settings.model_profile,
-            "fold_system": settings.profile["fold_system"],
+            "fold_system": False,  # Preserve historical metadata format; Kanana uses system roles.
             "data_sha256": hashlib.sha256(args.data.read_bytes()).hexdigest(),
             "policy_sha256": hashlib.sha256(POLICY.encode()).hexdigest(),
             "git_commit": git.stdout.strip() if git.returncode == 0 else None,

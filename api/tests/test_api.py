@@ -233,8 +233,8 @@ async def test_requests_do_not_share_conversation_history():
     assert "FIRST_PRIVATE_MESSAGE" not in json.dumps(calls[1])
 
 
-async def test_gemma_system_instruction_folding():
-    settings = configuration(model_profile="gemma")
+async def test_kanana_preserves_system_instruction_role():
+    settings = configuration()
     calls = []
 
     def handler(request):
@@ -243,6 +243,7 @@ async def test_gemma_system_instruction_folding():
 
     async with api(handler, settings) as client:
         await post(client)
-    assert len(calls[0]["messages"]) == 1
-    assert calls[0]["messages"][0]["role"] == "user"
+    assert len(calls[0]["messages"]) == 2
+    assert calls[0]["messages"][0]["role"] == "system"
+    assert calls[0]["messages"][1]["role"] == "user"
     assert "입력 검사기" in calls[0]["messages"][0]["content"]
