@@ -5,7 +5,7 @@ from pathlib import Path
 
 import httpx
 
-from app.settings import ROOT
+from backend.settings import ROOT
 
 
 def main():

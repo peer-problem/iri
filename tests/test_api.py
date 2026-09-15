@@ -5,9 +5,9 @@ from contextlib import asynccontextmanager
 import httpx
 import pytest
 
-from app.app import create_app
-from app.service import FALLBACKS, QueueFull, RequestGate
-from app.settings import Settings
+from backend.app import create_app
+from backend.service import FALLBACKS, QueueFull, RequestGate
+from backend.settings import Settings
 
 KEY = "test-only-api-key-" + "x" * 32
 MODEL_KEY = "test-only-model-key-" + "y" * 32

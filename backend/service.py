@@ -4,9 +4,9 @@ from contextlib import asynccontextmanager
 
 from pydantic import ValidationError
 
-from app.provider import ModelProvider, ModelUnavailable
-from app.schemas import AgeBand, InputVerdict, OutputVerdict
-from app.settings import ROOT
+from backend.provider import ModelProvider, ModelUnavailable
+from backend.schemas import AgeBand, InputVerdict, OutputVerdict
+from backend.settings import ROOT
 
 POLICY = json.dumps(json.loads((ROOT / "configs/policy.json").read_text()), ensure_ascii=False)
 FALLBACKS = {

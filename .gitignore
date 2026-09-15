@@ -1,47 +1,23 @@
-# Local guidance and operations (same convention as eden)
 AGENTS.md
 .agents/
-/.ops/
-/HANDOFF.md
-
-# Secrets
-.env
-.env.*
-*.pem
-*.key
-
-# OS and browser tooling
 .DS_Store
-.playwright-cli/
-playwright-report/
-test-results/
-
-# Dependencies and caches
 .venv/
 .venv-gpu/
 .venv-training/
-node_modules/
 __pycache__/
-*.py[cod]
-.ruff_cache/
 .pytest_cache/
-
-# Build and temporary output
-dist/
-build/
-*.egg-info/
-*.tsbuildinfo
-.vercel/
-tmp/
-releases/
-
-# Model runs, private source data and training output
+.ruff_cache/
+.env
+.env.*
+!.env.example
 runs/
 artifacts/
-/api/data/raw/
-/api/data/prepared/
+data/raw/
+data/prepared/
 *.safetensors
 *.gguf
 *.pt
 *.pth
 *.ckpt
+*.pem
+*.key

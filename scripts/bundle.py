@@ -4,7 +4,7 @@ import json
 import zipfile
 from pathlib import Path
 
-from app.operations.artifacts import ROOT, code_files
+from scripts.artifacts import ROOT, code_files
 
 
 def build_bundle(target: Path, root: Path = ROOT) -> dict:

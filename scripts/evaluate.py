@@ -14,11 +14,11 @@ from uuid import uuid4
 
 import httpx
 
-from app.operations.artifacts import code_manifest
-from app.operations.data import load_scenarios
-from app.provider import ModelProvider, ModelUnavailable
-from app.service import POLICY, ChatService, generation_messages
-from app.settings import Settings
+from backend.provider import ModelProvider, ModelUnavailable
+from backend.service import POLICY, ChatService, generation_messages
+from backend.settings import Settings
+from scripts.artifacts import code_manifest
+from scripts.data import load_scenarios
 
 
 def percentile(values: list[float], proportion: float) -> float | None:

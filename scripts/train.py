@@ -8,13 +8,13 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from app.operations.artifacts import code_manifest
-from app.operations.checkpoints import validate_resume
-from app.operations.data import load_scenarios
-from app.operations.source_square import normalized
-from app.operations.training_data import data_fingerprint, encode_row, load_training, pad_batch
-from app.service import POLICY
-from app.settings import ENV_FILE, Settings
+from backend.service import POLICY
+from backend.settings import Settings
+from scripts.artifacts import code_manifest
+from scripts.checkpoints import validate_resume
+from scripts.data import load_scenarios
+from scripts.source_square import normalized
+from scripts.training_data import data_fingerprint, encode_row, load_training, pad_batch
 
 
 def main():
@@ -33,7 +33,7 @@ def main():
     args = parser.parse_args()
     if not 128 <= args.max_length <= 4096:
         parser.error("Context limit must be between 128 and 4096")
-    load_dotenv(ENV_FILE)
+    load_dotenv()
     settings = Settings()
     if not settings.model_revision:
         parser.error("Set the pinned MODEL_REVISION in .env")

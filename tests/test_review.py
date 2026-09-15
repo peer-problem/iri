@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from app.operations.review import FIELDS, aggregate, export_packets
+from scripts.review import FIELDS, aggregate, export_packets
 
 
 def make_run(path, error=None):

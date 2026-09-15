@@ -3,8 +3,8 @@ import json
 import httpx
 import pytest
 
-from app.operations.checkpoints import validate_resume
-from app.operations.runpod_guard import POD_NAME, stop, stop_reason
+from scripts.checkpoints import validate_resume
+from scripts.runpod_guard import POD_NAME, stop, stop_reason
 
 
 def test_stop_targets_only_explicit_project_pod_and_verifies_state():

@@ -12,9 +12,9 @@ import httpx
 from dotenv import dotenv_values
 from pydantic import ValidationError
 
-from app.operations.data import load_scenarios, validate_development
-from app.provider import ModelProvider
-from app.settings import ENV_FILE, REPO_ROOT, Settings
+from backend.provider import ModelProvider
+from backend.settings import Settings
+from scripts.data import load_scenarios, validate_development
 
 
 async def inspect(online: bool = False) -> dict:
@@ -38,15 +38,14 @@ async def inspect(online: bool = False) -> dict:
             {"invalid_fields": sorted({str(error["loc"][0]) for error in exc.errors()})},
         )
         settings = None
-    env = ENV_FILE
+    env = Path(".env")
     add(
         "private_env",
         "pass" if env.exists() and env.stat().st_mode & 0o077 == 0 else "pending",
-        "Use app.operations.init_local for a private .env",
+        "Use scripts.init_local for a private .env",
     )
     ignored = subprocess.run(
-        ["git", "check-ignore", "AGENTS.md", ".agents/MASTERPLAN.md", ".env", "api/runs/"],
-        cwd=REPO_ROOT,
+        ["git", "check-ignore", "AGENTS.md", ".agents/MASTERPLAN.md", ".env", "runs/"],
         capture_output=True,
         text=True,
     )
@@ -66,10 +65,8 @@ async def inspect(online: bool = False) -> dict:
             "Draft labels need human review before formal evaluation",
         )
     except (ValueError, OSError):
-        add(
-            "development_data", "fail", "Run app.operations.data --phase-one to locate invalid data"
-        )
-    values = dotenv_values(env) if env.exists() else {}
+        add("development_data", "fail", "Run scripts.data --phase-one to locate invalid data")
+    values = dotenv_values(".env") if env.exists() else {}
     import os
 
     hf_present = bool(os.environ.get("HF_TOKEN") or values.get("HF_TOKEN"))

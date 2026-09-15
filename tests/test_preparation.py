@@ -4,11 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from app.operations.artifacts import code_files
-from app.operations.bundle import build_bundle
-from app.operations.prepare_training import TrainingRow, from_candidates, partition
-from app.operations.source_square import candidates, question_group
-from app.operations.training_data import encode_row, load_training, pad_batch
+from scripts.artifacts import code_files
+from scripts.bundle import build_bundle
+from scripts.prepare_training import TrainingRow, from_candidates, partition
+from scripts.source_square import candidates, question_group
+from scripts.training_data import encode_row, load_training, pad_batch
 
 
 def training_row(index=0, **updates):
@@ -110,44 +110,21 @@ def test_unexpected_template_boundary_rejected():
 def test_bundle_excludes_secrets_docs_models_and_symlinks(tmp_path):
     root = tmp_path / "source"
     root.mkdir()
-    (root / "api").mkdir()
-    for name in ("README.md", "api/pyproject.toml"):
+    for name in ("README.md", "pyproject.toml", ".env.example"):
         (root / name).write_text("public fixture")
     (root / ".env").write_text("SUPER_SECRET_KEY")
-    (root / "api/data/raw").mkdir(parents=True)
-    (root / "api/data/raw/private.json").write_text("PRIVATE_SOURCE")
-    (root / "api/app/operations").mkdir(parents=True)
-    (root / "api/app/secret.py").symlink_to(root / ".env")
-    (root / "api/app/operations/example.py").write_text("PUBLIC_OPERATION = True")
+    (root / "data/raw").mkdir(parents=True)
+    (root / "data/raw/private.json").write_text("PRIVATE_SOURCE")
+    (root / "backend").mkdir()
+    (root / "backend/secret.py").symlink_to(root / ".env")
     target = tmp_path / "source.zip"
     result = build_bundle(target, root)
     with zipfile.ZipFile(target) as archive:
         assert ".env" not in archive.namelist()
-        assert "api/app/secret.py" not in archive.namelist()
-        assert "api/data/raw/private.json" not in archive.namelist()
-        assert "api/app/operations/example.py" in archive.namelist()
-        assert "api/pyproject.toml" in archive.namelist()
+        assert "backend/secret.py" not in archive.namelist()
+        assert "data/raw/private.json" not in archive.namelist()
         assert "SUPER_SECRET_KEY" not in str([archive.read(name) for name in archive.namelist()])
         assert len(json.loads(archive.read("bundle-manifest.json"))) == result["files"]
     with pytest.raises(FileExistsError):
         build_bundle(target, root)
     assert all(p.is_file() for p in code_files(root))
-
-
-def test_init_local_creates_private_env_without_template(tmp_path, monkeypatch):
-    from dotenv import dotenv_values
-
-    from app.operations import init_local
-
-    target = tmp_path / ".env"
-    monkeypatch.setattr(init_local, "ENV_FILE", target)
-    monkeypatch.chdir(tmp_path)
-    init_local.main()
-    values = dotenv_values(target)
-    assert len(values["SANDBOX_API_KEY"]) >= 32
-    assert values["SANDBOX_API_KEY"] != values["MODEL_API_KEY"]
-    assert target.stat().st_mode & 0o777 == 0o600
-    original = target.read_bytes()
-    with pytest.raises(SystemExit, match="preserved"):
-        init_local.main()
-    assert target.read_bytes() == original

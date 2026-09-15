@@ -3,10 +3,10 @@
 import json
 from pathlib import Path
 
-from app.operations.prepare_training import TrainingRow
-from app.operations.source_square import normalized
-from app.provider import format_messages
-from app.service import generation_messages
+from backend.provider import format_messages
+from backend.service import generation_messages
+from scripts.prepare_training import TrainingRow
+from scripts.source_square import normalized
 
 
 def load_training(train_path: Path, validation_path: Path):
