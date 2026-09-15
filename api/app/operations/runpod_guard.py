@@ -11,10 +11,10 @@ import time
 import httpx
 from dotenv import dotenv_values
 
-from backend.settings import ROOT
+from app.settings import ENV_FILE, REPO_ROOT, ROOT
 
 API = "https://rest.runpod.io/v1"
-STATE_DIR = ROOT / ".agents/runpod"
+STATE_DIR = REPO_ROOT / ".agents/runpod"
 POD_NAME = "kids-sandbox-baseline"
 
 
@@ -117,7 +117,7 @@ def main():
         state_path.with_suffix(".heartbeat").touch()
         print("Activity lease renewed for at most 180 seconds; deadline unchanged")
         return
-    key = os.environ.get("RUNPOD_API_KEY") or dotenv_values(ROOT / ".env").get("RUNPOD_API_KEY")
+    key = os.environ.get("RUNPOD_API_KEY") or dotenv_values(ENV_FILE).get("RUNPOD_API_KEY")
     if not key:
         parser.error("Set RUNPOD_API_KEY locally in .env")
     with httpx.Client(headers={"Authorization": f"Bearer {key}"}, timeout=15) as client:
@@ -180,7 +180,7 @@ def main():
                     [
                         sys.executable,
                         "-m",
-                        "scripts.runpod_guard",
+                        "app.operations.runpod_guard",
                         "watch",
                         "--pod-id",
                         args.pod_id,

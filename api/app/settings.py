@@ -7,10 +7,12 @@ from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = ROOT.parent
+ENV_FILE = REPO_ROOT / ".env"
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(env_file=ENV_FILE, extra="ignore")
 
     sandbox_api_key: SecretStr = SecretStr("")
     model_api_key: SecretStr = SecretStr("")

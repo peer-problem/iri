@@ -1,6 +1,6 @@
 import httpx
 
-from backend.settings import Settings
+from app.settings import Settings
 
 
 class ModelUnavailable(Exception):

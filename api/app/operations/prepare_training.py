@@ -6,9 +6,9 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from backend.schemas import AgeBand
-from scripts.data import load_scenarios
-from scripts.source_square import normalized
+from app.operations.data import load_scenarios
+from app.operations.source_square import normalized
+from app.schemas import AgeBand
 
 
 class TrainingRow(BaseModel):

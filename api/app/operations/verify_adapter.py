@@ -7,10 +7,10 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from backend.provider import format_messages
-from backend.service import POLICY, generation_messages
-from backend.settings import Settings
-from scripts.data import load_scenarios
+from app.operations.data import load_scenarios
+from app.provider import format_messages
+from app.service import POLICY, generation_messages
+from app.settings import ENV_FILE, Settings
 
 
 def validate_manifest(run: Path, settings: Settings) -> dict:
@@ -36,7 +36,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("run", type=Path)
     args = parser.parse_args()
-    load_dotenv()
+    load_dotenv(ENV_FILE)
     settings = Settings()
     manifest = validate_manifest(args.run, settings)
     import torch

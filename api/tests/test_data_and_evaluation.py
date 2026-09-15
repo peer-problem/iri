@@ -5,11 +5,11 @@ from pathlib import Path
 import httpx
 import pytest
 
-from backend.provider import ModelUnavailable
-from scripts import evaluate
-from scripts.compare import compare
-from scripts.data import load_scenarios, validate_development
-from scripts.serve_model import build_command
+from app.operations import evaluate
+from app.operations.compare import compare
+from app.operations.data import load_scenarios, validate_development
+from app.operations.serve_model import build_command
+from app.provider import ModelUnavailable
 from tests.test_api import completion, configuration
 
 

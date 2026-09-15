@@ -6,7 +6,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from backend.schemas import AgeBand
+from app.schemas import AgeBand
 
 
 class Scenario(BaseModel):

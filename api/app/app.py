@@ -10,11 +10,11 @@ from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.requests import ClientDisconnect
 
-from backend.provider import ModelProvider, ModelUnavailable
-from backend.schemas import ChatRequest, ChatResponse
-from backend.service import FALLBACKS, ChatService, QueueFull, RequestGate
-from backend.settings import Settings
-from backend.transcription import FORMATS, Transcriber, TranscriptionUnavailable
+from app.provider import ModelProvider, ModelUnavailable
+from app.schemas import ChatRequest, ChatResponse
+from app.service import FALLBACKS, ChatService, QueueFull, RequestGate
+from app.settings import Settings
+from app.transcription import FORMATS, Transcriber, TranscriptionUnavailable
 
 
 def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
