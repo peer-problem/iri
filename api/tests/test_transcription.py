@@ -3,7 +3,7 @@ import asyncio
 import httpx
 import pytest
 
-from tests.test_api import KEY, api, configuration
+from api.tests.test_api import KEY, api, configuration
 
 WAV = b"RIFF" + b"\x00" * 4 + b"WAVE" + b"fmt " + b"\x00" * 32
 OPENAI_KEY = "test-only-openai-key"

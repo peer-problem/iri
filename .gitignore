@@ -1,12 +1,16 @@
 # Local guidance and operations (same convention as eden)
 AGENTS.md
 .agents/
-/.ops/
 /HANDOFF.md
+.logs/
 
 # Secrets
+.keys/
+/runpod/known_hosts
 .env
 .env.*
+/runpod-ed25519
+/runpod-known_hosts
 *.pem
 *.key
 
@@ -38,8 +42,8 @@ releases/
 # Model runs, private source data and training output
 runs/
 artifacts/
-/api/data/raw/
-/api/data/prepared/
+/runpod/data/raw/
+/runpod/data/prepared/
 *.safetensors
 *.gguf
 *.pt

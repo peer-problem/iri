@@ -6,9 +6,10 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from app.operations.data import load_scenarios
-from app.operations.source_square import normalized
-from app.schemas import AgeBand
+from api.app.schemas import AgeBand
+from runpod.operations.data import load_scenarios
+from runpod.operations.source_square import normalized
+from runpod.settings import ROOT
 
 
 class TrainingRow(BaseModel):
@@ -96,8 +97,8 @@ def partition(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("candidates", type=Path)
-    parser.add_argument("--evaluation", type=Path, nargs="+", default=[Path("data/dev.jsonl")])
-    parser.add_argument("--output", type=Path, default=Path("data/prepared"))
+    parser.add_argument("--evaluation", type=Path, nargs="+", default=[(ROOT / "data/dev.jsonl")])
+    parser.add_argument("--output", type=Path, default=(ROOT / "data/prepared"))
     args = parser.parse_args()
     rows = from_candidates(args.candidates)
     train, validation = partition(rows, args.evaluation)

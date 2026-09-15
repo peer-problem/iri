@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 from typing import Literal
 from urllib.parse import urlparse
@@ -8,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parent
-ENV_FILE = REPO_ROOT / ".env"
+ENV_FILE = REPO_ROOT / ".keys/.env"
 
 
 class Settings(BaseSettings):
@@ -52,10 +51,6 @@ class Settings(BaseSettings):
         ):
             raise ValueError("Use HTTPS or a localhost SSH tunnel")
         return value.rstrip("/")
-
-    @property
-    def profile(self) -> dict:
-        return json.loads((ROOT / "configs/models.json").read_text())[self.model_profile]
 
     @property
     def served_model(self) -> str:

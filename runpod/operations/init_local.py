@@ -1,11 +1,12 @@
 import os
 import secrets
 
-from app.settings import ENV_FILE
+from api.app.settings import ENV_FILE
 
 
 def main():
     target = ENV_FILE
+    target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     content = (
         f"SANDBOX_API_KEY={secrets.token_urlsafe(32)}\n"
         f"MODEL_API_KEY={secrets.token_urlsafe(32)}\n"
@@ -19,10 +20,10 @@ def main():
     try:
         descriptor = os.open(target, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
     except FileExistsError:
-        raise SystemExit(".env already exists; preserved without changes") from None
+        raise SystemExit(".keys/.env already exists; preserved without changes") from None
     with os.fdopen(descriptor, "w") as file:
         file.write(content)
-    print("Created private .env with separate API keys. No secrets printed.")
+    print("Created private .keys/.env with separate API keys. No secrets printed.")
 
 
 if __name__ == "__main__":

@@ -1,20 +1,21 @@
 import argparse
 import json
-from pathlib import Path
 
 import httpx
 import pytest
 
-from app.operations import evaluate
-from app.operations.compare import compare
-from app.operations.data import load_scenarios, validate_development
-from app.operations.serve_model import build_command
-from app.provider import ModelUnavailable
-from tests.test_api import completion, configuration
+from api.app.provider import ModelUnavailable
+from api.tests.test_api import completion
+from runpod.operations import evaluate
+from runpod.operations.compare import compare
+from runpod.operations.data import load_scenarios, validate_development
+from runpod.operations.serve_model import build_command
+from runpod.settings import ROOT
+from runpod.tests.helpers import configuration
 
 
 def test_development_data_is_balanced_and_explicitly_draft():
-    items = load_scenarios([Path("data/dev.jsonl")])
+    items = load_scenarios([(ROOT / "data/dev.jsonl")])
     validate_development(items)
     assert all(item.review_status == "draft" for item in items)
     assert all(item.source_id == "team-authored-dev-v1" for item in items)
@@ -22,7 +23,7 @@ def test_development_data_is_balanced_and_explicitly_draft():
 
 @pytest.mark.parametrize("mutation", ["duplicate", "scenario_leak", "text_leak", "bad_turns"])
 def test_dataset_rejects_corruption_and_leaks(tmp_path, mutation):
-    original = load_scenarios([Path("data/dev.jsonl")])[0].model_dump()
+    original = load_scenarios([(ROOT / "data/dev.jsonl")])[0].model_dump()
     modified = {**original, "id": "new-id"}
     if mutation == "duplicate":
         modified["id"] = original["id"]
@@ -41,7 +42,7 @@ def test_dataset_rejects_corruption_and_leaks(tmp_path, mutation):
 
 async def test_real_evaluation_requires_explicit_draft_opt_in(tmp_path):
     args = argparse.Namespace(
-        data=Path("data/dev.jsonl"), output=tmp_path, allow_draft=False, limit=None, mode="both"
+        data=(ROOT / "data/dev.jsonl"), output=tmp_path, allow_draft=False, limit=None, mode="both"
     )
     with pytest.raises(ValueError, match="Human review"):
         await evaluate.evaluate(args)
@@ -51,7 +52,7 @@ async def test_real_evaluation_requires_explicit_draft_opt_in(tmp_path):
 async def test_evaluation_refuses_unreachable_model_without_fake_results(tmp_path, monkeypatch):
     monkeypatch.setattr(evaluate, "Settings", lambda: configuration(model_revision=""))
     args = argparse.Namespace(
-        data=Path("data/dev.jsonl"), output=tmp_path, allow_draft=True, limit=1, mode="both"
+        data=(ROOT / "data/dev.jsonl"), output=tmp_path, allow_draft=True, limit=1, mode="both"
     )
     with pytest.raises(ModelUnavailable):
         await evaluate.evaluate(args)
@@ -79,7 +80,7 @@ async def test_evaluation_records_independent_multiturn_histories(tmp_path, monk
         lambda **kwargs: client_class(transport=httpx.MockTransport(handler), **kwargs),
     )
     monkeypatch.setattr(evaluate, "Settings", lambda: settings)
-    item = load_scenarios([Path("data/dev.jsonl")])[-2]
+    item = load_scenarios([(ROOT / "data/dev.jsonl")])[-2]
     dataset = tmp_path / "data.jsonl"
     dataset.write_text(item.model_dump_json() + "\n")
     output = tmp_path / "runs"

@@ -5,16 +5,16 @@ import json
 import re
 from pathlib import Path
 
-from app.operations.data import load_scenarios
-from app.service import generation_messages
-from app.settings import ROOT
+from api.app.service import generation_messages
+from runpod.operations.data import load_scenarios
+from runpod.settings import ROOT
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--profile", choices=["kanana"], required=True)
     parser.add_argument("--revision", required=True)
-    parser.add_argument("--output", type=Path, default=Path("runs/tokenizer-preflight.json"))
+    parser.add_argument("--output", type=Path, default=(ROOT / "runs/tokenizer-preflight.json"))
     args = parser.parse_args()
     if not re.fullmatch("[0-9a-f]{40}", args.revision):
         parser.error("Use the full model revision SHA")

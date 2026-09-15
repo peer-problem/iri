@@ -8,20 +8,22 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from app.operations.artifacts import code_manifest
-from app.operations.checkpoints import validate_resume
-from app.operations.data import load_scenarios
-from app.operations.source_square import normalized
-from app.operations.training_data import data_fingerprint, encode_row, load_training, pad_batch
-from app.service import POLICY
-from app.settings import ENV_FILE, Settings
+from api.app.service import POLICY
+from runpod.operations.artifacts import code_manifest
+from runpod.operations.checkpoints import validate_resume
+from runpod.operations.data import load_scenarios
+from runpod.operations.source_square import normalized
+from runpod.operations.training_data import data_fingerprint, encode_row, load_training, pad_batch
+from runpod.settings import ENV_FILE, ROOT, Settings
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train", type=Path, default=Path("data/prepared/train.jsonl"))
-    parser.add_argument("--validation", type=Path, default=Path("data/prepared/validation.jsonl"))
-    parser.add_argument("--evaluation", type=Path, nargs="+", default=[Path("data/dev.jsonl")])
+    parser.add_argument("--train", type=Path, default=(ROOT / "data/prepared/train.jsonl"))
+    parser.add_argument(
+        "--validation", type=Path, default=(ROOT / "data/prepared/validation.jsonl")
+    )
+    parser.add_argument("--evaluation", type=Path, nargs="+", default=[(ROOT / "data/dev.jsonl")])
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--smoke",
@@ -36,7 +38,7 @@ def main():
     load_dotenv(ENV_FILE)
     settings = Settings()
     if not settings.model_revision:
-        parser.error("Set the pinned MODEL_REVISION in .env")
+        parser.error("Set the pinned MODEL_REVISION in .keys/.env")
     train, validation = load_training(args.train, args.validation)
     evaluation = load_scenarios(args.evaluation)
     forbidden = {normalized(q) for row in evaluation for q in row.inputs}

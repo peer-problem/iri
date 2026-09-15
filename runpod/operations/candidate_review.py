@@ -5,7 +5,7 @@ import csv
 import json
 from pathlib import Path
 
-from app.operations.prepare_training import TrainingRow
+from runpod.operations.prepare_training import TrainingRow
 
 EDITABLE = (
     "adapted_question",

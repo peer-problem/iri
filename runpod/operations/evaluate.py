@@ -14,11 +14,11 @@ from uuid import uuid4
 
 import httpx
 
-from app.operations.artifacts import code_manifest
-from app.operations.data import load_scenarios
-from app.provider import ModelProvider, ModelUnavailable
-from app.service import POLICY, ChatService, generation_messages
-from app.settings import Settings
+from api.app.provider import ModelProvider, ModelUnavailable
+from api.app.service import POLICY, ChatService, generation_messages
+from runpod.operations.artifacts import code_manifest
+from runpod.operations.data import load_scenarios
+from runpod.settings import ROOT, Settings
 
 
 def percentile(values: list[float], proportion: float) -> float | None:
@@ -182,8 +182,8 @@ async def evaluate(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data", type=Path, default=Path("data/dev.jsonl"))
-    parser.add_argument("--output", type=Path, default=Path("runs"))
+    parser.add_argument("--data", type=Path, default=(ROOT / "data/dev.jsonl"))
+    parser.add_argument("--output", type=Path, default=(ROOT / "runs"))
     parser.add_argument("--mode", choices=["raw", "guarded", "both"], default="both")
     parser.add_argument("--allow-draft", action="store_true")
     parser.add_argument("--limit", type=int)

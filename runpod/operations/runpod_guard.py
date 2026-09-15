@@ -11,7 +11,7 @@ import time
 import httpx
 from dotenv import dotenv_values
 
-from app.settings import ENV_FILE, REPO_ROOT, ROOT
+from runpod.settings import ENV_FILE, REPO_ROOT
 
 API = "https://rest.runpod.io/v1"
 STATE_DIR = REPO_ROOT / ".agents/runpod"
@@ -119,7 +119,7 @@ def main():
         return
     key = os.environ.get("RUNPOD_API_KEY") or dotenv_values(ENV_FILE).get("RUNPOD_API_KEY")
     if not key:
-        parser.error("Set RUNPOD_API_KEY locally in .env")
+        parser.error("Set RUNPOD_API_KEY locally in .keys/.env")
     with httpx.Client(headers={"Authorization": f"Bearer {key}"}, timeout=15) as client:
         if args.action == "status":
             pods = request(client, "GET", "/pods").json()
@@ -180,12 +180,12 @@ def main():
                     [
                         sys.executable,
                         "-m",
-                        "app.operations.runpod_guard",
+                        "runpod.operations.runpod_guard",
                         "watch",
                         "--pod-id",
                         args.pod_id,
                     ],
-                    cwd=ROOT,
+                    cwd=REPO_ROOT,
                     stdin=subprocess.DEVNULL,
                     stdout=log,
                     stderr=log,

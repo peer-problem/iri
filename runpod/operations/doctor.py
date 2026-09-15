@@ -6,15 +6,14 @@ import json
 import platform
 import shutil
 import subprocess
-from pathlib import Path
 
 import httpx
 from dotenv import dotenv_values
 from pydantic import ValidationError
 
-from app.operations.data import load_scenarios, validate_development
-from app.provider import ModelProvider
-from app.settings import ENV_FILE, REPO_ROOT, Settings
+from api.app.provider import ModelProvider
+from runpod.operations.data import load_scenarios, validate_development
+from runpod.settings import ENV_FILE, REPO_ROOT, ROOT, Settings
 
 
 async def inspect(online: bool = False) -> dict:
@@ -42,21 +41,31 @@ async def inspect(online: bool = False) -> dict:
     add(
         "private_env",
         "pass" if env.exists() and env.stat().st_mode & 0o077 == 0 else "pending",
-        "Use app.operations.init_local for a private .env",
+        "Use runpod.operations.init_local for a private .keys/.env",
     )
     ignored = subprocess.run(
-        ["git", "check-ignore", "AGENTS.md", ".agents/MASTERPLAN.md", ".env", "api/runs/"],
+        [
+            "git",
+            "check-ignore",
+            "AGENTS.md",
+            ".agents/MASTERPLAN.md",
+            ".keys/.env",
+            ".keys/runpod-ed25519",
+            ".keys/runpod-ed25519.pub",
+            "runpod/known_hosts",
+            "runpod/runs/",
+        ],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
     )
     add(
         "git_exclusions",
-        "pass" if len(ignored.stdout.splitlines()) == 4 else "fail",
-        "AGENTS.md, .agents, .env and runs must stay excluded",
+        "pass" if len(ignored.stdout.splitlines()) == 7 else "fail",
+        "AGENTS.md, .agents, credentials in .keys and runs must stay excluded",
     )
     try:
-        items = load_scenarios([Path("data/dev.jsonl")])
+        items = load_scenarios([(ROOT / "data/dev.jsonl")])
         validate_development(items)
         drafts = sum(item.review_status != "reviewed" for item in items)
         add("development_data", "pass", {"count": len(items), "drafts": drafts})
@@ -67,7 +76,9 @@ async def inspect(online: bool = False) -> dict:
         )
     except (ValueError, OSError):
         add(
-            "development_data", "fail", "Run app.operations.data --phase-one to locate invalid data"
+            "development_data",
+            "fail",
+            "Run runpod.operations.data --phase-one to locate invalid data",
         )
     values = dotenv_values(env) if env.exists() else {}
     import os

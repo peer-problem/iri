@@ -9,7 +9,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from app.settings import ENV_FILE, Settings
+from runpod.settings import ENV_FILE, ROOT, Settings
 
 
 def build_command(settings: Settings, executable: str) -> list[str]:
@@ -47,22 +47,22 @@ def main():
     load_dotenv(ENV_FILE)
     settings = Settings()
     if not settings.configured:
-        raise SystemExit("Set .env keys and the model revision first. See README.md")
+        raise SystemExit("Set .keys/.env keys and the model revision first. See README.md")
     if sys.platform != "linux" or not shutil.which("nvidia-smi"):
         raise SystemExit("Run this launcher inside the Linux NVIDIA GPU Pod")
     executable = shutil.which("vllm") or str(Path(sys.executable).parent / "vllm")
     if not Path(executable).exists():
-        raise SystemExit("Install requirements-gpu.txt in the GPU environment first")
+        raise SystemExit("Install runpod/requirements-gpu.txt in the GPU environment first")
     version = importlib.metadata.version("vllm")
     if version != "0.29.0":
-        raise SystemExit("This launcher targets vLLM 0.29.0; use requirements-gpu.txt")
+        raise SystemExit("This launcher targets vLLM 0.29.0; use runpod/requirements-gpu.txt")
     gpu = subprocess.run(
         ["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"],
         check=True,
         capture_output=True,
         text=True,
     )
-    run_dir = Path("runs") / f"gpu-{settings.model_profile}-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
+    run_dir = (ROOT / "runs") / f"gpu-{settings.model_profile}-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
     run_dir.mkdir(parents=True, exist_ok=False)
     command = build_command(settings, executable)
     (run_dir / "gpu-environment.json").write_text(

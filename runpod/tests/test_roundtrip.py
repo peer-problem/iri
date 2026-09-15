@@ -3,11 +3,11 @@ import json
 
 import pytest
 
-from app.operations.candidate_review import export_csv, import_csv
-from app.operations.source_square import candidates
-from app.operations.verify_adapter import validate_manifest
-from app.service import POLICY
-from tests.test_api import configuration
+from api.app.service import POLICY
+from runpod.operations.candidate_review import export_csv, import_csv
+from runpod.operations.source_square import candidates
+from runpod.operations.verify_adapter import validate_manifest
+from runpod.tests.helpers import configuration
 
 
 def test_candidate_edits_preserve_original_source_and_validate_approval(tmp_path):

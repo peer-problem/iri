@@ -2,7 +2,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from app.settings import REPO_ROOT as ROOT
+from runpod.settings import REPO_ROOT as ROOT
 
 
 def code_files(root: Path = ROOT) -> list[Path]:
@@ -11,22 +11,27 @@ def code_files(root: Path = ROOT) -> list[Path]:
         root / name
         for name in (
             "README.md",
-            "api/pyproject.toml",
-            "api/uv.lock",
-            "api/.python-version",
+            "runpod/operations/init_local.py",
+            "api/__init__.py",
+            "runpod/pyproject.toml",
+            "runpod/uv.lock",
+            "runpod/.python-version",
             ".gitignore",
-            "api/requirements-gpu.txt",
-            "api/requirements-training.txt",
-            "api/requirements-training.lock",
+            "runpod/requirements-gpu.txt",
+            "runpod/requirements-training.txt",
+            "runpod/requirements-training.lock",
         )
     ]
     for directory, pattern in (
         ("api/app", "*.py"),
-        ("api/app/operations", "*.py"),
+        ("runpod/operations", "*.py"),
+        ("runpod", "*.py"),
+        ("runpod/tests", "*.py"),
+        ("runpod/configs", "*.json"),
         ("api/tests", "*.py"),
         ("api/configs", "*.json"),
-        ("api/data", "*.json"),
-        ("api/data", "*.jsonl"),
+        ("runpod/data", "*.json"),
+        ("runpod/data", "*.jsonl"),
     ):
         paths.extend((root / directory).glob(pattern))
     return sorted(

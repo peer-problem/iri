@@ -6,7 +6,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from app.schemas import AgeBand
+from api.app.schemas import AgeBand
+from runpod.settings import ROOT
 
 
 class Scenario(BaseModel):
@@ -79,7 +80,7 @@ def validate_development(items: list[Scenario]):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("paths", nargs="*", type=Path, default=[Path("data/dev.jsonl")])
+    parser.add_argument("paths", nargs="*", type=Path, default=[(ROOT / "data/dev.jsonl")])
     parser.add_argument("--phase-one", action="store_true")
     args = parser.parse_args()
     items = load_scenarios(args.paths)

@@ -4,10 +4,11 @@ import json
 import zipfile
 from pathlib import Path
 
-from app.operations.artifacts import ROOT, code_files
+from runpod.operations.artifacts import code_files
+from runpod.settings import REPO_ROOT, ROOT
 
 
-def build_bundle(target: Path, root: Path = ROOT) -> dict:
+def build_bundle(target: Path, root: Path = REPO_ROOT) -> dict:
     paths = code_files(root)
     manifest = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -25,7 +26,7 @@ def build_bundle(target: Path, root: Path = ROOT) -> dict:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=Path("artifacts/runpod-source.zip"))
+    parser.add_argument("--output", type=Path, default=(ROOT / "artifacts/runpod-source.zip"))
     args = parser.parse_args()
     print(json.dumps(build_bundle(args.output), indent=2))
 

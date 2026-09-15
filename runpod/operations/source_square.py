@@ -10,6 +10,8 @@ from pathlib import Path
 
 import httpx
 
+from runpod.settings import ROOT
+
 REPOSITORY = "naver-ai/korean-safety-benchmarks"
 REVISION = "e32837cd19c45564ab00083fbb2a4b89ecdf83f3"
 SOURCE_PATH = "data/SQuARe/response_train.json"
@@ -163,7 +165,7 @@ def fetch_and_prepare(output: Path, limit: int):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=Path("data/raw/square"))
+    parser.add_argument("--output", type=Path, default=(ROOT / "data/raw/square"))
     parser.add_argument("--limit", type=int, default=300)
     args = parser.parse_args()
     if not 1 <= args.limit <= 1000:

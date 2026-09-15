@@ -1,11 +1,10 @@
 import argparse
 import json
 import re
-from pathlib import Path
 
 import httpx
 
-from app.settings import ROOT
+from runpod.settings import ROOT
 
 
 def main():
@@ -18,8 +17,8 @@ def main():
     revision = response.json()["sha"]
     if not re.fullmatch("[0-9a-f]{40}", revision):
         raise SystemExit("Invalid revision returned by Hugging Face")
-    Path("runs").mkdir(exist_ok=True)
-    target = Path("runs") / f"{args.profile}-model.env"
+    (ROOT / "runs").mkdir(exist_ok=True)
+    target = (ROOT / "runs") / f"{args.profile}-model.env"
     target.write_text(f"MODEL_PROFILE={args.profile}\nMODEL_REVISION={revision}\n")
     print(f"{model_id}: {revision}\nSaved to {target}. No model weights downloaded.")
 

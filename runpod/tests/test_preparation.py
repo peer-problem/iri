@@ -1,14 +1,14 @@
 import json
 import zipfile
-from pathlib import Path
 
 import pytest
 
-from app.operations.artifacts import code_files
-from app.operations.bundle import build_bundle
-from app.operations.prepare_training import TrainingRow, from_candidates, partition
-from app.operations.source_square import candidates, question_group
-from app.operations.training_data import encode_row, load_training, pad_batch
+from runpod.operations.artifacts import code_files
+from runpod.operations.bundle import build_bundle
+from runpod.operations.prepare_training import TrainingRow, from_candidates, partition
+from runpod.operations.source_square import candidates, question_group
+from runpod.operations.training_data import encode_row, load_training, pad_batch
+from runpod.settings import ROOT
 
 
 def training_row(index=0, **updates):
@@ -55,8 +55,8 @@ def test_group_split_is_stable_and_keeps_age_variants_together():
     rows.append(
         training_row(80, scenario_id="group-0", question="다른 나이의 표현", age_band="7-10")
     )
-    train, validation = partition(rows, [Path("data/dev.jsonl")])
-    train2, validation2 = partition(list(reversed(rows)), [Path("data/dev.jsonl")])
+    train, validation = partition(rows, [(ROOT / "data/dev.jsonl")])
+    train2, validation2 = partition(list(reversed(rows)), [(ROOT / "data/dev.jsonl")])
     assert {r.id for r in train} == {r.id for r in train2}
     assert {r.id for r in validation} == {r.id for r in validation2}
     assert all(
@@ -68,7 +68,7 @@ def test_group_split_is_stable_and_keeps_age_variants_together():
 def test_training_evaluation_overlap_rejected():
     rows = [training_row(0, question="비는 왜 내려?")]
     with pytest.raises(ValueError, match="overlaps evaluation"):
-        partition(rows, [Path("data/dev.jsonl")])
+        partition(rows, [(ROOT / "data/dev.jsonl")])
 
 
 def test_training_validation_overlap_rejected(tmp_path):
@@ -110,44 +110,33 @@ def test_unexpected_template_boundary_rejected():
 def test_bundle_excludes_secrets_docs_models_and_symlinks(tmp_path):
     root = tmp_path / "source"
     root.mkdir()
-    (root / "api").mkdir()
-    for name in ("README.md", "api/pyproject.toml"):
+    (root / "api/app").mkdir(parents=True)
+    (root / ".keys").mkdir()
+    (root / "runpod").mkdir()
+    for name in ("README.md", "runpod/pyproject.toml"):
         (root / name).write_text("public fixture")
-    (root / ".env").write_text("SUPER_SECRET_KEY")
-    (root / "api/data/raw").mkdir(parents=True)
-    (root / "api/data/raw/private.json").write_text("PRIVATE_SOURCE")
-    (root / "api/app/operations").mkdir(parents=True)
-    (root / "api/app/secret.py").symlink_to(root / ".env")
-    (root / "api/app/operations/example.py").write_text("PUBLIC_OPERATION = True")
+    (root / ".keys/.env").write_text("SUPER_SECRET_KEY")
+    (root / ".keys/runpod-ed25519").write_text("PRIVATE_SSH_KEY")
+    (root / "runpod/known_hosts").write_text("PRIVATE_HOST_HISTORY")
+    (root / ".keys/runpod-ed25519.pub").write_text("SSH_PUBLIC_KEY")
+    (root / ".keys/credentials.json").write_text("PRIVATE_SERVICE_CREDENTIALS")
+    (root / "runpod/data/raw").mkdir(parents=True)
+    (root / "runpod/data/raw/private.json").write_text("PRIVATE_SOURCE")
+    (root / "runpod/operations").mkdir(parents=True)
+    (root / "api/app/secret.py").symlink_to(root / ".keys/.env")
+    (root / "runpod/operations/example.py").write_text("PUBLIC_OPERATION = True")
     target = tmp_path / "source.zip"
     result = build_bundle(target, root)
     with zipfile.ZipFile(target) as archive:
-        assert ".env" not in archive.namelist()
+        assert not any(name.startswith(".keys/") for name in archive.namelist())
+        assert ".keys/runpod-ed25519" not in archive.namelist()
+        assert "runpod/known_hosts" not in archive.namelist()
         assert "api/app/secret.py" not in archive.namelist()
-        assert "api/data/raw/private.json" not in archive.namelist()
-        assert "api/app/operations/example.py" in archive.namelist()
-        assert "api/pyproject.toml" in archive.namelist()
+        assert "runpod/data/raw/private.json" not in archive.namelist()
+        assert "runpod/operations/example.py" in archive.namelist()
+        assert "runpod/pyproject.toml" in archive.namelist()
         assert "SUPER_SECRET_KEY" not in str([archive.read(name) for name in archive.namelist()])
         assert len(json.loads(archive.read("bundle-manifest.json"))) == result["files"]
     with pytest.raises(FileExistsError):
         build_bundle(target, root)
     assert all(p.is_file() for p in code_files(root))
-
-
-def test_init_local_creates_private_env_without_template(tmp_path, monkeypatch):
-    from dotenv import dotenv_values
-
-    from app.operations import init_local
-
-    target = tmp_path / ".env"
-    monkeypatch.setattr(init_local, "ENV_FILE", target)
-    monkeypatch.chdir(tmp_path)
-    init_local.main()
-    values = dotenv_values(target)
-    assert len(values["SANDBOX_API_KEY"]) >= 32
-    assert values["SANDBOX_API_KEY"] != values["MODEL_API_KEY"]
-    assert target.stat().st_mode & 0o777 == 0o600
-    original = target.read_bytes()
-    with pytest.raises(SystemExit, match="preserved"):
-        init_local.main()
-    assert target.read_bytes() == original

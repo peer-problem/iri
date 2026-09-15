@@ -1,6 +1,6 @@
 import httpx
 
-from app.settings import Settings
+from api.app.settings import Settings
 
 
 class ModelUnavailable(Exception):

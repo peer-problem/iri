@@ -7,9 +7,9 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from app.operations.data import load_scenarios
-from app.service import POLICY, generation_messages
-from app.settings import ENV_FILE, Settings
+from api.app.service import POLICY, generation_messages
+from runpod.operations.data import load_scenarios
+from runpod.settings import ENV_FILE, ROOT, Settings
 
 
 def validate_manifest(run: Path, settings: Settings) -> dict:
@@ -63,7 +63,7 @@ def main():
     )
     model = PeftModel.from_pretrained(base, args.run / "adapter", is_trainable=False).eval()
     tokenizer = AutoTokenizer.from_pretrained(args.run / "adapter", local_files_only=True)
-    examples = load_scenarios([Path("data/dev.jsonl")])[:5]
+    examples = load_scenarios([(ROOT / "data/dev.jsonl")])[:5]
     responses = []
     for example in examples:
         messages = generation_messages(
