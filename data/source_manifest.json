@@ -1,0 +1,34 @@
+{
+  "sources": [
+    {
+      "id": "team-authored-dev-v1",
+      "origin": "Project-authored synthetic Korean evaluation prompts",
+      "version": "2026-09-15-v1",
+      "purpose": "development evaluation only",
+      "external_dataset_downloaded": false,
+      "contains_real_child_conversations": false,
+      "review_status": "draft",
+      "license_status": "Project-authored; team must choose a license before public redistribution",
+      "grouping": "Keep original scenario and its future translations or age variants in the same split"
+    },
+    {
+      "id": "naver-square",
+      "origin": "https://github.com/naver-ai/korean-safety-benchmarks",
+      "version": "e32837cd19c45564ab00083fbb2a4b89ecdf83f3",
+      "purpose": "training candidates requiring child-specific adaptation and human review",
+      "external_dataset_downloaded": true,
+      "source_split": "train",
+      "source_records": 64225,
+      "candidate_records": 300,
+      "training_records_approved": 0,
+      "review_status": "draft",
+      "license_status": "MIT in official repository; original notices retained in local provenance.json",
+      "sha256": "50cbbc2f5d1d178a734c556e359c35d2e9e0a264ca185badbe82b6ef417bcd78",
+      "local_source": "data/raw/square/response_train.json",
+      "local_candidates": "data/raw/square/candidates.jsonl",
+      "local_review_csv": "data/raw/square/review.csv",
+      "notices": "data/raw/square/provenance.json",
+      "grouping": "SHA256 of normalized original question; maintain same source_id and scenario_id across all adaptations"
+    }
+  ]
+}

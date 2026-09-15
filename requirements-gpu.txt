@@ -1,0 +1,3 @@
+# Linux NVIDIA GPU only. Install in a separate environment from the local API.
+# Actual CUDA/driver compatibility is verified on the Pod before model evaluation.
+vllm==0.29.0
