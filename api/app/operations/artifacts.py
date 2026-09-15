@@ -2,7 +2,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from backend.settings import ROOT
+from app.settings import REPO_ROOT as ROOT
 
 
 def code_files(root: Path = ROOT) -> list[Path]:
@@ -11,24 +11,22 @@ def code_files(root: Path = ROOT) -> list[Path]:
         root / name
         for name in (
             "README.md",
-            "pyproject.toml",
-            "uv.lock",
-            ".python-version",
+            "api/pyproject.toml",
+            "api/uv.lock",
+            "api/.python-version",
             ".gitignore",
-            ".env.example",
-            "requirements-gpu.txt",
-            "requirements-training.txt",
-            "requirements-training.lock",
+            "api/requirements-gpu.txt",
+            "api/requirements-training.txt",
+            "api/requirements-training.lock",
         )
     ]
     for directory, pattern in (
-        ("backend", "*.py"),
-        ("scripts", "*.py"),
-        ("tests", "*.py"),
-        ("configs", "*.json"),
-        ("data", "*.json"),
-        ("data", "*.jsonl"),
-        (".github/workflows", "*.yml"),
+        ("api/app", "*.py"),
+        ("api/app/operations", "*.py"),
+        ("api/tests", "*.py"),
+        ("api/configs", "*.json"),
+        ("api/data", "*.json"),
+        ("api/data", "*.jsonl"),
     ):
         paths.extend((root / directory).glob(pattern))
     return sorted(

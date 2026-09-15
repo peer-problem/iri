@@ -3,10 +3,10 @@ import json
 
 import pytest
 
-from backend.service import POLICY
-from scripts.candidate_review import export_csv, import_csv
-from scripts.source_square import candidates
-from scripts.verify_adapter import validate_manifest
+from app.operations.candidate_review import export_csv, import_csv
+from app.operations.source_square import candidates
+from app.operations.verify_adapter import validate_manifest
+from app.service import POLICY
 from tests.test_api import configuration
 
 

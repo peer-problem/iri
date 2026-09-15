@@ -5,10 +5,10 @@ import json
 import re
 from pathlib import Path
 
-from backend.provider import format_messages
-from backend.service import generation_messages
-from backend.settings import ROOT
-from scripts.data import load_scenarios
+from app.operations.data import load_scenarios
+from app.provider import format_messages
+from app.service import generation_messages
+from app.settings import ROOT
 
 
 def main():

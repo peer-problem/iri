@@ -9,7 +9,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from backend.settings import Settings
+from app.settings import ENV_FILE, Settings
 
 
 def build_command(settings: Settings, executable: str) -> list[str]:
@@ -46,7 +46,7 @@ def build_command(settings: Settings, executable: str) -> list[str]:
 
 
 def main():
-    load_dotenv()
+    load_dotenv(ENV_FILE)
     settings = Settings()
     if not settings.configured:
         raise SystemExit("Set .env keys and the model revision first. See README.md")

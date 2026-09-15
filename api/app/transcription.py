@@ -1,6 +1,6 @@
 import httpx
 
-from backend.settings import Settings
+from app.settings import Settings
 
 FORMATS = {
     "audio/wav": ("wav", lambda b: b.startswith(b"RIFF") and b[8:12] == b"WAVE"),
