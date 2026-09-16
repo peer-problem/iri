@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     model_serve_port: int = Field(default=8002, ge=1024, le=65535)
     model_profile: Literal["kanana"] = "kanana"
     model_revision: str = ""
+    adapter_name: str = Field(default="", pattern=r"^[a-zA-Z0-9_-]*$")
     request_timeout_seconds: float = Field(default=90, gt=0, le=300)
     max_waiting: int = Field(default=5, ge=0, le=20)
     openai_api_key: SecretStr = SecretStr("")
@@ -55,6 +56,10 @@ class Settings(BaseSettings):
     @property
     def served_model(self) -> str:
         return f"{self.model_profile}-{self.model_revision}"
+
+    @property
+    def generation_model(self) -> str:
+        return self.adapter_name or self.served_model
 
     @property
     def configured(self) -> bool:

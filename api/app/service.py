@@ -73,7 +73,7 @@ class ChatService:
         ]
         try:
             verdict = InputVerdict.model_validate_json(
-                await self.provider.complete(input_messages, max_tokens=80)
+                await self.provider.complete(input_messages, max_tokens=80, guard=True)
             )
             if verdict.decision != "allow":
                 return FALLBACKS[verdict.decision], verdict.decision
@@ -97,7 +97,7 @@ class ChatService:
                 },
             ]
             checked = OutputVerdict.model_validate_json(
-                await self.provider.complete(output_messages, max_tokens=80)
+                await self.provider.complete(output_messages, max_tokens=80, guard=True)
             )
             if checked.decision == "block":
                 return FALLBACKS["redirect"], "redirect"

@@ -5,7 +5,14 @@ import pytest
 
 from runpod.operations.artifacts import code_files
 from runpod.operations.bundle import build_bundle
-from runpod.operations.prepare_training import TrainingRow, from_candidates, partition
+from runpod.operations.prepare_training import (
+    TrainingRow,
+    distribution,
+    from_candidates,
+    load_split_plan,
+    partition,
+    validate_split_sizes,
+)
 from runpod.operations.source_square import candidates, question_group
 from runpod.operations.training_data import encode_row, load_training, pad_batch
 from runpod.settings import ROOT
@@ -46,7 +53,7 @@ def test_source_candidates_are_unique_unapproved_and_never_use_unacceptable_answ
 def test_unreviewed_candidates_cannot_become_training_data(tmp_path):
     path = tmp_path / "candidates.jsonl"
     path.write_text('{"review_status":"draft"}\n')
-    with pytest.raises(ValueError, match="No human-reviewed"):
+    with pytest.raises(ValueError, match="No reviewed"):
         from_candidates(path)
 
 
@@ -69,6 +76,117 @@ def test_training_evaluation_overlap_rejected():
     rows = [training_row(0, question="비는 왜 내려?")]
     with pytest.raises(ValueError, match="overlaps evaluation"):
         partition(rows, [(ROOT / "data/dev.jsonl")])
+
+
+def test_explicit_plan_meets_sizes_and_keeps_age_variants_together():
+    rows = [
+        training_row(i, scenario_id=f"group-{i // 2}", age_band="4-6" if i % 2 == 0 else "7-10")
+        for i in range(60)
+    ]
+    plan = {("test-fixture", f"group-{i}"): "train" if i < 25 else "validation" for i in range(30)}
+    train, validation = partition(rows, [ROOT / "data/dev.jsonl"], plan)
+    validate_split_sizes(train, validation)
+    assert (len(train), len(validation)) == (50, 10)
+    assert (train, validation) == partition(list(reversed(rows)), [ROOT / "data/dev.jsonl"], plan)
+    assert {row.scenario_id for row in train}.isdisjoint(row.scenario_id for row in validation)
+    counts = distribution(validation)
+    assert counts["groups"] == 5
+    assert counts["age_action_counts"]["4-6"] == {
+        "answer": 5,
+        "redirect": 0,
+        "support": 0,
+        "clarify": 0,
+    }
+
+
+@pytest.mark.parametrize("groups", [[], ["group-0", "extra"]])
+def test_split_plan_must_cover_exact_approved_groups(groups):
+    plan = {("test-fixture", group): "train" for group in groups}
+    with pytest.raises(ValueError, match="exactly all approved"):
+        partition([training_row()], [ROOT / "data/dev.jsonl"], plan)
+
+
+def test_split_plan_cannot_override_evaluation_exclusion():
+    row = training_row(question="비는 왜 내려?")
+    with pytest.raises(ValueError, match="overlaps evaluation"):
+        partition([row], [ROOT / "data/dev.jsonl"], {("test-fixture", "group-0"): "train"})
+
+
+def test_split_plan_rejects_duplicate_groups(tmp_path):
+    path = tmp_path / "plan.json"
+    record = {"source_id": "test-fixture", "scenario_id": "group-0", "split": "train"}
+    path.write_text(json.dumps([record, {**record, "split": "validation"}]))
+    with pytest.raises(ValueError, match="Duplicate split-plan group"):
+        load_split_plan(path)
+
+
+@pytest.mark.parametrize("sizes", [(49, 10), (50, 9)])
+def test_minimum_split_sizes_are_enforced(sizes):
+    with pytest.raises(ValueError, match="at least 50 train and 10 validation"):
+        validate_split_sizes(
+            [training_row(i) for i in range(sizes[0])],
+            [training_row(i + 100) for i in range(sizes[1])],
+        )
+
+
+def test_prepare_writes_explicit_plan_and_distribution(tmp_path, monkeypatch):
+    from runpod.operations import prepare_training
+
+    source = tmp_path / "reviewed.jsonl"
+    rows = [training_row(i) for i in range(60)]
+    source.write_text(
+        "".join(
+            json.dumps(
+                {
+                    **row.model_dump(),
+                    "source_split": "train",
+                    "adapted_question": row.question,
+                    "approved_answer": row.answer,
+                }
+            )
+            + "\n"
+            for row in rows
+        )
+    )
+    plan = tmp_path / "plan.json"
+    plan.write_text(
+        json.dumps(
+            [
+                {
+                    "source_id": row.source_id,
+                    "scenario_id": row.scenario_id,
+                    "split": "train" if i < 50 else "validation",
+                }
+                for i, row in enumerate(rows)
+            ]
+        )
+    )
+    output = tmp_path / "prepared"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["prepare_training", str(source), "--split-plan", str(plan), "--output", str(output)],
+    )
+    prepare_training.main()
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert (manifest["train"], manifest["validation"]) == (50, 10)
+    assert len(manifest["group_assignments"]) == 60
+    assert manifest["split_plan_sha256"]
+    assert manifest["distribution"]["validation"]["rows"] == 10
+    assert manifest["semantic_overlap_review"]["status"] == "required"
+
+
+def test_training_rejects_small_data_before_gpu_imports(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from runpod.operations import train
+
+    monkeypatch.setattr(train, "load_dotenv", lambda *_: None)
+    monkeypatch.setattr(train, "Settings", lambda: SimpleNamespace(model_revision="test-revision"))
+    monkeypatch.setattr(train, "load_training", lambda *_: ([training_row()], [training_row(1)]))
+    monkeypatch.setattr("sys.argv", ["train", "--output", str(tmp_path / "out")])
+    with pytest.raises(ValueError, match="at least 50 train and 10 validation"):
+        train.main()
+    assert not (tmp_path / "out").exists()
 
 
 def test_training_validation_overlap_rejected(tmp_path):

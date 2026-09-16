@@ -93,6 +93,9 @@ def main():
         adapter_sha256=hashlib.sha256(
             (args.run / "adapter/adapter_model.safetensors").read_bytes()
         ).hexdigest(),
+        adapter_config_sha256=hashlib.sha256(
+            (args.run / "adapter/adapter_config.json").read_bytes()
+        ).hexdigest(),
     )
     (args.run / "training-manifest.json").write_text(json.dumps(manifest, indent=2))
     print(

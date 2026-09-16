@@ -18,6 +18,7 @@ from api.app.provider import ModelProvider, ModelUnavailable
 from api.app.service import POLICY, ChatService, generation_messages
 from runpod.operations.artifacts import code_manifest
 from runpod.operations.data import load_scenarios
+from runpod.operations.experiments import evaluation_identity
 from runpod.settings import ROOT, Settings
 
 
@@ -50,6 +51,7 @@ def summarize(rows: list[dict]) -> dict:
 
 async def evaluate(args):
     settings = Settings()
+    experiment = evaluation_identity(settings, getattr(args, "adapter_run", None))
     items = load_scenarios([args.data])
     if any(item.split != "dev" for item in items):
         raise ValueError("This command only runs development data")
@@ -70,6 +72,7 @@ async def evaluate(args):
         git = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
         status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
         metadata = {
+            **experiment,
             "state": "running",
             "created_at": datetime.now(UTC).isoformat(),
             "model_id": settings.profile["model_id"],
@@ -97,6 +100,9 @@ async def evaluate(args):
         (run_dir / "dataset.jsonl").write_text(
             "".join(item.model_dump_json() + "\n" for item in items)
         )
+        metadata["dataset_snapshot_sha256"] = hashlib.sha256(
+            (run_dir / "dataset.jsonl").read_bytes()
+        ).hexdigest()
         (run_dir / "policy.json").write_text(POLICY)
         rows = []
         modes = ("raw", "guarded") if args.mode == "both" else (args.mode,)
@@ -186,6 +192,7 @@ def main():
     parser.add_argument("--output", type=Path, default=(ROOT / "runs"))
     parser.add_argument("--mode", choices=["raw", "guarded", "both"], default="both")
     parser.add_argument("--allow-draft", action="store_true")
+    parser.add_argument("--adapter-run", type=Path)
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
     if args.limit is not None and args.limit < 1:

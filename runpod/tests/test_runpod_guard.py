@@ -3,7 +3,7 @@ import json
 import httpx
 import pytest
 
-from runpod.operations.checkpoints import validate_resume
+from runpod.operations.checkpoints import CHECKPOINT_FILES, mark_complete, validate_resume
 from runpod.operations.runpod_guard import POD_NAME, stop, stop_reason
 
 
@@ -83,6 +83,8 @@ def test_resume_rejects_incomplete_and_changed_experiments(tmp_path):
         profile="kanana",
         max_length=1024,
         smoke=True,
+        code_sha256="code",
+        training_config={"learning_rate": 1e-4},
     )
     (tmp_path / "training-manifest.json").write_text(json.dumps(identity))
     (tmp_path / "policy.json").write_text("policy")
@@ -90,16 +92,10 @@ def test_resume_rejects_incomplete_and_changed_experiments(tmp_path):
     checkpoint.mkdir(parents=True)
     with pytest.raises(ValueError, match="incomplete"):
         validate_resume(tmp_path, checkpoint, identity, "policy")
-    for name in (
-        "checkpoint-complete.json",
-        "trainer_state.json",
-        "optimizer.pt",
-        "scheduler.pt",
-        "rng_state.pth",
-        "adapter_config.json",
-        "adapter_model.safetensors",
-    ):
+    for name in CHECKPOINT_FILES:
         (checkpoint / name).write_text("fixture")
+    (checkpoint / "trainer_state.json").write_text('{"global_step":10}')
+    mark_complete(checkpoint, 10)
     assert validate_resume(tmp_path, checkpoint, identity, "policy") == identity
     with pytest.raises(ValueError, match="changed"):
         validate_resume(tmp_path, checkpoint, {**identity, "data_sha256": "different"}, "policy")
@@ -107,3 +103,9 @@ def test_resume_rejects_incomplete_and_changed_experiments(tmp_path):
         validate_resume(tmp_path, checkpoint, identity, "new policy")
     with pytest.raises(ValueError, match="belong"):
         validate_resume(tmp_path, tmp_path.parent, identity, "policy")
+    for field, value in (("code_sha256", "new-code"), ("training_config", {"learning_rate": 2e-4})):
+        with pytest.raises(ValueError, match="changed"):
+            validate_resume(tmp_path, checkpoint, {**identity, field: value}, "policy")
+    (checkpoint / "optimizer.pt").write_text("tampered")
+    with pytest.raises(ValueError, match="files changed"):
+        validate_resume(tmp_path, checkpoint, identity, "policy")

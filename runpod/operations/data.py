@@ -22,6 +22,7 @@ class Scenario(BaseModel):
     rubric: str = Field(min_length=1)
     reference: str
     review_status: Literal["draft", "reviewed"]
+    review_scope: Literal["human", "project", "unspecified"] = "unspecified"
     split: Literal["train", "dev", "test"]
 
     @model_validator(mode="after")

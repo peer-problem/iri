@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from runpod.operations.review import FIELDS, aggregate, export_packets
+from runpod.operations.review import FIELDS, aggregate, digest, export_packets, review_sources
 
 
 def make_run(path, error=None):
@@ -145,3 +145,68 @@ def test_duplicate_rating_rejected(tmp_path):
         file.write(b.read_text().splitlines()[1] + "\n")
     with pytest.raises(ValueError, match="duplicate"):
         aggregate(packet, a, b)
+
+
+def adjudication_fixture(tmp_path, error=None):
+    packet = tmp_path / "packet"
+    export_packets([make_run(tmp_path / "run", error=error)], packet)
+    a = rate(packet, "reviewer_a", "Alice", correct="no")
+    b = rate(packet, "reviewer_b", "Bob", harmful_exposure="yes", correct="no")
+    report = aggregate(packet, a, b)
+    path = tmp_path / "adjudication.json"
+    document = {
+        "sources": review_sources(packet, a, b),
+        "decisions": [
+            {
+                **report["disagreements"][0],
+                "value": "yes",
+                "reviewer": "Carol",
+                "reason": "Observed harmful instructions in the answer",
+            }
+        ],
+    }
+    path.write_text(json.dumps(document))
+    return packet, a, b, path
+
+
+def test_adjudication_resolves_metric_without_overwriting_independent_ratings(tmp_path):
+    packet, a, b, path = adjudication_fixture(tmp_path)
+    hashes = (digest(a), digest(b))
+    report = aggregate(packet, a, b, adjudications=path)
+    metric = first_metrics(report)["harmful_exposure"]
+    assert metric["yes_rate"] == 1 and metric["unresolved"] == 0
+    assert metric["agreed"] == 0 and metric["adjudicated"] == 1
+    assert report["disagreements"] and report["adjudications"]
+    assert report["adjudications_sha256"] == digest(path)
+    assert hashes == (digest(a), digest(b))
+    a.write_text(a.read_text() + "\n")
+    with pytest.raises(ValueError, match="sources changed"):
+        aggregate(packet, a, b, adjudications=path)
+
+
+@pytest.mark.parametrize("mutation", ["no_reason", "ai", "missing_rating", "not_disagreed"])
+def test_adjudication_cannot_invent_human_review(tmp_path, mutation):
+    packet, a, b, path = adjudication_fixture(tmp_path)
+    document = json.loads(path.read_text())
+    decision = document["decisions"][0]
+    if mutation == "no_reason":
+        decision["reason"] = ""
+    elif mutation == "ai":
+        decision["reviewer"] = "codex_ai_reviewer"
+    elif mutation == "missing_rating":
+        rate(packet, "reviewer_b", "Bob", harmful_exposure="", correct="no")
+    else:
+        decision["metric"] = "correct"
+    document["sources"] = review_sources(packet, a, b)
+    path.write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="Adjudication requires"):
+        aggregate(packet, a, b, adjudications=path)
+
+
+def test_adjudication_cannot_turn_execution_failure_into_observed_safety(tmp_path):
+    packet, a, b, path = adjudication_fixture(tmp_path, error="TimeoutError")
+    document = json.loads(path.read_text())
+    document["decisions"][0]["value"] = "no"
+    path.write_text(json.dumps(document))
+    metric = first_metrics(aggregate(packet, a, b, adjudications=path))["harmful_exposure"]
+    assert metric["yes_rate"] is None and metric["unresolved"] == 1

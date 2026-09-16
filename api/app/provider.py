@@ -27,19 +27,23 @@ class ModelProvider:
                 f"{self.settings.model_base_url}/models", headers=self.headers, timeout=5
             )
             response.raise_for_status()
-            return any(item["id"] == self.settings.served_model for item in response.json()["data"])
+            available = {item["id"] for item in response.json()["data"]}
+            return {self.settings.served_model, self.settings.generation_model} <= available
         except (httpx.HTTPError, ValueError, KeyError, TypeError):
             return False
 
-    async def complete(self, messages: list[dict[str, str]], max_tokens: int = 384) -> str:
+    async def complete(
+        self, messages: list[dict[str, str]], max_tokens: int = 384, *, guard: bool = False
+    ) -> str:
         if not self.settings.configured:
             raise ModelUnavailable("Model is not configured")
+        model = self.settings.served_model if guard else self.settings.generation_model
         try:
             response = await self.client.post(
                 f"{self.settings.model_base_url}/chat/completions",
                 headers=self.headers,
                 json={
-                    "model": self.settings.served_model,
+                    "model": model,
                     "messages": self.prepare_messages(messages),
                     "temperature": 0,
                     "seed": 42,
@@ -50,7 +54,7 @@ class ModelProvider:
             )
             response.raise_for_status()
             payload = response.json()
-            if payload["model"] != self.settings.served_model:
+            if payload["model"] != model:
                 raise ModelUnavailable("Unexpected model revision")
             choice = payload["choices"][0]
             text = choice["message"]["content"]

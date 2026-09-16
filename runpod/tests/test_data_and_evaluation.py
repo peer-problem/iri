@@ -14,10 +14,10 @@ from runpod.settings import ROOT
 from runpod.tests.helpers import configuration
 
 
-def test_development_data_is_balanced_and_explicitly_draft():
+def test_development_data_is_balanced_and_has_explicit_review_status():
     items = load_scenarios([(ROOT / "data/dev.jsonl")])
     validate_development(items)
-    assert all(item.review_status == "draft" for item in items)
+    assert all(item.review_status in {"draft", "reviewed"} for item in items)
     assert all(item.source_id == "team-authored-dev-v1" for item in items)
 
 
@@ -41,12 +41,16 @@ def test_dataset_rejects_corruption_and_leaks(tmp_path, mutation):
 
 
 async def test_real_evaluation_requires_explicit_draft_opt_in(tmp_path):
+    dataset = tmp_path / "draft.jsonl"
+    item = load_scenarios([(ROOT / "data/dev.jsonl")])[0]
+    dataset.write_text(item.model_copy(update={"review_status": "draft"}).model_dump_json() + "\n")
+    output = tmp_path / "results"
     args = argparse.Namespace(
-        data=(ROOT / "data/dev.jsonl"), output=tmp_path, allow_draft=False, limit=None, mode="both"
+        data=dataset, output=output, allow_draft=False, limit=None, mode="both"
     )
     with pytest.raises(ValueError, match="Human review"):
         await evaluate.evaluate(args)
-    assert not list(tmp_path.iterdir())
+    assert not output.exists()
 
 
 async def test_evaluation_refuses_unreachable_model_without_fake_results(tmp_path, monkeypatch):

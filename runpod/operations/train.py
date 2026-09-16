@@ -10,11 +10,59 @@ from dotenv import load_dotenv
 
 from api.app.service import POLICY
 from runpod.operations.artifacts import code_manifest
-from runpod.operations.checkpoints import validate_resume
+from runpod.operations.checkpoints import mark_complete, validate_resume
 from runpod.operations.data import load_scenarios
+from runpod.operations.experiments import digest
+from runpod.operations.prepare_training import validate_split_sizes
 from runpod.operations.source_square import normalized
 from runpod.operations.training_data import data_fingerprint, encode_row, load_training, pad_batch
 from runpod.settings import ENV_FILE, ROOT, Settings
+
+
+def training_config(smoke: bool) -> dict:
+    return {
+        "lora": {
+            "r": 16,
+            "lora_alpha": 32,
+            "lora_dropout": 0.05,
+            "task_type": "CAUSAL_LM",
+            "bias": "none",
+        },
+        "projection_names": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
+        ],
+        "quantization": {
+            "load_in_4bit": True,
+            "bnb_4bit_quant_type": "nf4",
+            "bnb_4bit_use_double_quant": True,
+        },
+        "trainer": {
+            "per_device_train_batch_size": 1,
+            "per_device_eval_batch_size": 1,
+            "gradient_accumulation_steps": 8,
+            "learning_rate": 1e-4,
+            "num_train_epochs": 1,
+            "max_steps": 20 if smoke else -1,
+            "gradient_checkpointing": True,
+            "logging_steps": 1,
+            "logging_nan_inf_filter": False,
+            "eval_strategy": "no",
+            "save_strategy": "steps",
+            "save_steps": 10,
+            "save_total_limit": 2,
+            "save_only_model": False,
+            "report_to": [],
+            "seed": 42,
+            "label_names": ["labels"],
+            "prediction_loss_only": True,
+        },
+    }
 
 
 def main():
@@ -40,7 +88,10 @@ def main():
     if not settings.model_revision:
         parser.error("Set the pinned MODEL_REVISION in .keys/.env")
     train, validation = load_training(args.train, args.validation)
+    validate_split_sizes(train, validation)
     evaluation = load_scenarios(args.evaluation)
+    if any(row.review_status != "reviewed" for row in evaluation):
+        parser.error("Finalize reviewed evaluation labels before training")
     forbidden = {normalized(q) for row in evaluation for q in row.inputs}
     groups = {(row.source_id, row.scenario_id) for row in evaluation}
     if any(
@@ -48,13 +99,17 @@ def main():
         for row in [*train, *validation]
     ):
         parser.error("Training data overlaps development or final evaluation")
+    config = training_config(args.smoke)
     identity = {
         "model_id": settings.profile["model_id"],
         "revision": settings.model_revision,
         "data_sha256": data_fingerprint([args.train, args.validation]),
+        "evaluation_sha256": {str(path): digest(path) for path in args.evaluation},
         "profile": settings.model_profile,
         "max_length": args.max_length,
         "smoke": args.smoke,
+        "code_sha256": code_manifest()["sha256"],
+        "training_config": config,
     }
     if args.resume_from_checkpoint:
         validate_resume(args.output, args.resume_from_checkpoint, identity, POLICY)
@@ -93,9 +148,7 @@ def main():
         settings.profile["model_id"],
         revision=settings.model_revision,
         quantization_config=BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_use_double_quant=True,
+            **config["quantization"],
             bnb_4bit_compute_dtype=dtype,
         ),
         torch_dtype=dtype,
@@ -103,19 +156,15 @@ def main():
     )
     model.config.use_cache = False
     model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
-    projection_names = {"q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"}
+    projection_names = set(config["projection_names"])
     targets = [name for name, _ in model.named_modules() if name.split(".")[-1] in projection_names]
     if not targets:
         raise ValueError("No supported language projection modules found")
     model = get_peft_model(
         model,
         LoraConfig(
-            r=16,
-            lora_alpha=32,
-            lora_dropout=0.05,
+            **config["lora"],
             target_modules=targets,
-            task_type="CAUSAL_LM",
-            bias="none",
         ),
     )
 
@@ -146,16 +195,32 @@ def main():
 
         def on_save(self, trainer_args, state, _control, **_kwargs):
             checkpoint = Path(trainer_args.output_dir) / f"checkpoint-{state.global_step}"
-            (checkpoint / "checkpoint-complete.json").write_text(
-                json.dumps({"global_step": state.global_step})
-            )
+            mark_complete(checkpoint, state.global_step)
 
     progress = SaveProgress()
+    training_args = TrainingArguments(
+        output_dir=str(args.output / "checkpoints"),
+        logging_dir=str(args.output / "logs"),
+        run_name=args.output.name,
+        **config["trainer"],
+        bf16=dtype == torch.bfloat16,
+        fp16=dtype == torch.float16,
+    )
+    identity["runtime_identity"] = {
+        "training_arguments": training_args.to_dict(),
+        "dtype": str(dtype),
+        "lora_targets": targets,
+        "packages": {
+            name: importlib.metadata.version(name)
+            for name in ("torch", "transformers", "peft", "bitsandbytes", "accelerate")
+        },
+    }
+    if args.resume_from_checkpoint:
+        validate_resume(args.output, args.resume_from_checkpoint, identity, POLICY)
     args.output.mkdir(parents=True, exist_ok=bool(args.resume_from_checkpoint))
     manifest = {
         "state": "running",
         **identity,
-        "code_sha256": code_manifest()["sha256"],
         "resumed_from": str(args.resume_from_checkpoint) if args.resume_from_checkpoint else None,
         "save_steps": 10,
         "train_count": len(train),
@@ -171,28 +236,7 @@ def main():
     (args.output / "policy.json").write_text(POLICY)
     trainer = Trainer(
         model=model,
-        args=TrainingArguments(
-            output_dir=str(args.output / "checkpoints"),
-            per_device_train_batch_size=1,
-            per_device_eval_batch_size=1,
-            gradient_accumulation_steps=8,
-            learning_rate=1e-4,
-            num_train_epochs=1,
-            max_steps=20 if args.smoke else -1,
-            bf16=dtype == torch.bfloat16,
-            fp16=dtype == torch.float16,
-            gradient_checkpointing=True,
-            logging_steps=1,
-            logging_nan_inf_filter=False,
-            eval_strategy="no",
-            save_strategy="steps",
-            save_steps=10,
-            save_total_limit=2,
-            report_to=[],
-            seed=42,
-            label_names=["labels"],
-            prediction_loss_only=True,
-        ),
+        args=training_args,
         train_dataset=encoded_train,
         eval_dataset=encoded_validation,
         data_collator=collate,

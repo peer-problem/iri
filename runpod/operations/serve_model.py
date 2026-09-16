@@ -1,3 +1,4 @@
+import argparse
 import importlib.metadata
 import json
 import os
@@ -9,10 +10,14 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from runpod.operations.experiments import evaluation_identity
 from runpod.settings import ENV_FILE, ROOT, Settings
 
 
-def build_command(settings: Settings, executable: str) -> list[str]:
+def build_command(
+    settings: Settings, executable: str, adapter_run: Path | None = None
+) -> list[str]:
+    evaluation_identity(settings, adapter_run)
     command = [
         executable,
         "serve",
@@ -40,10 +45,34 @@ def build_command(settings: Settings, executable: str) -> list[str]:
         "--enforce-eager",
         "--no-enable-log-requests",
     ]
+    if adapter_run:
+        config = json.loads((adapter_run / "adapter/adapter_config.json").read_text())
+        rank = config.get("r")
+        if rank not in {1, 8, 16, 32, 64, 128, 256, 320, 512}:
+            raise ValueError("Unsupported adapter rank for the pinned vLLM launcher")
+        module = json.dumps(
+            {
+                "name": settings.adapter_name,
+                "path": str((adapter_run / "adapter").resolve()),
+                "base_model_name": settings.served_model,
+            }
+        )
+        command += [
+            "--enable-lora",
+            "--max-loras",
+            "1",
+            "--max-lora-rank",
+            str(rank),
+            "--lora-modules",
+            module,
+        ]
     return command
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--adapter-run", type=Path)
+    args = parser.parse_args()
     load_dotenv(ENV_FILE)
     settings = Settings()
     if not settings.configured:
@@ -64,10 +93,14 @@ def main():
     )
     run_dir = (ROOT / "runs") / f"gpu-{settings.model_profile}-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
     run_dir.mkdir(parents=True, exist_ok=False)
-    command = build_command(settings, executable)
+    command = build_command(settings, executable, args.adapter_run)
     (run_dir / "gpu-environment.json").write_text(
         json.dumps(
             {
+                **evaluation_identity(settings, args.adapter_run),
+                "adapter_directory": str((args.adapter_run / "adapter").resolve())
+                if args.adapter_run
+                else None,
                 "gpu": gpu.stdout.strip(),
                 "vllm": version,
                 "model_id": settings.profile["model_id"],

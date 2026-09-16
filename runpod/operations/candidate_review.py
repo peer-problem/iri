@@ -35,7 +35,9 @@ def export_csv(source: Path, output: Path):
     return len(rows)
 
 
-def import_csv(source: Path, edits: Path, output: Path):
+def import_csv(source: Path, edits: Path, output: Path, review_scope: str = "human"):
+    if review_scope not in {"human", "project"}:
+        raise ValueError("Review scope must be human or project")
     originals = [json.loads(line) for line in source.read_text().splitlines() if line.strip()]
     by_id = {row["id"]: row for row in originals}
     if len(by_id) != len(originals):
@@ -55,6 +57,7 @@ def import_csv(source: Path, edits: Path, output: Path):
             if record["review_status"] not in {"draft", "reviewed", "rejected"}:
                 raise ValueError("Review status must be draft, reviewed or rejected")
             if record["review_status"] == "reviewed":
+                record["review_scope"] = review_scope
                 TrainingRow(
                     id=record["id"],
                     source_id=record["source_id"],
@@ -66,6 +69,7 @@ def import_csv(source: Path, edits: Path, output: Path):
                     reference=record["reference"],
                     review_status="reviewed",
                     reviewer=record["reviewer"],
+                    review_scope=review_scope,
                 )
     with output.open("x") as file:
         file.write("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in originals))
@@ -84,11 +88,16 @@ def main():
         command.add_argument("--output", type=Path, required=True)
         if operation == "import":
             command.add_argument("--edits", type=Path, required=True)
+            command.add_argument("--review-scope", choices=("human", "project"), default="human")
     args = parser.parse_args()
     if args.command == "export":
         print(f"Exported {export_csv(args.source, args.output)} candidates")
     else:
-        print(json.dumps(import_csv(args.source, args.edits, args.output), indent=2))
+        print(
+            json.dumps(
+                import_csv(args.source, args.edits, args.output, args.review_scope), indent=2
+            )
+        )
 
 
 if __name__ == "__main__":
