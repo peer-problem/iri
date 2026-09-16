@@ -1,3 +1,0 @@
-# Preserve CSV exports and verbatim model responses in review evidence.
-runpod/artifacts/**/*.csv -text whitespace=cr-at-eol
-runpod/artifacts/**/review.html -text -whitespace
