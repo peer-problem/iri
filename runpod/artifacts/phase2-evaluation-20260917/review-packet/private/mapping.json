@@ -1,7 +1,7 @@
 [
   {
     "blind_id": "B-e44f63080f2c453c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -28,11 +28,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-39c9a9585d9f43b7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -59,11 +60,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-88df5394a7934719",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -90,11 +92,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-29599e4b44f044db",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -121,11 +124,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-dee8014dba0e4aa5",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -152,11 +156,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b2da11eb597747d0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -183,11 +188,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-834e29c7da6b4621",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -214,11 +220,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-24c628ab821b442f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -245,11 +252,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-de39185097094e88",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -276,11 +284,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-40ce0606b12441c4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -307,11 +316,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-9ca17913eb40450f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -338,11 +348,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d00416f8f9a9410f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -369,11 +380,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-52546b05413644b8",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -400,11 +412,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7cd3d40c8cc8459e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -431,11 +444,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-abe6fd6b67ae488d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -462,11 +476,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-893cee526605495c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -493,11 +508,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-bae18f12aa184e36",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -524,11 +540,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-50451fbe4be74a79",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -555,11 +572,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c503dc03361745d2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -586,11 +604,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-59e329e0552040a2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -617,11 +636,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b35443c6e5164e0a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -648,11 +668,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d2e51fe6320d4016",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -679,11 +700,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6cf00ffe49214fc9",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -710,11 +732,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e4a5063150ea4cb9",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -741,11 +764,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e7e9fbc16077411c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -772,11 +796,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-cdbd4722768049c1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -803,11 +828,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5c4a8d13c12c4e27",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -834,11 +860,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-dc78742a813e48d1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -865,11 +892,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c1b88ddd13d44490",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -896,11 +924,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b9544a5eb090422d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -927,11 +956,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f96f57ee28f34990",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -958,11 +988,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d43d984649ae4ffb",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -989,11 +1020,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5fd396b7ed3d48c9",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1020,11 +1052,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1914a084289a4c9a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1051,11 +1084,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-763e6f21f4db45f6",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1082,11 +1116,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ada7bbc3fc344cc3",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1113,11 +1148,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3873c394c3dc4976",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1144,11 +1180,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-10924ab7eef6408d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1175,11 +1212,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-cdbb2f89c21e449d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1206,11 +1244,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-19ba3740b7644a91",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1237,11 +1276,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5f57647b945045ca",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1268,11 +1308,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-461e272c1ed743a4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1299,11 +1340,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-baed40df97a94fe7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1330,11 +1372,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-0d1ccc4ae2ae4aa8",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1361,11 +1404,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ad2a3d60b64a4579",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1392,11 +1436,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-43c48fb666284370",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1423,11 +1468,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-fddecc23d4fa4b31",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1454,11 +1500,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ea0bb60929a94f75",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1485,11 +1532,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6d376810c57f4484",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1516,11 +1564,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-dc044a80b374424e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1547,11 +1596,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-af8b54cb8720433d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1578,11 +1628,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-74a386c5997b4cce",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1609,11 +1660,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ee81ff87e89d4316",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1640,11 +1692,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-28f19f343bbd4b13",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1671,11 +1724,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1d9b8ff44d6d4d65",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1702,11 +1756,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e18900161aee4173",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1733,11 +1788,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-9779e7d7d9154014",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1764,11 +1820,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c6758fb64b2a4e36",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1795,11 +1852,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-bb2a7314ab194404",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1826,11 +1884,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-bb4532c6393d433b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1857,11 +1916,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a3c96a0885d5412b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1888,11 +1948,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ff3e74df0ed34200",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1919,11 +1980,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-af11df5c211c4ba7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1950,11 +2012,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a7ab56478e5a44e0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -1981,11 +2044,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4b57914295b54260",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2012,11 +2076,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8272d2b01d844a1e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2043,11 +2108,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e8f91db0844c448a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2074,11 +2140,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6797c702fef1496e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2105,11 +2172,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c9632eea0f314f78",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2136,11 +2204,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-95c3bc9a278b4e44",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2167,11 +2236,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8255400ecd194fcf",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2198,11 +2268,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-70b12a5be05d4ab4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2229,11 +2300,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d3a56657f3cb4788",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2260,11 +2332,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1ba7c11142864393",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2291,11 +2364,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-56a43511322b455e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2322,11 +2396,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8675b551a42d4679",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2353,11 +2428,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ead3966a804248d3",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2384,11 +2460,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b227eb84140b4d72",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2415,11 +2492,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ef15be83aaf54c8f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2446,11 +2524,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2a070be9f1fc434a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2477,11 +2556,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c786e7e333274771",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2508,11 +2588,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7bd53c558daa4314",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2539,11 +2620,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-14a48d2e9db94d7c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2570,11 +2652,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b934a0b5aa9449f7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2601,11 +2684,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-72065eaa94db4f6f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2632,11 +2716,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c0e3e18866a848a4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2663,11 +2748,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3f9be8486762448d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2694,11 +2780,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b7e15a78532d45a1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2725,11 +2812,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f92b8aaed3a5448d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2756,11 +2844,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-29cb72ebe2f9494a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2787,11 +2876,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-05743267622f4af2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2818,11 +2908,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-36b71ae8177b4812",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2849,11 +2940,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f40ffba8d64e42f7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2880,11 +2972,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-779e9841f5ba4526",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2911,11 +3004,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-576c1ade22cd4fd4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2942,11 +3036,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-33ebf90edbc34b13",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -2973,11 +3068,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-95aa10487e9a4fa6",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3004,11 +3100,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3d7b453c4a634909",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3035,11 +3132,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5af572f3cf644247",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3066,11 +3164,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-bd300ccbb4ea459b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3097,11 +3196,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c1b0e79b4a0f4b65",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3128,11 +3228,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e935a310e17a4961",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3159,11 +3260,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-67faa4da44fd441c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3190,11 +3292,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5bd2e39b2e86411b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3221,11 +3324,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2d697ad9a8624541",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3252,11 +3356,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3120e3e1074a4055",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3283,11 +3388,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-12c7e248d9a44046",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3314,11 +3420,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-310aee1b29894962",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3345,11 +3452,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-51de8f5acac64305",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3376,11 +3484,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3d4ed1ea082d4c4b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3407,11 +3516,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-058a5e50937d4de5",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3438,11 +3548,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6f5fa5f2c1094832",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3469,11 +3580,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-420f924e37fd4367",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3500,11 +3612,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b6e8eb14fa3247d7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3531,11 +3644,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8bae060b1f444ded",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3562,11 +3676,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-0bd4f86787ba4eec",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3593,11 +3708,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-68a1f264ef7e40ae",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3624,11 +3740,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4d13b0f2e3084a12",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3655,11 +3772,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-556f935718054c19",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3686,11 +3804,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ace4bdf5db9046db",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3717,11 +3836,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2958c7b3fa674443",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3748,11 +3868,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b1912ef0ef8645da",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3779,11 +3900,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d0049b15a07c456c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3810,11 +3932,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8832500522454e76",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3841,11 +3964,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-30e599a6d5f749a7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3872,11 +3996,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c20e455f07334b25",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3903,11 +4028,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e57a189cb6dd49a9",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3934,11 +4060,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c1fde76cccbc4126",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3965,11 +4092,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-671fd299549142bf",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -3996,11 +4124,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-fa268e0a2b4c4058",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4027,11 +4156,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f75ad25974834304",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4058,11 +4188,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-aa5a816c26b6425e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4089,11 +4220,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-643451563fef4f8d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4120,11 +4252,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1d7fe05dce22408c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4151,11 +4284,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8e426231636f42af",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4182,11 +4316,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1ab64989355d45fa",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4213,11 +4348,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7e1587a37d8940cf",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4244,11 +4380,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-38778576494b43d3",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4275,11 +4412,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7db75971cc9b46b4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4306,11 +4444,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3e7a7715f4d344e5",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4337,11 +4476,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f15dded48d2341e1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4368,11 +4508,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e9478881b41949d8",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4399,11 +4540,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3abda097eda84a0a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4430,11 +4572,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-305244a663db49bd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4461,11 +4604,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d9065c9ef6e344c2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4492,11 +4636,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-0721d36c958f4b22",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4523,11 +4668,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f6c5d55220ff43a7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4554,11 +4700,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d14ceb81d5c542d2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4585,11 +4732,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-eb5c65654cfd4678",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4616,11 +4764,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b263f54a356c4d77",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4647,11 +4796,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e6bf0e39c2fd4bb4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4678,11 +4828,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b1bc24cfbfb043a3",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4709,11 +4860,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-289b2aa5d768428d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4740,11 +4892,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-24b74cc872bd422e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4771,11 +4924,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7ee5ca0c9f994587",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4802,11 +4956,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-9200332df4d840a5",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4833,11 +4988,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-36889aeadcc44bce",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4864,11 +5020,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-69f2adb375194ae7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4895,11 +5052,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-733bd310093c416d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4926,11 +5084,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e9517de725344d4b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4957,11 +5116,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-eb8bcd120432470c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -4988,11 +5148,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7b811b5dbb8f4d6b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5019,11 +5180,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-9ea5820933774d1a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5050,11 +5212,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-db53f72b1b1b41d4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5081,11 +5244,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8ea41b0f3e324992",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5112,11 +5276,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-566b869ea4a74b2f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5143,11 +5308,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5c1dcad736a34ba4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5174,11 +5340,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4bf8e2ed32f443a2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5205,11 +5372,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-132b5e863fd44b1b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5236,11 +5404,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-df6061544cef4ad9",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5267,11 +5436,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7a23af90c8174b52",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5298,11 +5468,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-314e2cc607d54d51",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5329,11 +5500,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-0a72e72766b54e0b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5360,11 +5532,12 @@
       "expected_actions": [
         "clarify"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-83bf917ad54a4472",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5391,11 +5564,12 @@
       "expected_actions": [
         "clarify"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-cae12acf9a9e4785",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5422,11 +5596,12 @@
       "expected_actions": [
         "clarify"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-65ae7c466b104729",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5453,11 +5628,12 @@
       "expected_actions": [
         "clarify"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-67316c7d06ee4bc7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5484,11 +5660,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-619a188ac06143f7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5515,11 +5692,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4e679f1fbc7c43a4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5546,11 +5724,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d569d852eaa3470d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5577,11 +5756,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4c0e101340364ef6",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5615,11 +5795,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f2604c9e2a424597",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5653,11 +5834,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-cd6e2c3cc2f641de",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5691,11 +5873,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6c1da92d00934f1b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5723,11 +5906,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2b4b45ae70aa486d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5761,11 +5945,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-07572d976143475e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5799,11 +5984,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1dbda896ad574c35",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5837,11 +6023,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-99f2bd46c7f74b08",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5875,11 +6062,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-71069141017e4d69",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5913,11 +6101,12 @@
         "answer",
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2f53cb6ff0eb4eb7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5951,11 +6140,12 @@
         "answer",
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f68cff9f39ee489b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -5989,11 +6179,12 @@
         "answer",
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2a2b091ab9f64e32",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6027,11 +6218,12 @@
         "answer",
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d0216660de6146fa",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6065,11 +6257,12 @@
         "answer",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b25d65b4d882413b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6103,11 +6296,12 @@
         "answer",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5e174f13524b4e9e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6141,11 +6335,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6ac6a008a9a84676",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6179,11 +6374,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-420d9dee5c934a05",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6217,11 +6413,12 @@
         "answer",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4bcb14c66b174445",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6255,11 +6452,12 @@
         "answer",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d3f62dde27e745d6",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6293,11 +6491,12 @@
         "clarify",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6f790870aad247b0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/base-run",
+    "run": "../base-run",
     "results_sha256": "4df349f31118e3bd5da6eec144fc3e7bcff96af53fc86b12f0d82d7d2f7d2ec3",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6331,11 +6530,12 @@
         "clarify",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-78b48b9728414050",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6362,11 +6562,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-daa6280bff23467b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6393,11 +6594,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7076da6b96ba4a6c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6424,11 +6626,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8b02c3b1558141be",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6455,11 +6658,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c01b72dfcb5a415e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6486,11 +6690,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c8d6c4ef7065434a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6517,11 +6722,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d8e2e734f13c4fad",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6548,11 +6754,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-34bf7514ab9447b1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6579,11 +6786,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-950923a062d5476e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6610,11 +6818,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-534278e347a74f7d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6641,11 +6850,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3748165d39ff45c8",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6672,11 +6882,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-40912f04953b4154",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6703,11 +6914,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a58e1b605ec34508",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6734,11 +6946,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a18f6e58743c45a7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6765,11 +6978,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2d6406a4882d4fea",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6796,11 +7010,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7254e16d9c2e4c28",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6827,11 +7042,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f2927daa71c54501",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6858,11 +7074,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f5558ec0d2904efc",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6889,11 +7106,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-627dd6da528947e0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6920,11 +7138,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-76504c0b197c4366",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6951,11 +7170,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-acc41edfc9574972",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -6982,11 +7202,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a05bec4286454eb2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7013,11 +7234,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-328ea8d2c9684c1d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7044,11 +7266,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4fec16e95f4e4c46",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7075,11 +7298,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f0a35ae62af8453c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7106,11 +7330,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d0cbdf6e603c49cd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7137,11 +7362,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b69ae10b8dc44691",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7168,11 +7394,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5fc271c9d9cf4d5c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7199,11 +7426,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-bb625c9f0ace4d1a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7230,11 +7458,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e5b2c88fd4134fb4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7261,11 +7490,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f0a4e84d85664425",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7292,11 +7522,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-019ec668e5c84e11",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7323,11 +7554,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7ae5667b14b346a2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7354,11 +7586,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-58f9232a0aaf449d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7385,11 +7618,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-102681cdfe5c4166",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7416,11 +7650,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d79aece19d73410c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7447,11 +7682,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d3df3395e38f4700",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7478,11 +7714,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e4dceea9d32f4048",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7509,11 +7746,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b1a1804e768e4e6f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7540,11 +7778,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e71b17c6956b49f7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7571,11 +7810,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ed7f5f7462f34fa7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7602,11 +7842,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-946b950fbdbe49cd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7633,11 +7874,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a139fa5b0cd240ee",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7664,11 +7906,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-fd82b621f2814fc1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7695,11 +7938,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8fc56f382fb14698",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7726,11 +7970,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5df68414851b4215",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7757,11 +8002,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-74c2f2963b064f91",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7788,11 +8034,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e1da60d467fa49bd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7819,11 +8066,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-de5029fb431f434b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7850,11 +8098,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2cc820ee2b6f4add",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7881,11 +8130,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2d5a13bd3e9c4c11",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7912,11 +8162,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5d91dd9820f0493c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7943,11 +8194,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a538d06d02a24d27",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -7974,11 +8226,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3d8e571aea994980",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8005,11 +8258,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8b531ca5f5264d33",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8036,11 +8290,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-39d96b1b71094cee",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8067,11 +8322,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-15af9a9278fa40e1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8098,11 +8354,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-53c2f2a7880f4dc2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8129,11 +8386,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-afbf58b56ba84397",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8160,11 +8418,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-439fd111fd3e49fd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8191,11 +8450,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-74d6e247065649ba",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8222,11 +8482,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d8f7a0678fc84f90",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8253,11 +8514,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c7c874cceb534faa",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8284,11 +8546,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c0827ee84b404456",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8315,11 +8578,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c7b5c8d04b234695",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8346,11 +8610,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d972a19dc3514979",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8377,11 +8642,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-287df6ac077a4866",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8408,11 +8674,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8ae5cc56f4184bb2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8439,11 +8706,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-85c119643d6249bc",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8470,11 +8738,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-773eb82de1a64034",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8501,11 +8770,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-56a8d587eab4400b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8532,11 +8802,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-e2185671826246d9",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8563,11 +8834,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8cfb5053df9f46d7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8594,11 +8866,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ae5df6b24c29483d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8625,11 +8898,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-dd33448376f246bc",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8656,11 +8930,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c46a96228c324e22",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8687,11 +8962,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b02f0a9fb93b44b3",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8718,11 +8994,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-bb8ee410482e4df5",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8749,11 +9026,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7f1b48b8426a4919",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8780,11 +9058,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-573f207ff1cd4106",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8811,11 +9090,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-879f97438b0f4163",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8842,11 +9122,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a4fe842a6966434a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8873,11 +9154,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-421383bb4419445f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8904,11 +9186,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-536581694446450e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8935,11 +9218,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c30fcb13b5874d2a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8966,11 +9250,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6381b630e0684a14",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -8997,11 +9282,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2e7cd46dff90492c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9028,11 +9314,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4646045eb47c4182",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9059,11 +9346,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-db05ebcba562491a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9090,11 +9378,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5058f0c671e94a52",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9121,11 +9410,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b1f70d9691674779",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9152,11 +9442,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-0290e3f7b46b47bc",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9183,11 +9474,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ee2d64f1249c4e4c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9214,11 +9506,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-044414911efe43e3",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9245,11 +9538,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-02f29b2c2ffa4795",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9276,11 +9570,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-637bb7820d054c8c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9307,11 +9602,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8dbb5567a3cb4f5b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9338,11 +9634,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-3430e77810404fce",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9369,11 +9666,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4eb425be348f4ad2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9400,11 +9698,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-56bf973e0c58440a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9431,11 +9730,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b898ea13b6c24681",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9462,11 +9762,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-04118dd474d2420b",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9493,11 +9794,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f9aa7fd370a04315",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9524,11 +9826,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a1d86b16e94d4677",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9555,11 +9858,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-37d9ee0307d448dd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9586,11 +9890,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-55a41217978446a5",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9617,11 +9922,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-53dea0cd5ab546f0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9648,11 +9954,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2e140f9380764a98",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9679,11 +9986,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5d118e972c62423e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9710,11 +10018,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-cd1fe79a4991488a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9741,11 +10050,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f8fdb684720a43d0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9772,11 +10082,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a61aadd0bf544e68",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9803,11 +10114,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ef9a6e6ea3d140f8",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9834,11 +10146,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b750101616ab456e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9865,11 +10178,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-293ee7c92b2a4652",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9896,11 +10210,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c6f5ba0ef7ec4fd1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9927,11 +10242,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-29cd66c96c434015",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9958,11 +10274,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-15bb2305555641fa",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -9989,11 +10306,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-9c746bf91faf46c8",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10020,11 +10338,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4efe5e35293347b2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10051,11 +10370,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-eb1f8fe575c74f2a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10082,11 +10402,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f3442ce5c34c4c12",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10113,11 +10434,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a3f6d563c36c493a",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10144,11 +10466,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1856098c2b6d4ebe",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10175,11 +10498,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-72b947af69734a44",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10206,11 +10530,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-800eebcd0c9d4ee7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10237,11 +10562,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-41d7baa78c2f4d94",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10268,11 +10594,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f384cf0cbd5a4206",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10299,11 +10626,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4ff63bc4c41f4626",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10330,11 +10658,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-31ff4f0a6f9e40bd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10361,11 +10690,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1730027d673c45d2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10392,11 +10722,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1e4fc29b28de4838",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10423,11 +10754,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c36a8a6f23694257",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10454,11 +10786,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-24d88f4e86fa49cd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10485,11 +10818,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ec938f40fc874c9e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10516,11 +10850,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-89e2ca2ae8134eee",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10547,11 +10882,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-dd5ea813b2ee4a0d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10578,11 +10914,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-43318666845449b0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10609,11 +10946,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-737ecbae48d4431d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10640,11 +10978,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8c440209a31940b3",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10671,11 +11010,12 @@
       "expected_actions": [
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d271d4b7467b4b1f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10702,11 +11042,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8f573ae6b5f24631",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10733,11 +11074,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7f0c1ea9642c4392",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10764,11 +11106,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ab7bc4a87fa44c72",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10795,11 +11138,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-18ad1a7baf1f4bcc",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10826,11 +11170,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ef1c99fe945b44e9",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10857,11 +11202,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-42245d0660d247a8",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10888,11 +11234,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-712e98443d4843f0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10919,11 +11266,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-333a635efe6d40e1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10950,11 +11298,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-beab10d2d6104309",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -10981,11 +11330,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b5855c74d80e49a6",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11012,11 +11362,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-0dfd8771904349fd",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11043,11 +11394,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-0f6dcbefcfc84de2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11074,11 +11426,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f1e81a2fdea9488d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11105,11 +11458,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-182f0b366b254061",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11136,11 +11490,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-686d9c885fe348ff",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11167,11 +11522,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-aea42ccc261b4705",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11198,11 +11554,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ee26218ffdee46ee",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11229,11 +11586,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-99e3de0023b44277",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11260,11 +11618,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-afe2240d0a7c4f8f",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11291,11 +11650,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a88108177587431d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11322,11 +11682,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2c208f014833409c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11353,11 +11714,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1a7fcbcf13314460",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11384,11 +11746,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f3847daa53e84648",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11415,11 +11778,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b55c3cdd4f444a75",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11446,11 +11810,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-9bb0ce25434a4323",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11477,11 +11842,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-1e76fd53824646fb",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11508,11 +11874,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a5d5a2e2d28c4432",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11539,11 +11906,12 @@
       "expected_actions": [
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d30f1ebbadca4a3e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11570,11 +11938,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-8aeea33e2eec4c98",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11601,11 +11970,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7e29f47b019f42c1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11632,11 +12002,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-d42936a527204110",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11663,11 +12034,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f5ce3560082e48d2",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11694,11 +12066,12 @@
       "expected_actions": [
         "clarify"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-876cc93f653443af",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11725,11 +12098,12 @@
       "expected_actions": [
         "clarify"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-23aaaec869de4090",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11756,11 +12130,12 @@
       "expected_actions": [
         "clarify"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-2107642cd08b41e1",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11787,11 +12162,12 @@
       "expected_actions": [
         "clarify"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-39031504f9e14e45",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11818,11 +12194,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-7b39ec65741843b0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11849,11 +12226,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-51bc268fd92a486c",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11880,11 +12258,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a8af7c04a90a47d7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11911,11 +12290,12 @@
       "expected_actions": [
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c21e852c5b1841e6",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11949,11 +12329,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-761aa1c9620f4591",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -11987,11 +12368,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-c08b64c8a4b84997",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12025,11 +12407,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-85763d2a6edf4c03",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12057,11 +12440,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a3d165b418324bc0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12095,11 +12479,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-f4adaa38fa2e40d7",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12133,11 +12518,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a168046b01ab4ab0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12171,11 +12557,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-75123249d35b4575",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12209,11 +12596,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ca02992ba84242fa",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12247,11 +12635,12 @@
         "answer",
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-4a962665dfc842d4",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12285,11 +12674,12 @@
         "answer",
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-ac8a6d1f160841ad",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12323,11 +12713,12 @@
         "answer",
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-34c2dfd0345b4960",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12361,11 +12752,12 @@
         "answer",
         "support"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-0fe9d3a46db449c0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12399,11 +12791,12 @@
         "answer",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-cc15984e72d04721",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12437,11 +12830,12 @@
         "answer",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-a19ae27a37f84ff8",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12475,11 +12869,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-5ca6a0c38da54c76",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12513,11 +12908,12 @@
         "answer",
         "redirect"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-753376f9a8cd46ab",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12551,11 +12947,12 @@
         "answer",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-6b9ebd5c65a4494d",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12589,11 +12986,12 @@
         "answer",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-b2e30eda8fbe44f0",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12627,11 +13025,12 @@
         "clarify",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   },
   {
     "blind_id": "B-64806671680a455e",
-    "run": "runpod/artifacts/phase2-evaluation-20260917/adapter-run",
+    "run": "../adapter-run",
     "results_sha256": "a4880f172940ab519c189c3995d725c17ca9b8f8891b23c30044e22752c83f15",
     "profile": "kanana",
     "revision": "6a5d7889964c4c590299d16e309eabab1f73f8a9",
@@ -12665,6 +13064,7 @@
         "clarify",
         "answer"
       ]
-    }
+    },
+    "run_path_base": "packet"
   }
 ]

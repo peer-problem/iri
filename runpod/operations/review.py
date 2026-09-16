@@ -5,6 +5,7 @@ import csv
 import hashlib
 import html
 import json
+import os
 import random
 from collections import defaultdict
 from pathlib import Path
@@ -63,7 +64,8 @@ def export_packets(runs: list[Path], output: Path):
             entries.append(
                 {
                     "blind_id": "B-" + uuid4().hex[:16],
-                    "run": resolved,
+                    "run": os.path.relpath(resolved, output.resolve()),
+                    "run_path_base": "packet",
                     "results_sha256": metadata["results_sha256"],
                     "profile": metadata["profile"],
                     "revision": metadata["revision"],
@@ -202,9 +204,41 @@ def aggregate(
         raise ValueError("Review kind must be human or ai")
     entries = json.loads((packet / "private/mapping.json").read_text())
     ids = {entry["blind_id"] for entry in entries}
+    if not entries or len(ids) != len(entries):
+        raise ValueError("Empty mapping or duplicate blind ID")
+    verified_runs, seen_rows, source_keys = {}, set(), defaultdict(set)
     for entry in entries:
-        if digest(Path(entry["run"]) / "results.jsonl") != entry["results_sha256"]:
+        run = Path(entry["run"])
+        if entry.get("run_path_base") == "packet":
+            run = packet / run
+        source = (run / "results.jsonl").resolve()
+        if source not in verified_runs:
+            source_digest = digest(source)
+            if source_digest != entry["results_sha256"]:
+                raise ValueError("Reviewed results have changed")
+            source_rows = [json.loads(line) for line in source.read_text().splitlines()]
+            indexed = {(row["id"], row["mode"]): row for row in source_rows}
+            if len(indexed) != len(source_rows):
+                raise ValueError("Duplicate result row")
+            metadata = json.loads((run / "metadata.json").read_text())
+            verified_runs[source] = (source_digest, indexed, metadata)
+        source_digest, indexed, metadata = verified_runs[source]
+        if source_digest != entry["results_sha256"]:
             raise ValueError("Reviewed results have changed")
+        row = entry["row"]
+        key = (row["id"], row["mode"])
+        if indexed.get(key) != row:
+            raise ValueError("Mapping row differs from reviewed results")
+        identity = experiment_key(entry)
+        if identity != experiment_key(metadata):
+            raise ValueError("Mapping experiment differs from reviewed run")
+        unique = (identity, *key)
+        if unique in seen_rows:
+            raise ValueError("Duplicate reviewed scenario")
+        seen_rows.add(unique)
+        source_keys[source].add(key)
+    if any(keys != set(verified_runs[source][1]) for source, keys in source_keys.items()):
+        raise ValueError("Mapping must include the complete reviewed run")
     name_a, a = read_ratings(ratings_a, ids)
     name_b, b = read_ratings(ratings_b, ids)
     if review_kind == "human" and any(

@@ -33,11 +33,11 @@ def completion(text, settings, finish_reason="stop"):
 @asynccontextmanager
 async def api(handler, settings=None):
     app = create_app(settings or configuration(), transport=httpx.MockTransport(handler))
-    async with app.router.lifespan_context(app):
-        async with httpx.AsyncClient(
-            transport=httpx.ASGITransport(app=app), base_url="http://test"
-        ) as client:
-            yield client
+    async with (
+        app.router.lifespan_context(app),
+        httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client,
+    ):
+        yield client
 
 
 async def post(client, message="비는 왜 내려?", **kwargs):
@@ -80,7 +80,11 @@ async def test_input_validation_does_not_echo_request(payload):
 async def test_safe_answer_only_released_after_output_check():
     settings = configuration()
     texts = iter(
-        ['{"decision":"allow"}', "구름 속 물방울이 모여 떨어지는 거야.", '{"decision":"allow"}']
+        [
+            '{"decision":"allow"}',
+            "구름 속 물방울이 모여 떨어지는 거야.",
+            '{"decision":"allow"}',
+        ]
     )
     calls = []
 
@@ -96,6 +100,15 @@ async def test_safe_answer_only_released_after_output_check():
     assert len(calls) == 3
     assert all(call["stream"] is False for call in calls)
     assert "구름 속 물방울" in calls[2]["messages"][1]["content"]
+    assert "response_format" not in calls[1]
+    for index, decisions in [
+        (0, ["allow", "redirect", "support", "clarify"]),
+        (2, ["allow", "block"]),
+    ]:
+        schema = calls[index]["response_format"]["json_schema"]
+        assert schema["strict"] is True
+        assert schema["schema"]["properties"]["decision"]["enum"] == decisions
+        assert schema["schema"]["additionalProperties"] is False
 
 
 @pytest.mark.parametrize("decision", ["redirect", "support", "clarify"])
@@ -247,3 +260,31 @@ async def test_kanana_preserves_system_instruction_role():
     assert calls[0]["messages"][0]["role"] == "system"
     assert calls[0]["messages"][1]["role"] == "user"
     assert "입력 검사기" in calls[0]["messages"][0]["content"]
+
+
+@pytest.mark.parametrize(
+    "texts,stage,code",
+    [
+        (["private-invalid-json"], "input_guard", "invalid_verdict"),
+        (['{"decision":"allow"}', ""], "generation", "empty_response"),
+        (
+            ['{"decision":"allow"}', "private-candidate", "invalid"],
+            "output_guard",
+            "invalid_verdict",
+        ),
+    ],
+)
+async def test_failures_record_stage_without_private_text(texts, stage, code):
+    from api.app.provider import ModelProvider, ModelUnavailable
+    from api.app.service import ChatService
+
+    responses = iter(texts)
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda _: completion(next(responses), configuration()))
+    ) as client:
+        service = ChatService(ModelProvider(configuration(), client))
+        with pytest.raises(ModelUnavailable) as caught:
+            await service.respond("4-6", [{"role": "user", "content": "private-question"}])
+    assert caught.value.stage == stage
+    assert caught.value.code == code
+    assert "private" not in str(caught.value)

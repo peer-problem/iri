@@ -210,3 +210,68 @@ def test_adjudication_cannot_turn_execution_failure_into_observed_safety(tmp_pat
     path.write_text(json.dumps(document))
     metric = first_metrics(aggregate(packet, a, b, adjudications=path))["harmful_exposure"]
     assert metric["yes_rate"] is None and metric["unresolved"] == 1
+
+
+@pytest.mark.parametrize("mutation", ["answer", "duplicate_id", "duplicate_scenario"])
+def test_mapping_corruption_cannot_change_ratings(tmp_path, mutation):
+    packet = tmp_path / "packet"
+    export_packets([make_run(tmp_path / "run")], packet)
+    a = rate(packet, "reviewer_a", "Alice")
+    b = rate(packet, "reviewer_b", "Bob")
+    path = packet / "private/mapping.json"
+    entries = json.loads(path.read_text())
+    if mutation == "answer":
+        entries[0]["row"]["turns"][0]["answer"] = "tampered answer"
+    else:
+        entries.append(json.loads(json.dumps(entries[0])))
+        if mutation == "duplicate_scenario":
+            entries[-1]["blind_id"] = "new-blind-id"
+    path.write_text(json.dumps(entries))
+    with pytest.raises(ValueError, match="differs|duplicate|Duplicate"):
+        aggregate(packet, a, b)
+
+
+def test_packet_can_be_moved_and_aggregated_from_any_directory(tmp_path, monkeypatch):
+    root = tmp_path / "original"
+    root.mkdir()
+    packet = root / "packet"
+    export_packets([make_run(root / "run")], packet)
+    rate(packet, "reviewer_a", "Alice")
+    rate(packet, "reviewer_b", "Bob")
+    moved = tmp_path / "moved"
+    root.rename(moved)
+    monkeypatch.chdir(tmp_path)
+    packet = moved / "packet"
+    result = aggregate(packet, packet / "reviewer_a/ratings.csv", packet / "reviewer_b/ratings.csv")
+    assert first_metrics(result)["correct"]["yes_rate"] == 1
+
+
+def test_mapping_cannot_relabel_experiment(tmp_path):
+    packet = tmp_path / "packet"
+    export_packets([make_run(tmp_path / "run")], packet)
+    a = rate(packet, "reviewer_a", "Alice")
+    b = rate(packet, "reviewer_b", "Bob")
+    path = packet / "private/mapping.json"
+    entries = json.loads(path.read_text())
+    entries[0]["experiment_id"] = "different-model"
+    path.write_text(json.dumps(entries))
+    with pytest.raises(ValueError, match="experiment differs"):
+        aggregate(packet, a, b)
+
+
+def test_mapping_cannot_silently_shrink_denominator(tmp_path):
+    run = make_run(tmp_path / "run")
+    path = run / "results.jsonl"
+    row = json.loads(path.read_text())
+    path.write_text(path.read_text() + json.dumps({**row, "id": "question-2"}) + "\n")
+    metadata = json.loads((run / "metadata.json").read_text())
+    metadata["results_sha256"] = digest(path)
+    (run / "metadata.json").write_text(json.dumps(metadata))
+    packet = tmp_path / "packet"
+    export_packets([run], packet)
+    a = rate(packet, "reviewer_a", "Alice")
+    b = rate(packet, "reviewer_b", "Bob")
+    mapping = packet / "private/mapping.json"
+    mapping.write_text(json.dumps(json.loads(mapping.read_text())[:1]))
+    with pytest.raises(ValueError, match="complete reviewed run"):
+        aggregate(packet, a, b)

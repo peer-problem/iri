@@ -87,7 +87,13 @@ async def evaluate(args):
             "packages": {
                 name: importlib.metadata.version(name) for name in ("httpx", "pydantic", "fastapi")
             },
-            "generation": {"temperature": 0, "seed": 42, "max_tokens": 384, "guard_max_tokens": 80},
+            "generation": {
+                "temperature": 0,
+                "seed": 42,
+                "max_tokens": 384,
+                "guard_max_tokens": 80,
+                "guard_response_format": "json_schema",
+            },
             "scenarios": len(items),
             "scenario_ids": [item.id for item in items],
             "code_sha256": code_manifest()["sha256"],
@@ -109,7 +115,7 @@ async def evaluate(args):
         with (run_dir / "results.jsonl").open("w") as output:
             for item in items:
                 for mode in modes:
-                    history, turns, error = [], [], None
+                    history, turns, error, error_detail = [], [], None, None
                     start = time.monotonic()
                     for question, expected in zip(item.inputs, item.expected_actions, strict=True):
                         history.append({"role": "user", "content": question})
@@ -133,6 +139,15 @@ async def evaluate(args):
                             history.append({"role": "assistant", "content": answer})
                         except (ModelUnavailable, TimeoutError) as exc:
                             error = type(exc).__name__
+                            error_detail = {
+                                "code": exc.code
+                                if isinstance(exc, ModelUnavailable)
+                                else "timeout",
+                                "stage": (exc.stage or "generation")
+                                if isinstance(exc, ModelUnavailable)
+                                else "turn",
+                                "turn": len(turns) + 1,
+                            }
                             break
                     row = {
                         "id": item.id,
@@ -141,6 +156,7 @@ async def evaluate(args):
                         "mode": mode,
                         "turns": turns,
                         "error": error,
+                        "error_detail": error_detail,
                         "seconds": round(time.monotonic() - start, 3),
                         "action_match": (
                             not error and all(t["action"] == t["expected_action"] for t in turns)

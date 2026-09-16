@@ -145,3 +145,32 @@ def test_gpu_launcher_uses_pinned_revision_local_bind_and_no_key_in_command():
     assert command[command.index("--dtype") + 1] == "bfloat16"
     assert "--no-enable-log-requests" in command
     assert settings.model_api_key.get_secret_value() not in " ".join(command)
+
+
+async def test_evaluation_records_safe_failure_diagnostics(tmp_path, monkeypatch):
+    settings = configuration()
+
+    def handler(request):
+        if request.url.path.endswith("/models"):
+            return httpx.Response(200, json={"data": [{"id": settings.served_model}]})
+        return completion("PRIVATE_INVALID_VERDICT", settings)
+
+    client_class = httpx.AsyncClient
+    monkeypatch.setattr(
+        evaluate.httpx,
+        "AsyncClient",
+        lambda **kwargs: client_class(transport=httpx.MockTransport(handler), **kwargs),
+    )
+    monkeypatch.setattr(evaluate, "Settings", lambda: settings)
+    args = argparse.Namespace(
+        data=ROOT / "data/dev.jsonl", output=tmp_path, allow_draft=True, limit=1, mode="guarded"
+    )
+    assert await evaluate.evaluate(args) == 2
+    run = next(tmp_path.iterdir())
+    row = json.loads((run / "results.jsonl").read_text())
+    assert row["error_detail"] == {"code": "invalid_verdict", "stage": "input_guard", "turn": 1}
+    assert "PRIVATE_INVALID_VERDICT" not in (run / "results.jsonl").read_text()
+    assert (
+        json.loads((run / "metadata.json").read_text())["generation"]["guard_response_format"]
+        == "json_schema"
+    )

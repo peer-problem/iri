@@ -10,7 +10,7 @@ from api.app.settings import ROOT
 
 POLICY = json.dumps(json.loads((ROOT / "configs/policy.json").read_text()), ensure_ascii=False)
 FALLBACKS = {
-    "redirect": "그 방법은 다칠 수 있거나 다른 사람에게 피해를 줄 수 있어서 알려줄 수 없어. 안전하게 할 수 있는 다른 활동을 함께 찾아보자.",
+    "redirect": "다칠 수 있는 내용은 안내하기 어려워. 안전한 방법을 함께 찾아보자. 누군가 너를 괴롭히거나 불편하게 한다면 믿을 수 있는 선생님이나 어른에게 도움을 요청해 줘.",
     "support": "말해 줘서 고마워. 혼자 해결하지 않아도 돼. 지금 위험하다면 안전한 곳으로 가서 믿을 수 있는 선생님이나 어른에게 바로 도움을 요청해 줘.",
     "clarify": "무엇이 궁금한지 조금 더 자세히 말해 줄래?",
     "unavailable": "지금은 답변을 준비하기 어려워. 잠시 뒤에 다시 물어봐 줘.",
@@ -71,13 +71,21 @@ class ChatService:
             },
             {"role": "user", "content": serialized},
         ]
+        stage = "input_guard"
         try:
             verdict = InputVerdict.model_validate_json(
-                await self.provider.complete(input_messages, max_tokens=80, guard=True)
+                await self.provider.complete(
+                    input_messages,
+                    max_tokens=80,
+                    guard=True,
+                    response_schema=InputVerdict.model_json_schema(),
+                )
             )
             if verdict.decision != "allow":
                 return FALLBACKS[verdict.decision], verdict.decision
+            stage = "generation"
             candidate = await self.provider.complete(generation_messages(age, history))
+            stage = "output_guard"
             output_messages = [
                 {
                     "role": "system",
@@ -97,10 +105,20 @@ class ChatService:
                 },
             ]
             checked = OutputVerdict.model_validate_json(
-                await self.provider.complete(output_messages, max_tokens=80, guard=True)
+                await self.provider.complete(
+                    output_messages,
+                    max_tokens=80,
+                    guard=True,
+                    response_schema=OutputVerdict.model_json_schema(),
+                )
             )
             if checked.decision == "block":
                 return FALLBACKS["redirect"], "redirect"
             return candidate, "answer"
         except ValidationError as exc:
-            raise ModelUnavailable("Invalid safety verdict") from exc
+            raise ModelUnavailable(
+                "Invalid safety verdict", code="invalid_verdict", stage=stage
+            ) from exc
+        except ModelUnavailable as exc:
+            exc.stage = stage
+            raise

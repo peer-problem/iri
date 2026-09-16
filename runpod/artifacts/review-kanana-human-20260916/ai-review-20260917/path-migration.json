@@ -1,0 +1,6 @@
+{
+  "reason": "Package-relative source paths and bundled original results for reproducible aggregation on another machine. Ratings and semantic metrics unchanged.",
+  "previous_mapping_sha256": "d65f706106e32fd8622c4c820d46776822af174a328e230daeea3aa71e585e5d",
+  "mapping_sha256": "254b763a1a2e88432db6d57e53f459c163a2aebaa869b45ea7993cc81263efa7",
+  "results_sha256": "44bd0d22817da252c0889799b34554f7d6d9038295cd2dbc608793b2ccf57dc4"
+}
