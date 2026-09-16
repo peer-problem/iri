@@ -1,5 +1,5 @@
 {
-  "status": "closed_not_adopted",
+  "status": "completed",
   "selected_variant": "base",
   "candidate_variant": "adapter",
   "decision_basis": "The existing no-decrease normal-correctness criterion failed in a single unblinded AI review. Do not adopt this candidate; do not claim an independently confirmed quality or safety result.",
@@ -69,5 +69,22 @@
     "stopped_storage_usd_per_month": 2
   },
   "local_backup": "runpod/backups/phase2-evaluation-20260917",
-  "backup_sha256": "3ae4a1faeda5d06b9159c76cbf646f54ec1880ec01d3f66a8b9891b370b0dd38"
+  "backup_sha256": "3ae4a1faeda5d06b9159c76cbf646f54ec1880ec01d3f66a8b9891b370b0dd38",
+  "phase": 2,
+  "candidate_decision": "not_adopted",
+  "phase_2_remaining_tasks": [],
+  "next_phase": 3,
+  "closure": {
+    "date": "2026-09-17",
+    "authority": "explicit_user_direction",
+    "route": "continue_with_base_model",
+    "additional_training_required": false,
+    "additional_review_required_to_close_phase_2": false,
+    "handoff": "phase3-handoff.md"
+  },
+  "phase_3_followups": [
+    "Investigate dev-092 guarded ModelUnavailable during integration verification",
+    "Perform final quality evaluation of the selected base model and resolve rating disagreements",
+    "Complete the existing product integration, deployment and release-scope tasks"
+  ]
 }
