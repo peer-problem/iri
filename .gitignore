@@ -41,7 +41,12 @@ releases/
 
 # Model runs, private source data and training output
 runs/
-artifacts/
+/runpod/backups/
+/runpod/artifacts/**/work/
+/runpod/artifacts/**/*.zip
+/runpod/artifacts/**/*.tar.gz
+/runpod/artifacts/**/checkpoints/
+/runpod/artifacts/**/adapter/
 /runpod/data/raw/
 /runpod/data/prepared/
 *.safetensors
