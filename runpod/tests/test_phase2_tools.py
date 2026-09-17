@@ -343,3 +343,16 @@ def test_project_development_review_keeps_scope_and_all_generation_inputs(tmp_pa
     assert all(r["review_scope"] == "project" for r in imported)
     assert [r["inputs"] for r in original] == [r["inputs"] for r in imported]
     assert json.loads((output / "review-manifest.json").read_text())["review_scope"] == "project"
+
+
+def test_behavior_experiments_have_distinct_identities():
+    from runpod.operations.experiments import evaluation_identity
+    from runpod.tests.helpers import configuration
+
+    settings = configuration()
+    baseline = evaluation_identity(settings)
+    candidate = evaluation_identity(settings.model_copy(update={"behavior_profile": "input_v2"}))
+    assert baseline["experiment_id"] != candidate["experiment_id"]
+    assert baseline["behavior_profile"] == "baseline"
+    assert candidate["behavior_profile"] == "input_v2"
+    assert baseline["base_revision"] == candidate["base_revision"]

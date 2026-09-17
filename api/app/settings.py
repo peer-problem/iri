@@ -5,6 +5,8 @@ from urllib.parse import urlparse
 from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from api.app.behavior import BehaviorProfile
+
 ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parent
 ENV_FILE = REPO_ROOT / ".keys/.env"
@@ -20,6 +22,7 @@ class Settings(BaseSettings):
     model_profile: Literal["kanana"] = "kanana"
     model_revision: str = ""
     adapter_name: str = Field(default="", pattern=r"^[a-zA-Z0-9_-]*$")
+    behavior_profile: BehaviorProfile = "baseline"
     request_timeout_seconds: float = Field(default=90, gt=0, le=300)
     max_waiting: int = Field(default=5, ge=0, le=20)
     openai_api_key: SecretStr = SecretStr("")

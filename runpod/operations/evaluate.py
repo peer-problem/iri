@@ -51,6 +51,8 @@ def summarize(rows: list[dict]) -> dict:
 
 async def evaluate(args):
     settings = Settings()
+    if getattr(args, "behavior_profile", None):
+        settings = settings.model_copy(update={"behavior_profile": args.behavior_profile})
     experiment = evaluation_identity(settings, getattr(args, "adapter_run", None))
     items = load_scenarios([args.data])
     if any(item.split != "dev" for item in items):
@@ -123,7 +125,9 @@ async def evaluate(args):
                             async with asyncio.timeout(settings.request_timeout_seconds):
                                 if mode == "raw":
                                     answer = await provider.complete(
-                                        generation_messages(item.age_band, history)
+                                        generation_messages(
+                                            item.age_band, history, settings.behavior_profile
+                                        )
                                     )
                                     action = None
                                 else:
@@ -209,6 +213,9 @@ def main():
     parser.add_argument("--mode", choices=["raw", "guarded", "both"], default="both")
     parser.add_argument("--allow-draft", action="store_true")
     parser.add_argument("--adapter-run", type=Path)
+    parser.add_argument(
+        "--behavior-profile", choices=["baseline", "input_v2", "support_v2", "full_v2"]
+    )
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
     if args.limit is not None and args.limit < 1:

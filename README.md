@@ -6,6 +6,9 @@
 
 Phase 2는 종료했다. 다음 단계 모델은 `kakaocorp/kanana-2-3b-instruct` 원본이며 리비전은 `6a5d7889964c4c590299d16e309eabab1f73f8a9`다. 이번 QLoRA 어댑터는 품질 향상이 확인되지 않아 채택하지 않았다.
 
+Phase 3의 첫 작업은 입력 판정과 피해 지원, 답변 정확도를 개선하는 비교 실험이다. 개선 설정은 선택해서 실행하며 기본값은 검증 전 후보를 자동 적용하지 않는 `baseline`이다.
+
+- [Phase 3 첫 구현과 GPU 비교 결과](runpod/artifacts/phase3-quality-20260917/README.md)
 - [Phase 2 종료 보고서](runpod/artifacts/phase2-evaluation-20260917/README.md)
 - [전체 검토와 보완 내역](runpod/artifacts/phase2-evaluation-20260917/audit.md)
 - [Phase 3 인수인계](runpod/artifacts/phase2-evaluation-20260917/phase3-handoff.md)
@@ -36,10 +39,31 @@ runpod/.venv/bin/python -m uvicorn api.app.app:app --host 127.0.0.1 --port 8000
 
 ```sh
 python -m runpod.operations.serve_model
-python -m runpod.operations.evaluate --data runpod/data/dev.jsonl --mode both
+python -m runpod.operations.evaluate --data runpod/artifacts/phase2-evaluation-20260917/base-run/dataset.jsonl --mode both
 ```
 
 서빙과 평가 명령은 각각 별도 터미널에서 실행한다. 안전 검사에는 JSON schema 지원이 필요하다. 검증되지 않은 결과를 허용하기 위한 비구조화 판정으로의 자동 대체는 하지 않는다. 기존 400건은 변경 전 코드의 결과이며 최신 코드의 GPU 검증을 대신하지 않는다.
+
+### Phase 3 품질 비교
+
+`BEHAVIOR_PROFILE`로 API 설정을 선택한다. 평가에서는 `--behavior-profile`로 같은 설정을 지정한다.
+
+| 설정 | 기준선에서 바뀌는 내용 |
+| --- | --- |
+| `baseline` | 기존 정책과 고정 피해 지원 문구 |
+| `input_v2` | 피해 고백 우선 분류와 불필요한 재질문 축소 |
+| `support_v2` | `input_v2`에 상황별 지원 답변 생성과 출력 검사 추가 |
+| `full_v2` | `support_v2`에 사실 정확도와 간결한 설명 지침 추가 |
+
+지원 답변이 출력 검사에서 차단되면 안전한 지원 문구로 돌아간다. 피해 고백을 위험 요청으로 바꾸어 표시하지 않는다.
+
+```sh
+python -m runpod.operations.quality_experiment \
+  --data runpod/artifacts/phase2-evaluation-20260917/base-run/dataset.jsonl \
+  --output runpod/runs/quality-comparison
+```
+
+네 설정 각각 동일한 개발 100문항을 raw와 guarded로 실행한다. 미검수 초안은 실행 전에 거부하며 결과 파일의 해시와 문항별 실행 쌍을 검사한다. 출력 폴더는 새 경로를 사용한다. `runpod/data/dev.jsonl`은 초안이므로 위의 동결된 검수본을 사용한다. 기대 행동 일치율은 정답률이나 유해 노출률을 대신하지 않는다.
 
 ## 자료 보관
 

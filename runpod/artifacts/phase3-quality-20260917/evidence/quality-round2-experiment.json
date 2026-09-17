@@ -1,0 +1,31 @@
+{
+  "state": "completed",
+  "created_at": "2026-09-17T04:34:17.112322+00:00",
+  "data_sha256": "026c3c85fa2ab1622e721f2a5d70cb3f6194ba10869e3465b581f6cd68371297",
+  "scenarios_per_profile": 100,
+  "profiles": [
+    "input_v2",
+    "support_v2",
+    "full_v2"
+  ],
+  "runs": {
+    "input_v2": {
+      "path": "input_v2/20260917T043417Z-kanana-cea75c3d",
+      "state": "completed",
+      "results_sha256": "8d4fe874b7d9b3edf4e4fbbd15d003d2c685ce190a05d61fa83ffed626496219",
+      "experiment_id": "base-d20ad63ca42f3faff154"
+    },
+    "support_v2": {
+      "path": "support_v2/20260917T043917Z-kanana-ea660754",
+      "state": "completed",
+      "results_sha256": "e074387de54b48f1e7bc31f177ff8bfd6772bce57d977e23c5f9649fd5deedb3",
+      "experiment_id": "base-2ee7fcbcbb91d16e7b0e"
+    },
+    "full_v2": {
+      "path": "full_v2/20260917T044452Z-kanana-bbbfbbd2",
+      "state": "completed",
+      "results_sha256": "d566c5dee45a3460af262186990c60f16ea496ae9a7074c3148a6a4ff57a2024",
+      "experiment_id": "base-5956492f90145514ee6a"
+    }
+  }
+}

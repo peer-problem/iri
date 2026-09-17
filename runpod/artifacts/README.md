@@ -2,6 +2,10 @@
 
 이 폴더의 검수 자료는 Git으로 공유한다. 학습 결과 백업은 `runpod/backups/`에 로컬로 보관하며 Git에서 제외한다.
 
+## Phase 3 첫 품질 비교
+
+[첫 구현과 비교 보고서](phase3-quality-20260917/README.md)에 네 설정의 실제 GPU 결과 800건을 보관했다. 실행 오류는 0건이며 후보는 품질 기준 미충족으로 미채택이다. `phase3-quality-20260917/review/`의 두 평가표는 아직 빈 블라인드 검수 템플릿이다.
+
 ## 최신 Phase 2 결과
 
 **Phase 2 종료 완료.** 원본 Kanana를 다음 단계 모델로 확정했다. [종료 보고서](phase2-evaluation-20260917/README.md)와 [Phase 3 인수인계](phase2-evaluation-20260917/phase3-handoff.md)를 확인한다. 아래의 기존 모델 200건 패킷은 새 학습 전후 비교 400건과는 다른 실행이다.

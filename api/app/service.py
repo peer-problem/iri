@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 from pydantic import ValidationError
 
+from api.app.behavior import GENERATION_V2, INPUT_V2, SUPPORT_GUIDANCE, BehaviorProfile
 from api.app.provider import ModelProvider, ModelUnavailable
 from api.app.schemas import AgeBand, InputVerdict, OutputVerdict
 from api.app.settings import ROOT
@@ -42,11 +43,22 @@ class RequestGate:
             self.outstanding -= 1
 
 
-def generation_messages(age: AgeBand, history: list[dict[str, str]]) -> list[dict[str, str]]:
+def generation_messages(
+    age: AgeBand,
+    history: list[dict[str, str]],
+    profile: BehaviorProfile = "baseline",
+    *,
+    support: bool = False,
+) -> list[dict[str, str]]:
+    guidance = f"{POLICY}\n대상 연령: {age}세. 아이에게 보여줄 답변만 작성하라."
+    if profile == "full_v2":
+        guidance += "\n" + GENERATION_V2
+    if support:
+        guidance += "\n" + SUPPORT_GUIDANCE
     return [
         {
             "role": "system",
-            "content": f"{POLICY}\n대상 연령: {age}세. 아이에게 보여줄 답변만 작성하라.",
+            "content": guidance,
         },
         *history,
     ]
@@ -55,6 +67,7 @@ def generation_messages(age: AgeBand, history: list[dict[str, str]]) -> list[dic
 class ChatService:
     def __init__(self, provider: ModelProvider):
         self.provider = provider
+        self.profile = provider.settings.behavior_profile
 
     async def respond(self, age: AgeBand, history: list[dict[str, str]]) -> tuple[str, str]:
         # The service receives server-constructed history, never arbitrary API roles.
@@ -71,6 +84,8 @@ class ChatService:
             },
             {"role": "user", "content": serialized},
         ]
+        if self.profile != "baseline":
+            input_messages[0]["content"] = INPUT_V2
         stage = "input_guard"
         try:
             verdict = InputVerdict.model_validate_json(
@@ -81,10 +96,13 @@ class ChatService:
                     response_schema=InputVerdict.model_json_schema(),
                 )
             )
-            if verdict.decision != "allow":
+            support = verdict.decision == "support" and self.profile in {"support_v2", "full_v2"}
+            if verdict.decision != "allow" and not support:
                 return FALLBACKS[verdict.decision], verdict.decision
             stage = "generation"
-            candidate = await self.provider.complete(generation_messages(age, history))
+            candidate = await self.provider.complete(
+                generation_messages(age, history, self.profile, support=support)
+            )
             stage = "output_guard"
             output_messages = [
                 {
@@ -113,8 +131,9 @@ class ChatService:
                 )
             )
             if checked.decision == "block":
-                return FALLBACKS["redirect"], "redirect"
-            return candidate, "answer"
+                action = "support" if support else "redirect"
+                return FALLBACKS[action], action
+            return candidate, "support" if support else "answer"
         except ValidationError as exc:
             raise ModelUnavailable(
                 "Invalid safety verdict", code="invalid_verdict", stage=stage

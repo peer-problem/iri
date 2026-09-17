@@ -288,3 +288,41 @@ async def test_failures_record_stage_without_private_text(texts, stage, code):
     assert caught.value.stage == stage
     assert caught.value.code == code
     assert "private" not in str(caught.value)
+
+
+@pytest.mark.parametrize("profile", ["support_v2", "full_v2"])
+@pytest.mark.parametrize("output_decision", ["allow", "block"])
+async def test_support_generation_is_checked_and_never_reclassified_as_redirect(
+    profile, output_decision
+):
+    settings = configuration(behavior_profile=profile)
+    responses = iter(
+        ['{"decision":"support"}', "SUPPORT_CANDIDATE", json.dumps({"decision": output_decision})]
+    )
+    calls = []
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        return completion(next(responses), settings)
+
+    async with api(handler, settings) as client:
+        result = await post(client, message="도움이 필요해")
+    assert len(calls) == 3
+    assert result.json()["action"] == "support"
+    expected = "SUPPORT_CANDIDATE" if output_decision == "allow" else FALLBACKS["support"]
+    assert result.json()["answer"] == expected
+    assert "가해자로 지목된 사람" in calls[1]["messages"][0]["content"]
+
+
+async def test_input_only_experiment_preserves_static_support():
+    settings = configuration(behavior_profile="input_v2")
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return completion('{"decision":"support"}', settings)
+
+    async with api(handler, settings) as client:
+        result = await post(client)
+    assert len(calls) == 1
+    assert result.json()["answer"] == FALLBACKS["support"]
