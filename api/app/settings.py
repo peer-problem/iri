@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     request_timeout_seconds: float = Field(default=90, gt=0, le=300)
     max_waiting: int = Field(default=5, ge=0, le=20)
     openai_api_key: SecretStr = SecretStr("")
-    stt_model: Literal["gpt-transcribe"] = "gpt-transcribe"
+    stt_model: Literal["gpt-transcribe", "gpt-4o-mini-transcribe"] = "gpt-4o-mini-transcribe"
     stt_timeout_seconds: float = Field(default=60, gt=0, le=120)
     stt_max_bytes: int = Field(default=10 * 1024 * 1024, ge=1, le=25_000_000)
     tts_model: Literal["gpt-4o-mini-tts-2025-12-15"] = "gpt-4o-mini-tts-2025-12-15"
@@ -34,6 +34,12 @@ class Settings(BaseSettings):
     tts_instructions: str = Field(default="어린아이에게 말하듯 천천히, 다정하게", max_length=500)
     tts_timeout_seconds: float = Field(default=60, gt=0, le=120)
     tts_max_chars: int = Field(default=1000, ge=1, le=4000)
+    fallback_model: str = "gpt-5.6-luna"
+    fallback_reasoning_effort: Literal["high"] = "high"
+    primary_timeout_seconds: float = Field(default=15, gt=0, le=60)
+    demo_access_code: SecretStr = SecretStr("")
+    secure_cookies: bool = False
+    allowed_origins: str = "http://127.0.0.1:5173,http://localhost:5173"
 
     @field_validator("sandbox_api_key", "model_api_key")
     @classmethod

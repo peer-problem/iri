@@ -31,7 +31,7 @@ class ModelProvider:
             response = await self.client.get(
                 f"{self.settings.model_base_url}/models",
                 headers=self.headers,
-                timeout=5,
+                timeout=2,
             )
             response.raise_for_status()
             available = {item["id"] for item in response.json()["data"]}

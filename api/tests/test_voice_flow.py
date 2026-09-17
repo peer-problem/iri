@@ -17,6 +17,8 @@ async def test_transcript_to_guarded_answer_to_speech():
         called.append(request.url.path)
         if request.url.path == "/v1/audio/transcriptions":
             return httpx.Response(200, json={"text": transcript})
+        if request.url.path == "/v1/models":
+            return httpx.Response(200, json={"data": [{"id": settings.served_model}]})
         body = json.loads(request.content)
         if request.url.path == "/v1/chat/completions":
             assert transcript in body["messages"][-1]["content"]
@@ -46,4 +48,4 @@ async def test_transcript_to_guarded_answer_to_speech():
         assert spoken.status_code == 200
         assert spoken.content == MP3
         assert spoken.headers["content-type"] == "audio/mpeg"
-    assert called == ["/v1/audio/transcriptions", *["/v1/chat/completions"] * 3, "/v1/audio/speech"]
+    assert called == ["/v1/audio/transcriptions", "/v1/models", *["/v1/chat/completions"] * 3, "/v1/audio/speech"]

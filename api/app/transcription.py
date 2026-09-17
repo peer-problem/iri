@@ -18,6 +18,10 @@ class TranscriptionUnavailable(Exception):
     pass
 
 
+class NoSpeechDetected(Exception):
+    pass
+
+
 class Transcriber:
     def __init__(self, settings: Settings, client: httpx.AsyncClient):
         self.settings = settings
@@ -36,13 +40,15 @@ class Transcriber:
                 headers={
                     "Authorization": f"Bearer {self.settings.openai_api_key.get_secret_value()}"
                 },
-                data={"model": self.settings.stt_model, "languages[]": "ko"},
+                data={"model": self.settings.stt_model, "language": "ko"},
                 files={"file": (f"recording.{extension}", audio, mime)},
                 timeout=self.settings.stt_timeout_seconds,
             )
             response.raise_for_status()
             text = response.json()["text"]
-            if not isinstance(text, str) or not text.strip() or len(text.strip()) > 1000:
+            if isinstance(text, str) and not text.strip():
+                raise NoSpeechDetected
+            if not isinstance(text, str) or len(text.strip()) > 1000:
                 raise TranscriptionUnavailable
             return text.strip()
         except httpx.TimeoutException as exc:

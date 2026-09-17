@@ -1,6 +1,6 @@
 import asyncio
 import secrets
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from uuid import uuid4
 
 import httpx
@@ -11,11 +11,13 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.requests import ClientDisconnect
 
 from api.app.provider import ModelProvider, ModelUnavailable
-from api.app.schemas import ChatRequest, ChatResponse, SpeechRequest
-from api.app.service import FALLBACKS, ChatService, QueueFull, RequestGate
+from api.app.routing import RoutedChatService
+from api.app.schemas import ChatRequest, ChatResponse, LoginRequest, SpeechRequest
+from api.app.service import FALLBACKS, QueueFull, RequestGate
+from api.app.sessions import COOKIE, TTL, Sessions
 from api.app.settings import Settings
 from api.app.speech import SpeechUnavailable, Synthesizer
-from api.app.transcription import FORMATS, Transcriber, TranscriptionUnavailable
+from api.app.transcription import FORMATS, NoSpeechDetected, Transcriber, TranscriptionUnavailable
 
 
 def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
@@ -23,31 +25,89 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
     gate = RequestGate(settings.max_waiting)
     audio_gate = RequestGate(0)
     speech_gate = RequestGate(0)
+    sessions = Sessions(settings)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
+        async def prune_sessions():
+            while True:
+                sessions.prune()
+                await asyncio.sleep(30)
+
         async with httpx.AsyncClient(transport=transport, trust_env=False) as client:
             app.state.provider = ModelProvider(settings, client)
-            app.state.service = ChatService(app.state.provider)
+            app.state.service = RoutedChatService(app.state.provider)
             app.state.transcriber = Transcriber(settings, client)
             app.state.synthesizer = Synthesizer(settings, client)
-            yield
+            cleanup = asyncio.create_task(prune_sessions())
+            try:
+                yield
+            finally:
+                cleanup.cancel()
+                with suppress(asyncio.CancelledError):
+                    await cleanup
+                sessions.items.clear()
 
     app = FastAPI(title="Kids Sandbox: internal Phase 1 API", lifespan=lifespan)
     bearer = HTTPBearer(auto_error=False)
 
     async def authenticate(
+        request: Request,
         credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
     ):
         expected = settings.sandbox_api_key.get_secret_value()
-        if (
-            not expected
-            or credentials is None
-            or not secrets.compare_digest(credentials.credentials.encode(), expected.encode())
+        request.state.demo_session = None
+        if expected and credentials and secrets.compare_digest(
+            credentials.credentials.encode(), expected.encode()
         ):
-            raise HTTPException(
-                401, "Authentication required", headers={"WWW-Authenticate": "Bearer"}
-            )
+            return
+        session = sessions.lookup(request)
+        if session:
+            if request.method not in {"GET", "HEAD"}:
+                sessions.origin(request)
+                sessions.limit(session)
+            request.state.demo_session = session
+            return
+        raise HTTPException(401, "Authentication required", headers={"WWW-Authenticate": "Bearer"})
+
+    @app.middleware("http")
+    async def private_responses(request: Request, call_next):
+        response = await call_next(request)
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        return response
+
+    @app.post("/session")
+    async def login(body: LoginRequest, request: Request):
+        token = sessions.login(request, body.code)
+        response = JSONResponse({"authenticated": True})
+        response.set_cookie(COOKIE, token, max_age=TTL, httponly=True,
+                            secure=settings.secure_cookies, samesite="lax", path="/")
+        return response
+
+    @app.get("/session", dependencies=[Depends(authenticate)])
+    async def session_status():
+        return {"authenticated": True, "voice_available": bool(settings.openai_api_key.get_secret_value())}
+
+    @app.delete("/session", dependencies=[Depends(authenticate)])
+    async def logout(request: Request):
+        sessions.logout(request)
+        response = JSONResponse({"authenticated": False})
+        response.delete_cookie(COOKIE, path="/", secure=settings.secure_cookies, httponly=True, samesite="lax")
+        return response
+
+    @app.delete("/conversation", dependencies=[Depends(authenticate)])
+    async def clear_conversation(request: Request):
+        if request.state.demo_session:
+            request.state.demo_session.history.clear()
+        return {"cleared": True}
+
+    @app.get("/conversation", dependencies=[Depends(authenticate)])
+    async def conversation(request: Request):
+        session = request.state.demo_session
+        return {"age_band": session.age or "4-6" if session else "4-6", "messages": [
+            {"id": str(uuid4()), **item} for item in (session.history if session else [])
+        ]}
 
     @app.exception_handler(RequestValidationError)
     async def invalid_request(_request, _exc):
@@ -97,19 +157,27 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             raise HTTPException(504, "Transcription timed out") from None
         except TranscriptionUnavailable:
             raise HTTPException(503, "Transcription is unavailable") from None
+        except NoSpeechDetected:
+            raise HTTPException(422, "No speech detected") from None
         except (ValueError, ClientDisconnect):
             raise HTTPException(400, "Invalid audio") from None
 
     @app.post("/chat", response_model=ChatResponse, dependencies=[Depends(authenticate)])
-    async def chat(body: ChatRequest):
+    async def chat(body: ChatRequest, request: Request):
         request_id = uuid4()
         try:
             async with asyncio.timeout(settings.request_timeout_seconds):
                 async with gate.enter():
-                    answer, action = await app.state.service.respond(
-                        body.age_band, [{"role": "user", "content": body.message}]
-                    )
-            return ChatResponse(answer=answer, action=action, request_id=request_id)
+                    session = request.state.demo_session
+                    if session and session.age != body.age_band:
+                        session.history.clear()
+                        session.age = body.age_band
+                    history = list(session.history) if session else []
+                    history.append({"role": "user", "content": body.message})
+                    answer, action, provider = await app.state.service.respond(body.age_band, history)
+                    if session:
+                        session.history = [*history, {"role": "assistant", "content": answer}][-12:]
+            return ChatResponse(answer=answer, action=action, request_id=request_id, provider=provider)
         except QueueFull:
             status, headers = 429, {"Retry-After": "3"}
         except TimeoutError:
@@ -120,13 +188,19 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             status_code=status,
             headers=headers,
             content=ChatResponse(
-                answer=FALLBACKS["unavailable"], action="unavailable", request_id=request_id
+                answer=FALLBACKS["unavailable"], action="unavailable", request_id=request_id,
+                provider="unavailable",
             ).model_dump(mode="json"),
         )
 
     @app.post("/speech", dependencies=[Depends(authenticate)])
-    async def speech(body: SpeechRequest):
+    async def speech(body: SpeechRequest, request: Request):
         """Read an answer from POST /chat aloud. Returns MP3 bytes."""
+        session = request.state.demo_session
+        if session and not any(
+            item["role"] == "assistant" and item["content"] == body.text for item in session.history
+        ):
+            raise HTTPException(403, "Only a checked conversation answer can be read aloud")
         if not settings.openai_api_key.get_secret_value():
             raise HTTPException(503, "Speech is not configured")
         if len(body.text) > settings.tts_max_chars:
