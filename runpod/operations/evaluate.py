@@ -8,6 +8,7 @@ import math
 import platform
 import subprocess
 import time
+from contextlib import nullcontext
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import get_args
@@ -18,6 +19,7 @@ import httpx
 from runpod.inference.behavior import BehaviorProfile
 from runpod.inference.provider import ModelProvider, ModelUnavailable
 from runpod.inference.service import POLICY, ChatService, generation_messages
+from runpod.inference.trace import TurnTrace
 from runpod.operations.artifacts import code_manifest
 from runpod.operations.data import load_scenarios
 from runpod.operations.experiments import evaluation_identity
@@ -52,6 +54,7 @@ def summarize(rows: list[dict]) -> dict:
 
 
 async def evaluate(args):
+    trace_stages = getattr(args, "trace_stages", False)
     settings = Settings()
     if getattr(args, "behavior_profile", None):
         settings = settings.model_copy(update={"behavior_profile": args.behavior_profile})
@@ -89,7 +92,8 @@ async def evaluate(args):
             "git_dirty": bool(status.stdout.strip()),
             "python": platform.python_version(),
             "packages": {
-                name: importlib.metadata.version(name) for name in ("httpx", "pydantic", "pydantic-settings")
+                name: importlib.metadata.version(name)
+                for name in ("httpx", "pydantic", "pydantic-settings")
             },
             "generation": {
                 "temperature": 0,
@@ -105,6 +109,7 @@ async def evaluate(args):
             if any(i.review_status == "draft" for i in items)
             else "reviewed",
             "gpu_manifest": "Attach runs/gpu-environment.json and gpu-packages.txt from the Pod",
+            "stage_trace": {"enabled": trace_stages, "version": 1},
         }
         (run_dir / "metadata.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2))
         (run_dir / "dataset.jsonl").write_text(
@@ -116,24 +121,40 @@ async def evaluate(args):
         (run_dir / "policy.json").write_text(POLICY)
         rows = []
         modes = ("raw", "guarded") if args.mode == "both" else (args.mode,)
-        with (run_dir / "results.jsonl").open("w") as output:
+        trace_path = run_dir / "stage-traces.jsonl"
+        with (
+            (run_dir / "results.jsonl").open("w") as output,
+            trace_path.open("x", encoding="utf-8", newline="\n")
+            if trace_stages
+            else nullcontext() as trace_output,
+        ):
             for item in items:
                 for mode in modes:
                     history, turns, error, error_detail = [], [], None, None
+                    turn_traces = []
                     start = time.monotonic()
                     for question, expected in zip(item.inputs, item.expected_actions, strict=True):
                         history.append({"role": "user", "content": question})
+                        trace = TurnTrace() if trace_stages else None
+                        turn_number = len(turns) + 1
                         try:
                             async with asyncio.timeout(settings.request_timeout_seconds):
                                 if mode == "raw":
-                                    answer = await provider.complete(
-                                        generation_messages(
-                                            item.age_band, history, settings.behavior_profile
+                                    with trace.measure("generation") if trace else nullcontext():
+                                        answer = await provider.complete(
+                                            generation_messages(
+                                                item.age_band, history, settings.behavior_profile
+                                            )
                                         )
-                                    )
                                     action = None
+                                    if trace:
+                                        trace.finish(None, fallback=False)
                                 else:
-                                    answer, action = await service.respond(item.age_band, history)
+                                    answer, action = await service.respond(
+                                        item.age_band,
+                                        history,
+                                        **({"trace": trace} if trace else {}),
+                                    )
                             turns.append(
                                 {
                                     "question": question,
@@ -155,6 +176,9 @@ async def evaluate(args):
                                 "turn": len(turns) + 1,
                             }
                             break
+                        finally:
+                            if trace:
+                                turn_traces.append({"turn": turn_number, **trace.snapshot()})
                     row = {
                         "id": item.id,
                         "age_band": item.age_band,
@@ -173,6 +197,19 @@ async def evaluate(args):
                         "expected_actions": item.expected_actions,
                     }
                     rows.append(row)
+                    if trace_output:
+                        trace_output.write(
+                            json.dumps(
+                                {
+                                    "id": item.id,
+                                    "mode": mode,
+                                    "turns": turn_traces,
+                                },
+                                ensure_ascii=False,
+                            )
+                            + "\n"
+                        )
+                        trace_output.flush()
                     output.write(json.dumps(row, ensure_ascii=False) + "\n")
                     output.flush()
                     print(f"{item.id} {mode}: {'error' if error else 'recorded'}", flush=True)
@@ -204,6 +241,12 @@ async def evaluate(args):
         metadata["results_sha256"] = hashlib.sha256(
             (run_dir / "results.jsonl").read_bytes()
         ).hexdigest()
+        if trace_stages:
+            metadata["stage_trace"].update(
+                file=trace_path.name,
+                rows=len(rows),
+                sha256=hashlib.sha256(trace_path.read_bytes()).hexdigest(),
+            )
         (run_dir / "metadata.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2))
         return 2 if any(row["error"] for row in rows) else 0
 
@@ -217,6 +260,7 @@ def main():
     parser.add_argument("--adapter-run", type=Path)
     parser.add_argument("--behavior-profile", choices=get_args(BehaviorProfile))
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--trace-stages", action="store_true")
     args = parser.parse_args()
     if args.limit is not None and args.limit < 1:
         parser.error("--limit must be positive")

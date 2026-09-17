@@ -1,5 +1,6 @@
 import httpx
 
+from runpod.inference.telemetry import record_completion
 from runpod.settings import Settings
 
 
@@ -83,6 +84,7 @@ class ModelProvider:
                 raise ModelUnavailable("Unexpected model revision", code="model_mismatch")
             choice = payload["choices"][0]
             text = choice["message"]["content"]
+            record_completion(payload, text, choice["finish_reason"])
             if choice["finish_reason"] != "stop":
                 raise ModelUnavailable("Incomplete model response", code="incomplete_response")
             if not isinstance(text, str) or not text.strip():
