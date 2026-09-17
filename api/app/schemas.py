@@ -17,6 +17,12 @@ class ChatResponse(BaseModel):
     answer: str
     action: Action
     request_id: UUID
+    provider: Literal["kanana", "luna", "unavailable"] = "kanana"
+
+
+class LoginRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    code: str = Field(min_length=1, max_length=200)
 
 
 class SpeechRequest(BaseModel):

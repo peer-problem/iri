@@ -26,8 +26,8 @@ async def test_transcription_uses_official_fields_and_never_calls_chat():
         calls.append(request)
         assert str(request.url) == "https://api.openai.com/v1/audio/transcriptions"
         assert request.headers["authorization"] == f"Bearer {OPENAI_KEY}"
-        assert b'name="languages[]"' in request.content and b"gpt-transcribe" in request.content
-        assert b'name="language"' not in request.content
+        assert b'name="language"' in request.content and b"gpt-4o-mini-transcribe" in request.content
+        assert b'name="languages[]"' not in request.content
         return httpx.Response(200, json={"text": "  비는 왜 내려?  "})
 
     async with api(handler, configuration(openai_api_key=OPENAI_KEY)) as client:
@@ -83,7 +83,6 @@ async def test_missing_openai_key_does_not_fall_back_to_fake_transcription():
     [
         httpx.Response(401, text="private upstream error"),
         httpx.Response(429, text="private quota information"),
-        httpx.Response(200, json={"text": ""}),
         httpx.Response(200, json={"text": "a" * 1001}),
         httpx.Response(200, json={"wrong": "field"}),
         httpx.Response(200, json={"text": 123}),
@@ -94,6 +93,13 @@ async def test_transcription_failure_is_sanitized(response):
         result = await client.post("/transcribe", content=WAV, headers=headers())
     assert result.status_code == 503
     assert "private" not in result.text
+
+
+async def test_silence_is_a_retryable_input_error():
+    async with api(lambda _: httpx.Response(200, json={"text": "  "}), configuration(openai_api_key=OPENAI_KEY)) as client:
+        result = await client.post("/transcribe", content=WAV, headers=headers())
+    assert result.status_code == 422
+    assert result.json()["detail"] == "No speech detected"
 
 
 async def test_transcription_concurrency_and_timeout():

@@ -1,6 +1,29 @@
 # IRI
 
-한국어 4~10세 대상 모델의 Runpod 학습과 서빙 및 평가 도구와 음성 API를 관리한다. 팀원의 [PR #1](https://github.com/peer-problem/iri/pull/1)을 통합해 `api/`를 복원했다. 제품 하네스와 API는 해당 팀원 구현을 유지하며, 모델 작업은 `runpod/`에서 진행한다. 화면과 마이크 녹음 UI는 아직 포함되지 않았다.
+한국어 4~10세 대상 모델의 Runpod 학습과 서빙 및 평가 도구와 음성 대화 서비스를 관리한다. 팀원의 [PR #1](https://github.com/peer-problem/iri/pull/1) API를 바탕으로 Peer Design 화면과 마이크 녹음 및 재생을 `web/`에 구현했다. 모델 작업은 `runpod/`에서 진행한다.
+
+## 음성 대화 데모
+
+[배포된 화면](https://iri-voice.vercel.app)을 사용한다. Vercel의 화면에서 Contabo HTTPS API로 연결한다. 참여 코드는 Git에서 제외한 `.keys/.env`의 `DEMO_ACCESS_CODE`에 보관한다. 실제 계정 키는 브라우저에 전달하지 않는다.
+
+기본 흐름은 마이크 녹음 → STT → 인식 문장 확인 또는 수정 → 답변 생성 → TTS 재생이다. 텍스트로도 입력할 수 있고 모든 답변은 화면에 남는다. 재생 중지와 다시 듣기 및 음성 출력 끄기를 지원한다. 녹음은 최대 60초다.
+
+Kanana가 설정한 리비전으로 서빙 중이면 우선 사용한다. 준비되지 않았거나 요청이 실패하면 `gpt-5.6-luna`의 reasoning `high`로 입력 검사부터 출력 검사까지 다시 실행한다. STT는 `gpt-4o-mini-transcribe`, TTS는 `gpt-4o-mini-tts-2025-12-15`를 사용한다. GPU를 자동으로 시작하지 않는다.
+
+브라우저 세션에는 최근 6턴을 서버 메모리에 보관한다. 새 이야기와 연령 변경 및 로그아웃으로 해당 문맥을 삭제한다. 세션은 1시간 뒤 만료되며 만료 자료는 30초 간격으로 정리한다. 녹음과 대화를 디스크에 저장하지 않으며 외부 AI 서비스의 처리는 별도다.
+
+로컬 실행은 터미널 두 개에서 다음 명령을 실행한다.
+
+```sh
+runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000
+```
+
+```sh
+npm ci --prefix web
+npm run dev --prefix web
+```
+
+화면은 http://127.0.0.1:5173 에서 연다. API 설정은 `.keys/.env`를 읽는다. 배포와 롤백은 [운영 안내](api/deploy/README.md)를 참고한다.
 
 ## 현재 상태
 
@@ -39,7 +62,7 @@ runpod/.venv/bin/ruff check --config runpod/pyproject.toml api runpod
 runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000
 ```
 
-모든 처리 요청은 `Authorization: Bearer <SANDBOX_API_KEY>` 인증을 사용한다.
+내부 클라이언트는 `Authorization: Bearer <SANDBOX_API_KEY>` 인증을 사용한다. 제품 화면은 참여 코드로 발급받은 HttpOnly 세션 쿠키를 사용한다.
 
 | 경로 | 요청 | 응답 |
 | --- | --- | --- |
@@ -47,7 +70,7 @@ runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000
 | `POST /chat` | 확인한 전사문의 `message`와 `age_band` (`4-6` 또는 `7-10`) | `answer`, `action`, `request_id` |
 | `POST /speech` | `/chat`이 반환한 `answer`를 `text`로 전송 | MP3 바이트 |
 
-클라이언트가 전사문 확인 후 `/chat`을 호출하고 받은 답변을 `/speech`로 전달한다. 서버가 세 경로를 자동 연결하거나 임의의 `/speech` 텍스트에 추가 안전 검사를 수행하는 구조는 아니다. 실제 음성 제공자 연결과 마이크 및 재생 UI 검증은 별도로 남아 있다.
+화면이 전사문 확인 후 `/chat`을 호출하고 받은 답변을 `/speech`로 전달한다. 데모 세션은 최근 검사된 답변만 음성으로 읽을 수 있다. 내부 Bearer 클라이언트는 검사된 답변만 전송해야 한다. 실제 OpenAI STT와 TTS 및 Luna 대체 응답을 확인했다. 개인 기기의 마이크와 스피커 품질 검증은 별도로 필요하다.
 
 ## GPU 실행과 평가
 
