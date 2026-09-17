@@ -1,0 +1,8 @@
+{
+  "absent_since_start": [
+    "jptiugznfe0bty",
+    "lp1yb45m6ardph"
+  ],
+  "added_outside_this_run": [],
+  "note": "Read-only inventory comparison. This run performed no pod deletion."
+}

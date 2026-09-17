@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ttb34ziuu2ovrd",
+    "name": "iri-v10-full-new-20260917-01",
+    "desiredStatus": "EXITED",
+    "volumeInGb": 10,
+    "costPerHr": 0.5
+  },
+  {
+    "id": "9l7neo7d5wu3ec",
+    "name": "iri-phase3-v3-preferred-20260917",
+    "desiredStatus": "EXITED",
+    "volumeInGb": 10,
+    "costPerHr": 0.5
+  },
+  {
+    "id": "ihxof0nqownkzw",
+    "name": "iri-phase3-quality-20260917",
+    "desiredStatus": "EXITED",
+    "volumeInGb": 10,
+    "costPerHr": 0.49
+  },
+  {
+    "id": "agp8j1pz448x2k",
+    "name": "iri-phase2-evaluation-20260917",
+    "desiredStatus": "EXITED",
+    "volumeInGb": 10,
+    "costPerHr": 0.49
+  },
+  {
+    "id": "apu0j7ndp42wqd",
+    "name": "iri-phase2-training-v2",
+    "desiredStatus": "EXITED",
+    "volumeInGb": 10,
+    "costPerHr": 0.27
+  },
+  {
+    "id": "egw5ndth2lsus8",
+    "name": "kids-sandbox-baseline",
+    "desiredStatus": "EXITED",
+    "volumeInGb": 20,
+    "costPerHr": 0.5
+  }
+]

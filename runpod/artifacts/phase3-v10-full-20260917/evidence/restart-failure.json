@@ -1,0 +1,21 @@
+{
+  "pod_id": "lp1yb45m6ardph",
+  "pod_name": "iri-v10-3090-pilot-20260917-01",
+  "created_at": 1789656165.2207196,
+  "deadline": 1789661565.2207196,
+  "status": "exited_confirmed",
+  "mutation_api": "official_v1",
+  "wall_cap_removed_by_user": true,
+  "prior_gpu_seconds": 3128.512110079956,
+  "previous_cumulative_limit_removed": true,
+  "watchdog_pid": 21704,
+  "ready_at": 1789656165.4742117,
+  "start_requested_at": 1789656168.212124,
+  "cost": 0.5,
+  "volume_gb": 10,
+  "prior_started_at": "2026-09-17T14:20:56.546Z",
+  "start_error": "capacity_unavailable_http_500",
+  "last_poll_at": 1789656175.2691972,
+  "pod_status": "EXITED",
+  "stopped_at": 1789656176.2458873
+}

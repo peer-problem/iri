@@ -1,0 +1,39 @@
+{
+  "status": "exited_confirmed",
+  "created_at": 1789656216.913787,
+  "deadline": 1789661616.913787,
+  "name": "iri-v10-full-new-20260917-01",
+  "prior_gpu_seconds": 3128.512110079956,
+  "previous_cumulative_limit_removed": true,
+  "volume_gb": 10,
+  "max_gpu_cost": 0.5,
+  "old_ids": [
+    "lp1yb45m6ardph",
+    "jptiugznfe0bty",
+    "9l7neo7d5wu3ec",
+    "ihxof0nqownkzw",
+    "agp8j1pz448x2k",
+    "apu0j7ndp42wqd",
+    "egw5ndth2lsus8"
+  ],
+  "watchdog_pid": 22388,
+  "ready_at": 1789656218.515267,
+  "attempts": [
+    {
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "cloud": "SECURE",
+      "quoted_gpu_cost": 0.5,
+      "requested_at": 1789656220.928702,
+      "http_status": 201
+    }
+  ],
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "pod_id": "ttb34ziuu2ovrd",
+  "created_at_api": "2026-09-17T14:43:41.657Z",
+  "cost": 0.5,
+  "last_poll_at": 1789658157.3541882,
+  "pod_status": "EXITED",
+  "started_at": "2026-09-17T14:43:41.652Z",
+  "stop_reason": "explicit_stop",
+  "stopped_at": 1789658157.3541882
+}

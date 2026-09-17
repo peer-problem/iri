@@ -1,0 +1,2 @@
+# Preserve hashed evidence, including CRLF and model-generated trailing spaces.
+* -text -whitespace

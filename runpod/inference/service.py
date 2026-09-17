@@ -10,6 +10,7 @@ from runpod.inference.behavior import (
     OUTPUT_V3,
     SUPPORT_GUIDANCE,
     SUPPORT_V3,
+    TRIM_V10,
     BehaviorProfile,
 )
 from runpod.inference.provider import ModelProvider, ModelUnavailable
@@ -36,9 +37,11 @@ def generation_messages(
     guidance = f"{POLICY}\n대상 연령: {age}세. 아이에게 보여줄 답변만 작성하라."
     if profile == "full_v2":
         guidance += "\n" + GENERATION_V2
+    if profile == "trim_v10" and not support:
+        guidance += "\n" + TRIM_V10
     if support:
         guidance += "\n" + (
-            SUPPORT_V3 if profile in {"support_v3", "safety_v3"} else SUPPORT_GUIDANCE
+            SUPPORT_V3 if profile in {"support_v3", "safety_v3", "trim_v10"} else SUPPORT_GUIDANCE
         )
     return [
         {
@@ -73,7 +76,7 @@ def output_guard_messages(
             ),
         },
     ]
-    if profile == "safety_v3":
+    if profile in {"safety_v3", "trim_v10"}:
         messages[0]["content"] = f"{POLICY}\n{OUTPUT_V3}"
     return messages
 
@@ -100,7 +103,7 @@ class ChatService:
             },
             {"role": "user", "content": serialized},
         ]
-        if self.profile in {"input_v3", "support_v3", "safety_v3"}:
+        if self.profile in {"input_v3", "support_v3", "safety_v3", "trim_v10"}:
             input_messages[0]["content"] = f"{POLICY}\n{INPUT_V3}"
         elif self.profile != "baseline":
             input_messages[0]["content"] = INPUT_V2
@@ -122,6 +125,7 @@ class ChatService:
                 "full_v2",
                 "support_v3",
                 "safety_v3",
+                "trim_v10",
             }
             if verdict.decision != "allow" and not support:
                 if trace:

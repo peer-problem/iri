@@ -1,0 +1,17 @@
+{
+  "base_commit": "cda7c71da08acd1db27c69e5ecff92503cb2858a",
+  "scope": "trim_v10 only on committed safety_v3; V4-V9 excluded",
+  "isolated_tests_passed": 149,
+  "ruff": "passed",
+  "request_response_contract_cases_identical_to_evaluated_source": 48,
+  "contract_sha256": "dea536a55741b8e85244f8301ed6958d19729a8a8b5d3c403b74ccbbd5b3f522",
+  "evaluated_source_zip_sha256": "d9dd1aa67196bafc640bca93c302075c0e64a13df260555ed1199c53f0bfb18a",
+  "isolated_source_sha256": {
+    "runpod/inference/behavior.py": "e0fa9062e3631655753994316cd025fb2dd3e35201a0a13336a6880d00a3cc95",
+    "runpod/inference/service.py": "5435d6aa6482e616d0a31d06fc2dbb5ca30b338043e03738cb135c79586f954f",
+    "runpod/tests/test_behavior_v10.py": "f64860d4dacddb781fb2e280843bb54fa398081bc8a5a97dd6fa04281103b1c5"
+  },
+  "gpu_evaluation_rerun_after_isolation": false,
+  "original_result_and_metadata_bytes_preserved": true,
+  "review_mapping_path_update": "relative separators normalized to /; ratings remain blank"
+}

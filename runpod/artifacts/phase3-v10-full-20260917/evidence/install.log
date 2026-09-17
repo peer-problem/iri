@@ -1,0 +1,402 @@
+VERIFIED torch-2.13.0-cp312-cp312-manylinux_2_28_x86_64.whl 526605292 6.3
+VERIFIED nvidia_cudnn_cu13-9.20.0.48-py3-none-manylinux_2_27_x86_64.whl 366173588 8.6
+VERIFIED nvidia_cufft-12.0.0.61-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 214085489 10.0
+VERIFIED nvidia_cusolver-12.0.4.66-py3-none-manylinux_2_27_x86_64.whl 200941980 11.4
+VERIFIED nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_x86_64.whl 423138758 12.5
+VERIFIED triton-3.7.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 197719725 12.8
+VERIFIED nvidia_nccl_cu13-2.29.7-py3-none-manylinux_2_18_x86_64.whl 205976000 13.0
+VERIFIED nvidia_cusparse-12.6.3.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 145942937 13.2
+VERIFIED nvidia_cuda_nvrtc-13.0.88-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl 90215200 13.3
+VERIFIED nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_x86_64.whl 170148586 13.5
+VERIFIED nvidia_cutlass_dsl_libs_cu12-4.6.2-cp312-cp312-manylinux_2_28_x86_64.whl 88454261 13.6
+VERIFIED nvidia_cutlass_dsl_libs_cu13-4.6.2-cp312-cp312-manylinux_2_28_x86_64.whl 88036030 13.7
+VERIFIED tokenspeed_triton-3.8.10.post20260906-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 81641592 13.8
+VERIFIED nvidia_nvvm-13.4.59-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl 72604481 13.9
+VERIFIED opencv_python_headless-5.0.0.93-cp37-abi3-manylinux_2_28_x86_64.whl 61204038 14.0
+VERIFIED nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 60412546 14.1
+VERIFIED nvidia_curand-10.4.0.35-py3-none-manylinux_2_27_x86_64.whl 59544258 14.1
+VERIFIED llvmlite-0.47.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 56275178 14.2
+VERIFIED tilelang-0.1.12-cp38-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 50501074 14.3
+VERIFIED nvidia_cuda_nvcc-13.4.59-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 47672583 14.3
+VERIFIED pynvvideocodec-2.0.4-cp312-cp312-manylinux_2_28_x86_64.whl 43176147 14.4
+VERIFIED nvidia_nvjitlink-13.4.52-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl 42452221 14.4
+VERIFIED z3_solver-4.15.4.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 29268352 14.5
+VERIFIED flashinfer_python-0.6.18-py3-none-any.whl 18347767 14.5
+VERIFIED numpy-2.3.5-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 16606086 14.5
+VERIFIED transformers-5.17.0-py3-none-any.whl 12295140 14.5
+VERIFIED nvidia_cuda_cupti-13.0.85-py3-none-manylinux_2_25_x86_64.whl 10715597 14.6
+VERIFIED pycountry-26.2.16-py3-none-any.whl 8044600 14.6
+VERIFIED torchcodec-0.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 9471149 14.6
+VERIFIED torchvision-0.28.0-cp312-cp312-manylinux_2_28_x86_64.whl 7675040 14.6
+VERIFIED nvidia_cudnn_frontend-1.29.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 7292886 14.6
+VERIFIED cuda_bindings-13.4.1-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl 7170956 14.6
+VERIFIED grpcio-1.84.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 7156115 14.6
+VERIFIED mistral_common-1.11.7-py3-none-any.whl 6553583 14.6
+VERIFIED pillow-12.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 6940830 14.6
+VERIFIED sympy-1.14.0-py3-none-any.whl 6299353 14.7
+VERIFIED cuda_core-1.2.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl 6608833 14.7
+VERIFIED instanttensor-0.2.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 6178704 14.7
+VERIFIED cryptography-50.0.1-cp311-abi3-manylinux_2_34_x86_64.whl 4746230 14.7
+VERIFIED nvidia_cuda_nvdisasm-13.4.49-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 5202364 14.7
+VERIFIED xgrammar-0.2.7-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 1265122 14.7
+VERIFIED torchaudio-2.11.0-cp312-cp312-manylinux_2_28_x86_64.whl 1771992 14.7
+VERIFIED pygments-2.21.0-py3-none-any.whl 1250147 14.7
+VERIFIED fastsafetensors-0.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 2096153 14.7
+VERIFIED hf_xet-1.6.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 4464663 14.7
+VERIFIED pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 2066284 14.7
+VERIFIED anthropic-1.6.0-py3-none-any.whl 1249068 14.7
+VERIFIED tiktoken-0.14.0-cp312-cp312-manylinux_2_28_x86_64.whl 1204197 14.7
+VERIFIED uvloop-0.22.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 4426307 14.7
+VERIFIED aiohttp-3.14.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 1792122 14.7
+VERIFIED llguidance-1.7.6-cp39-abi3-manylinux_2_31_x86_64.whl 3074809 14.7
+VERIFIED nvidia_cufile-1.15.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 1223672 14.7
+VERIFIED tokenizers-0.23.2-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 3386843 14.7
+VERIFIED openai-3.14.1-py3-none-any.whl 2003545 14.7
+VERIFIED nvidia_cuda_runtime-13.0.96-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 2243632 14.7
+VERIFIED networkx-3.6.1-py3-none-any.whl 2068504 14.7
+VERIFIED torch_c_dlpack_ext-0.1.5-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl 897846 14.7
+VERIFIED rignore-0.8.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 927835 14.7
+VERIFIED openai_harmony-0.0.8-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 2953260 14.7
+VERIFIED fastar-0.12.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 808091 14.8
+VERIFIED outlines_core-0.2.14-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 2341426 14.8
+VERIFIED sentencepiece-0.2.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 1397736 14.8
+VERIFIED nvidia_cuda_cccl-13.3.4.2.1-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 3919426 14.8
+VERIFIED numba-0.65.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 3801411 14.8
+VERIFIED nvidia_cutlass_dsl_libs_base-4.6.2-cp312-cp312-manylinux_2_28_x86_64.whl 2824987 14.8
+VERIFIED apache_tvm_ffi-0.1.11-cp312-abi3-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl 2697683 14.8
+VERIFIED nccl4py-0.5.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl 3572033 14.8
+VERIFIED pyzmq-27.2.0-cp312-abi3-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl 872258 14.8
+VERIFIED pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 807870 14.8
+VERIFIED setuptools-80.10.2-py3-none-any.whl 1064234 14.8
+VERIFIED huggingface_hub-1.31.0-py3-none-any.whl 798313 14.8
+VERIFIED httptools-0.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl 523851 14.8
+VERIFIED pydantic-2.13.5-py3-none-any.whl 472589 14.8
+VERIFIED safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 516040 14.8
+VERIFIED nvidia_cutlass_dsl_libs_core-4.6.2-py3-none-any.whl 772393 14.8
+VERIFIED quack_kernels-0.6.4-py3-none-any.whl 728458 14.8
+VERIFIED mpmath-1.3.0-py3-none-any.whl 536198 14.8
+VERIFIED dnspython-2.8.0-py3-none-any.whl 331094 14.8
+VERIFIED nvtx-0.2.15-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 806187 14.8
+VERIFIED tokenspeed_mla-0.1.8-py3-none-manylinux_2_28_x86_64.whl 755827 14.8
+VERIFIED googleapis_common_protos-1.75.3-py3-none-any.whl 306984 14.8
+VERIFIED rich-15.0.0-py3-none-any.whl 310654 14.8
+VERIFIED rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 366189 14.8
+VERIFIED ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl 409890 14.8
+VERIFIED humming_kernels-0.1.12-py3-none-manylinux_2_28_x86_64.whl 322656 14.8
+VERIFIED cuda_tile-1.6.0-cp312-cp312-manylinux2014_x86_64.whl 382170 14.8
+VERIFIED cbor2-6.1.4-cp312-cp312-manylinux_2_28_x86_64.whl 461193 14.8
+VERIFIED regex-2026.9.10-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 804587 14.8
+VERIFIED propcache-0.5.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 250424 14.8
+VERIFIED sentry_sdk-2.69.2-py3-none-any.whl 528765 14.8
+VERIFIED multidict-6.8.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 287410 14.8
+VERIFIED mcp-2.2.0-py3-none-any.whl 365656 14.8
+VERIFIED watchfiles-1.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 456398 14.8
+VERIFIED blake3-1.0.9-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 383851 14.8
+VERIFIED jiter-0.17.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl 345025 14.8
+VERIFIED protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl 323436 14.8
+VERIFIED charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 248801 14.8
+VERIFIED msgspec-0.21.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 225025 14.8
+VERIFIED websockets-17.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl 224557 14.8
+VERIFIED frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl 242411 14.8
+VERIFIED compressed_tensors-0.17.0-py3-none-any.whl 211714 14.8
+VERIFIED cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 221822 14.8
+VERIFIED fsspec-2026.7.0-py3-none-any.whl 206583 14.8
+VERIFIED anyio-4.15.1-py3-none-any.whl 132079 14.8
+VERIFIED httpx2-2.13.0-py3-none-any.whl 95565 14.8
+VERIFIED click-8.5.0-py3-none-any.whl 125251 14.8
+VERIFIED nvidia_nvtx-13.0.85-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl 148047 14.8
+VERIFIED model_hosting_container_standards-0.1.16-py3-none-any.whl 125666 14.8
+VERIFIED opentelemetry_semantic_conventions-0.65b0-py3-none-any.whl 204645 14.8
+VERIFIED ijson-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 149848 14.8
+VERIFIED packaging-26.3-py3-none-any.whl 129956 14.8
+VERIFIED lark-1.2.2-py3-none-any.whl 111036 14.8
+VERIFIED filelock-3.32.7-py3-none-any.whl 100157 14.8
+VERIFIED urllib3-2.8.0-py3-none-any.whl 135717 14.8
+VERIFIED markdown_it_py-4.2.0-py3-none-any.whl 91687 14.8
+VERIFIED jsonschema-4.26.0-py3-none-any.whl 90630 14.8
+VERIFIED pybase64-1.5.0-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl 94681 14.8
+VERIFIED supervisor-4.3.0-py2.py3-none-any.whl 320736 14.8
+VERIFIED yarl-1.25.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 117050 14.8
+VERIFIED httpcore2-2.13.0-py3-none-any.whl 83162 14.8
+VERIFIED dill-0.4.1-py3-none-any.whl 120019 14.8
+VERIFIED ninja-1.13.2-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 183365 14.8
+VERIFIED psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl 155560 14.8
+VERIFIED typer-0.27.2-py3-none-any.whl 123130 14.8
+VERIFIED jinja2-3.1.6-py3-none-any.whl 134899 14.8
+VERIFIED opentelemetry_sdk-1.44.0-py3-none-any.whl 137221 14.8
+VERIFIED uvicorn-0.53.0-py3-none-any.whl 87081 14.8
+VERIFIED certifi-2026.7.22-py3-none-any.whl 136983 14.8
+VERIFIED fastapi_cloud_cli-0.26.0-py3-none-any.whl 108653 14.8
+VERIFIED fastapi-0.136.3-py3-none-any.whl 117481 14.8
+VERIFIED nvidia_cuda_crt-13.4.59-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl 160870 14.8
+VERIFIED tqdm-4.70.1-py3-none-any.whl 80199 14.8
+VERIFIED pydantic_extra_types-2.11.1-py3-none-any.whl 79526 14.8
+VERIFIED starlette-1.6.0-py3-none-any.whl 75969 14.8
+VERIFIED opentelemetry_proto-1.44.0-py3-none-any.whl 72483 14.8
+VERIFIED idna-3.19-py3-none-any.whl 68550 14.8
+VERIFIED httpcore-1.0.9-py3-none-any.whl 78784 14.8
+VERIFIED pydantic_settings-2.15.0-py3-none-any.whl 69413 14.9
+VERIFIED attrs-26.1.0-py3-none-any.whl 67548 14.9
+VERIFIED einops-0.8.2-py3-none-any.whl 65638 14.9
+VERIFIED requests-2.34.2-py3-none-any.whl 73075 14.9
+VERIFIED mcp_types-2.2.0-py3-none-any.whl 69106 14.9
+VERIFIED referencing-0.37.0-py3-none-any.whl 26766 14.9
+VERIFIED prometheus_client-0.26.0-py3-none-any.whl 64494 14.9
+VERIFIED httpx-0.28.1-py3-none-any.whl 73517 14.9
+VERIFIED tabulate-0.10.0-py3-none-any.whl 39814 14.9
+VERIFIED h11-0.16.0-py3-none-any.whl 37515 14.9
+VERIFIED pyjwt-2.14.0-py3-none-any.whl 32896 14.9
+VERIFIED markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 22947 14.9
+VERIFIED rich_toolkit-0.20.5-py3-none-any.whl 39370 14.9
+VERIFIED depyf-0.20.0-py3-none-any.whl 39381 14.9
+VERIFIED cuda_pathfinder-1.8.1-py3-none-any.whl 62552 14.9
+VERIFIED astor-0.8.1-py2.py3-none-any.whl 27488 14.9
+VERIFIED loguru-0.7.3-py3-none-any.whl 61595 14.9
+VERIFIED python_multipart-0.0.32-py3-none-any.whl 30042 14.9
+VERIFIED nvidia_ml_py-13.610.43-py3-none-any.whl 53163 14.9
+VERIFIED typing_extensions-4.16.0-py3-none-any.whl 45571 14.9
+VERIFIED interegular-0.3.3-py37-none-any.whl 23635 14.9
+VERIFIED setproctitle-1.3.7-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl 32932 14.9
+VERIFIED email_validator-2.3.0-py3-none-any.whl 35604 14.9
+VERIFIED opentelemetry_api-1.44.0-py3-none-any.whl 60018 14.9
+VERIFIED pycparser-3.0-py3-none-any.whl 48172 14.9
+VERIFIED python_dotenv-1.2.3-py3-none-any.whl 22780 14.9
+VERIFIED py_cpuinfo-9.0.0-py3-none-any.whl 22335 14.9
+VERIFIED lm_format_enforcer-0.11.3-py3-none-any.whl 45418 14.9
+VERIFIED docstring_parser-0.18.0-py3-none-any.whl 22484 14.9
+VERIFIED cloudpickle-3.1.2-py3-none-any.whl 22228 14.9
+VERIFIED opentelemetry_exporter_otlp_proto_http-1.44.0-py3-none-any.whl 21850 14.9
+VERIFIED prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl 19649 14.9
+VERIFIED opentelemetry_exporter_otlp_proto_grpc-1.44.0-py3-none-any.whl 19624 14.9
+VERIFIED jmespath-1.1.0-py3-none-any.whl 20419 14.9
+VERIFIED truststore-0.10.4-py3-none-any.whl 18660 14.9
+VERIFIED jsonschema_specifications-2025.9.1-py3-none-any.whl 18437 14.9
+VERIFIED sse_starlette-3.4.11-py3-none-any.whl 17122 14.9
+VERIFIED opentelemetry_exporter_otlp_proto_common-1.44.0-py3-none-any.whl 17045 14.9
+VERIFIED cachetools-7.1.8-py3-none-any.whl 16842 14.9
+VERIFIED annotated_types-0.8.0-py3-none-any.whl 13427 14.9
+VERIFIED aiohappyeyeballs-2.7.1-py3-none-any.whl 15038 14.9
+VERIFIED typing_inspection-0.4.4-py3-none-any.whl 14750 14.9
+VERIFIED opentelemetry_semantic_conventions_ai-0.5.1-py3-none-any.whl 11250 14.9
+VERIFIED six-1.17.0-py2.py3-none-any.whl 11050 14.9
+VERIFIED partial_json_parser-0.2.1.1.post7-py3-none-any.whl 10877 14.9
+VERIFIED sniffio-1.3.1-py3-none-any.whl 10235 14.9
+VERIFIED fastapi_cli-0.0.32-py3-none-any.whl 14670 14.9
+VERIFIED shellingham-1.5.4-py2.py3-none-any.whl 9755 14.9
+VERIFIED python_json_logger-4.2.0-py3-none-any.whl 14988 14.9
+VERIFIED cuda_python-13.4.1-py3-none-any.whl 7594 14.9
+VERIFIED aiosignal-1.4.0-py3-none-any.whl 7490 14.9
+VERIFIED nvidia_cutlass_dsl-4.6.2-py3-none-any.whl 10460 14.9
+VERIFIED mdurl-0.1.2-py3-none-any.whl 9979 14.9
+VERIFIED annotated_doc-0.0.5-py3-none-any.whl 5302 14.9
+VERIFIED agent_detector-2.0.0-py3-none-any.whl 9352 14.9
+VERIFIED opentelemetry_exporter_otlp-1.44.0-py3-none-any.whl 6727 14.9
+VERIFIED cuda_toolkit-13.0.3.0-py2.py3-none-any.whl 2512 14.9
+VERIFIED detect_installer-0.2.1-py3-none-any.whl 5371 14.9
+VERIFIED vllm-0.29.0-cp38-abi3-manylinux_2_28_x86_64.whl 315961042 50.6
+{"verified_wheels": 196, "selected_wheels": 196, "bytes": 3869931556, "elapsed_seconds": 50.57, "manifest_sha256": "529c0ee375f739c64d94269c760001974d8b1fe963308b8bfd662349a7dbea88"}
+Using CPython 3.12.3 interpreter at: /usr/local/bin/python
+Creating virtual environment at: /opt/iri-v10-generation-pilot-01
+Activate with: source /opt/iri-v10-generation-pilot-01/bin/activate
+Using Python 3.12.3 environment at: /opt/iri-v10-generation-pilot-01
+Resolved 196 packages in 234ms
+Prepared 196 packages in 26.20s
+Installed 196 packages in 830ms
+ + agent-detector==2.0.0
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ + aiosignal==1.4.0
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anthropic==1.6.0
+ + anyio==4.15.1
+ + apache-tvm-ffi==0.1.11
+ + astor==0.8.1
+ + attrs==26.1.0
+ + blake3==1.0.9
+ + cachetools==7.1.8
+ + cbor2==6.1.4
+ + certifi==2026.7.22
+ + cffi==2.1.1
+ + charset-normalizer==3.5.1
+ + click==8.5.0
+ + cloudpickle==3.1.2
+ + compressed-tensors==0.17.0
+ + cryptography==50.0.1
+ + cuda-bindings==13.4.1
+ + cuda-core==1.2.0
+ + cuda-pathfinder==1.8.1
+ + cuda-python==13.4.1
+ + cuda-tile==1.6.0
+ + cuda-toolkit==13.0.3.0
+ + depyf==0.20.0
+ + detect-installer==0.2.1
+ + dill==0.4.1
+ + dnspython==2.8.0
+ + docstring-parser==0.18.0
+ + einops==0.8.2
+ + email-validator==2.3.0
+ + fastapi==0.136.3
+ + fastapi-cli==0.0.32
+ + fastapi-cloud-cli==0.26.0
+ + fastar==0.12.0
+ + fastsafetensors==0.4.0
+ + filelock==3.32.7
+ + flashinfer-python==0.6.18
+ + frozenlist==1.8.0
+ + fsspec==2026.7.0
+ + googleapis-common-protos==1.75.3
+ + grpcio==1.84.0
+ + h11==0.16.0
+ + hf-xet==1.6.0
+ + httpcore==1.0.9
+ + httpcore2==2.13.0
+ + httptools==0.8.0
+ + httpx==0.28.1
+ + httpx2==2.13.0
+ + huggingface-hub==1.31.0
+ + humming-kernels==0.1.12
+ + idna==3.19
+ + ijson==3.5.1
+ + instanttensor==0.2.0
+ + interegular==0.3.3
+ + jinja2==3.1.6
+ + jiter==0.17.0
+ + jmespath==1.1.0
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + lark==1.2.2
+ + llguidance==1.7.6
+ + llvmlite==0.47.0
+ + lm-format-enforcer==0.11.3
+ + loguru==0.7.3
+ + markdown-it-py==4.2.0
+ + markupsafe==3.0.3
+ + mcp==2.2.0
+ + mcp-types==2.2.0
+ + mdurl==0.1.2
+ + mistral-common==1.11.7
+ + ml-dtypes==0.6.0
+ + model-hosting-container-standards==0.1.16
+ + mpmath==1.3.0
+ + msgspec==0.21.1
+ + multidict==6.8.0
+ + nccl4py==0.5.0
+ + networkx==3.6.1
+ + ninja==1.13.2
+ + numba==0.65.0
+ + numpy==2.3.5
+ + nvidia-cublas==13.1.1.3
+ + nvidia-cuda-cccl==13.3.4.2.1
+ + nvidia-cuda-crt==13.4.59
+ + nvidia-cuda-cupti==13.0.85
+ + nvidia-cuda-nvcc==13.4.59
+ + nvidia-cuda-nvdisasm==13.4.49
+ + nvidia-cuda-nvrtc==13.0.88
+ + nvidia-cuda-runtime==13.0.96
+ + nvidia-cudnn-cu13==9.20.0.48
+ + nvidia-cudnn-frontend==1.29.0
+ + nvidia-cufft==12.0.0.61
+ + nvidia-cufile==1.15.1.6
+ + nvidia-curand==10.4.0.35
+ + nvidia-cusolver==12.0.4.66
+ + nvidia-cusparse==12.6.3.3
+ + nvidia-cusparselt-cu13==0.8.1
+ + nvidia-cutlass-dsl==4.6.2
+ + nvidia-cutlass-dsl-libs-base==4.6.2
+ + nvidia-cutlass-dsl-libs-core==4.6.2
+ + nvidia-cutlass-dsl-libs-cu12==4.6.2
+ + nvidia-cutlass-dsl-libs-cu13==4.6.2
+ + nvidia-ml-py==13.610.43
+ + nvidia-nccl-cu13==2.29.7
+ + nvidia-nvjitlink==13.4.52
+ + nvidia-nvshmem-cu13==3.4.5
+ + nvidia-nvtx==13.0.85
+ + nvidia-nvvm==13.4.59
+ + nvtx==0.2.15
+ + openai==3.14.1
+ + openai-harmony==0.0.8
+ + opencv-python-headless==5.0.0.93
+ + opentelemetry-api==1.44.0
+ + opentelemetry-exporter-otlp==1.44.0
+ + opentelemetry-exporter-otlp-proto-common==1.44.0
+ + opentelemetry-exporter-otlp-proto-grpc==1.44.0
+ + opentelemetry-exporter-otlp-proto-http==1.44.0
+ + opentelemetry-proto==1.44.0
+ + opentelemetry-sdk==1.44.0
+ + opentelemetry-semantic-conventions==0.65b0
+ + opentelemetry-semantic-conventions-ai==0.5.1
+ + outlines-core==0.2.14
+ + packaging==26.3
+ + partial-json-parser==0.2.1.1.post7
+ + pillow==12.3.0
+ + prometheus-client==0.26.0
+ + prometheus-fastapi-instrumentator==8.1.0
+ + propcache==0.5.4
+ + protobuf==6.33.6
+ + psutil==7.2.2
+ + py-cpuinfo==9.0.0
+ + pybase64==1.5.0
+ + pycountry==26.2.16
+ + pycparser==3.0
+ + pydantic==2.13.5
+ + pydantic-core==2.46.5
+ + pydantic-extra-types==2.11.1
+ + pydantic-settings==2.15.0
+ + pygments==2.21.0
+ + pyjwt==2.14.0
+ + pynvvideocodec==2.0.4
+ + python-dotenv==1.2.3
+ + python-json-logger==4.2.0
+ + python-multipart==0.0.32
+ + pyyaml==6.0.3
+ + pyzmq==27.2.0
+ + quack-kernels==0.6.4
+ + referencing==0.37.0
+ + regex==2026.9.10
+ + requests==2.34.2
+ + rich==15.0.0
+ + rich-toolkit==0.20.5
+ + rignore==0.8.1
+ + rpds-py==2026.6.3
+ + safetensors==0.8.0
+ + sentencepiece==0.2.2
+ + sentry-sdk==2.69.2
+ + setproctitle==1.3.7
+ + setuptools==80.10.2
+ + shellingham==1.5.4
+ + six==1.17.0
+ + sniffio==1.3.1
+ + sse-starlette==3.4.11
+ + starlette==1.6.0
+ + supervisor==4.3.0
+ + sympy==1.14.0
+ + tabulate==0.10.0
+ + tiktoken==0.14.0
+ + tilelang==0.1.12
+ + tokenizers==0.23.2
+ + tokenspeed-mla==0.1.8
+ + tokenspeed-triton==3.8.10.post20260906
+ + torch==2.13.0
+ + torch-c-dlpack-ext==0.1.5
+ + torchaudio==2.11.0
+ + torchcodec==0.16.0
+ + torchvision==0.28.0
+ + tqdm==4.70.1
+ + transformers==5.17.0
+ + triton==3.7.1
+ + truststore==0.10.4
+ + typer==0.27.2
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + urllib3==2.8.0
+ + uvicorn==0.53.0
+ + uvloop==0.22.1
+ + vllm==0.29.0
+ + watchfiles==1.2.0
+ + websockets==17.1
+ + xgrammar==0.2.7
+ + yarl==1.25.1
+ + z3-solver==4.15.4.0
+0.29.0 2.13.0+cu130 NVIDIA GeForce RTX 3090
+pinned_packages 196
