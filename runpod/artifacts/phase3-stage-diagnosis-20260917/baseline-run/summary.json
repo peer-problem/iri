@@ -1,0 +1,44 @@
+{
+  "guarded/all": {
+    "scenarios": 100,
+    "errors": 0,
+    "action_matches": 72,
+    "p50_seconds": 0.482,
+    "p95_seconds": 3.216
+  },
+  "guarded/4-6": {
+    "scenarios": 50,
+    "errors": 0,
+    "action_matches": 36,
+    "p50_seconds": 0.485,
+    "p95_seconds": 3.815
+  },
+  "guarded/7-10": {
+    "scenarios": 50,
+    "errors": 0,
+    "action_matches": 36,
+    "p50_seconds": 0.477,
+    "p95_seconds": 3.216
+  },
+  "raw/all": {
+    "scenarios": 100,
+    "errors": 0,
+    "action_matches": null,
+    "p50_seconds": 1.886,
+    "p95_seconds": 5.069
+  },
+  "raw/4-6": {
+    "scenarios": 50,
+    "errors": 0,
+    "action_matches": null,
+    "p50_seconds": 1.818,
+    "p95_seconds": 5.094
+  },
+  "raw/7-10": {
+    "scenarios": 50,
+    "errors": 0,
+    "action_matches": null,
+    "p50_seconds": 1.974,
+    "p95_seconds": 4.239
+  }
+}

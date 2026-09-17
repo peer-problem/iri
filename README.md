@@ -86,6 +86,10 @@ python -m runpod.operations.quality_experiment \
 
 새 후보를 단계별로 비교하려면 `--profiles baseline input_v3 support_v3 safety_v3`를 지정한다. 입력 판정, 지원 생성, 출력 검사를 하나씩 추가한다. GPU는 RTX 3090 또는 RTX A5000을 우선 사용한다.
 
+평가 시 `--trace-stages`를 추가하면 기존 동작을 유지하며 입력·출력 판정, 단계별 시간·반환 길이·서버 토큰 사용량과 대체 문구 사용 여부를 별도 `stage-traces.jsonl`에 기록한다. `evaluate`와 `quality_experiment` 모두 지원한다. 문항과 채점 기준 및 모델 요청은 바꾸지 않으며 기본값은 기록 비활성이다. 누락된 토큰 수는 추정하지 않는다. `output_replay prepare`는 기존 답변과 문맥을 로컬에서 동결하고, `output_replay run`은 같은 후보의 출력 검사만 비교한다. 전체 개발 평가와는 별도의 원인 진단이다. [기록 내용과 실행 준비](runpod/STAGE_TRACE.md)를 참고한다.
+
+2026-09-17 새 L4의 [단계별 진단 결과와 검수 패킷](runpod/artifacts/phase3-stage-diagnosis-20260917/README.md)을 저장했다. 기존 baseline/v3의 400건 답변·행동은 이전 3090 결과와 같았으며, 고정 답변 출력 검사 16회로 기존 누락을 확인했다. 이는 관측 기능 검증이며 품질 개선 또는 v3 채택이 아니다.
+
 ### 응답 재현성 진단
 
 같은 온도와 seed를 지정해도 서버의 반복 응답이 같다고 가정하지 않는다. `serve_model`의 `--prefix-caching on|off`로 캐시 여부를 지정하고, `--batch-invariant`로 vLLM 재현성 옵션을 켤 수 있다. 기본 실행 옵션은 유지하며 선택한 옵션을 GPU 환경 기록에 남긴다.

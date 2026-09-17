@@ -1,0 +1,39 @@
+{
+  "state": "completed",
+  "created_at": "2026-09-17T09:36:52.812118+00:00",
+  "data_sha256": "026c3c85fa2ab1622e721f2a5d70cb3f6194ba10869e3465b581f6cd68371297",
+  "scenarios_per_profile": 100,
+  "profiles": [
+    "baseline",
+    "safety_v3"
+  ],
+  "trace_stages": true,
+  "runs": {
+    "baseline": {
+      "path": "baseline/20260917T093652Z-kanana-3126d018",
+      "state": "completed",
+      "results_sha256": "d0f27ac67c151eb202dc4f28af0d9efde36301063fb675b21edd7e1d10d8425a",
+      "experiment_id": "base-a9b66353a4eee56d015b",
+      "stage_trace": {
+        "enabled": true,
+        "version": 1,
+        "file": "stage-traces.jsonl",
+        "rows": 200,
+        "sha256": "a7be5fe4a08d0a634f6d5e9bdbbf2066d9d09909e736cb2b6736c3f117ad1074"
+      }
+    },
+    "safety_v3": {
+      "path": "safety_v3/20260917T094251Z-kanana-45f15cdf",
+      "state": "completed",
+      "results_sha256": "f02844d9edd757439c8470bdc1333690c634062b98c5af2e84f4eaab0eb338f7",
+      "experiment_id": "base-2fb235eaedd9db6740ba",
+      "stage_trace": {
+        "enabled": true,
+        "version": 1,
+        "file": "stage-traces.jsonl",
+        "rows": 200,
+        "sha256": "13a03dc762d6a57d646c4fcc60ffeb3d58af347bba71d3d8076e4544beb54140"
+      }
+    }
+  }
+}

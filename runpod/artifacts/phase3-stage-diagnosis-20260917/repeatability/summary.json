@@ -1,0 +1,10 @@
+{
+  "requests": 60,
+  "scenarios": 20,
+  "passes": 3,
+  "request_mismatch_ids": [],
+  "response_mismatch_ids": [],
+  "error_ids": [],
+  "observed_repeatable": true,
+  "note": "First-turn diagnostic sample only; not a quality or universal determinism guarantee."
+}
