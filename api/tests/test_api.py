@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 import httpx
 import pytest
 
+from api.app.answer_profile import ANSWER_PROFILE
 from api.app.app import create_app
 from api.app.service import FALLBACKS, QueueFull, RequestGate
 from api.app.settings import Settings
@@ -109,6 +110,32 @@ async def test_safe_answer_only_released_after_output_check():
         assert schema["strict"] is True
         assert schema["schema"]["properties"]["decision"]["enum"] == decisions
         assert schema["schema"]["additionalProperties"] is False
+
+
+async def test_kanana_receives_answer_profile_only_for_generation():
+    settings = configuration()
+    texts = iter(
+        [
+            '{"decision":"allow"}',
+            "햇빛이 물을 데우면 수증기가 되어 올라가.",
+            '{"decision":"allow"}',
+        ]
+    )
+    calls = []
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        return completion(next(texts), settings)
+
+    async with api(handler, settings) as client:
+        response = await post(client)
+
+    assert response.status_code == 200
+    marker = f"[AnswerProfile {ANSWER_PROFILE.version}]"
+    system_messages = [call["messages"][0]["content"] for call in calls]
+    assert marker not in system_messages[0]
+    assert ANSWER_PROFILE.prompt in system_messages[1]
+    assert marker not in system_messages[2]
 
 
 @pytest.mark.parametrize("decision", ["redirect", "support", "clarify"])

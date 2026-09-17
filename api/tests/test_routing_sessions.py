@@ -3,6 +3,8 @@ import json
 import httpx
 import pytest
 
+from api.app.answer_profile import ANSWER_PROFILE
+from api.app.service import generation_messages
 from api.tests.test_api import api, completion, configuration, post
 
 
@@ -40,6 +42,14 @@ async def test_fallback_restarts_entire_guarded_pipeline(primary_failure):
     assert response.json()["provider"] == "luna"
     assert len(calls) == 3
     assert "text" in calls[0] and "text" in calls[2]
+    marker = f"[AnswerProfile {ANSWER_PROFILE.version}]"
+    system_messages = [call["input"][0]["content"] for call in calls]
+    assert marker not in system_messages[0]
+    assert ANSWER_PROFILE.prompt in system_messages[1]
+    assert marker not in system_messages[2]
+    assert calls[1]["input"] == generation_messages(
+        "4-6", [{"role": "user", "content": "비는 왜 내려?"}]
+    )
 
 
 async def test_ready_primary_does_not_call_cloud():

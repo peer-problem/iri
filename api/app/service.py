@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 from pydantic import ValidationError
 
+from api.app.answer_profile import ANSWER_PROFILE
 from api.app.behavior import GENERATION_V2, INPUT_V2, SUPPORT_GUIDANCE, BehaviorProfile
 from api.app.provider import ModelProvider, ModelUnavailable
 from api.app.schemas import AgeBand, InputVerdict, OutputVerdict
@@ -50,7 +51,10 @@ def generation_messages(
     *,
     support: bool = False,
 ) -> list[dict[str, str]]:
-    guidance = f"{POLICY}\n대상 연령: {age}세. 아이에게 보여줄 답변만 작성하라."
+    guidance = (
+        f"{POLICY}\n대상 연령: {age}세. 아이에게 보여줄 답변만 작성하라.\n"
+        f"{ANSWER_PROFILE.prompt}"
+    )
     if profile == "full_v2":
         guidance += "\n" + GENERATION_V2
     if support:
