@@ -11,7 +11,7 @@ import httpx
 from dotenv import dotenv_values
 from pydantic import ValidationError
 
-from api.app.provider import ModelProvider
+from runpod.inference.provider import ModelProvider
 from runpod.operations.data import load_scenarios, validate_development
 from runpod.settings import ENV_FILE, REPO_ROOT, ROOT, Settings
 
@@ -96,11 +96,6 @@ async def inspect(online: bool = False) -> dict:
             "pass" if settings.model_revision else "pending",
             "Set the resolved commit SHA before GPU execution",
         )
-        add(
-            "transcription",
-            "pass" if settings.openai_api_key.get_secret_value() else "optional",
-            "Key presence only. No OpenAI API request is made",
-        )
         if online:
             async with httpx.AsyncClient(trust_env=False) as client:
                 ready = await ModelProvider(settings, client).ready()
@@ -113,7 +108,7 @@ async def inspect(online: bool = False) -> dict:
     add(
         "nvidia_gpu",
         "pass" if shutil.which("nvidia-smi") else "pending",
-        "GPU is not required for local API tests",
+        "GPU is not required for local inference tests",
     )
     return {
         "checks": checks,

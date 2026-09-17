@@ -4,7 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from api.app.service import POLICY
+from runpod.inference.service import POLICY
 
 
 def digest(path: Path) -> str:

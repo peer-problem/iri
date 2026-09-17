@@ -8,7 +8,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from api.app.service import POLICY
+from runpod.inference.service import POLICY
 from runpod.operations.artifacts import code_manifest
 from runpod.operations.checkpoints import mark_complete, validate_resume
 from runpod.operations.data import load_scenarios

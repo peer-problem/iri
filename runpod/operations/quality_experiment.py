@@ -6,11 +6,14 @@ import hashlib
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import get_args
 
+from runpod.inference.behavior import BehaviorProfile
 from runpod.operations.data import load_scenarios
 from runpod.operations.evaluate import evaluate
 
-PROFILES = ("baseline", "input_v2", "support_v2", "full_v2")
+PROFILES = get_args(BehaviorProfile)
+DEFAULT_PROFILES = ("baseline", "input_v2", "support_v2", "full_v2")
 
 
 def preflight(data: Path) -> int:
@@ -20,7 +23,7 @@ def preflight(data: Path) -> int:
     return len(items)
 
 
-async def run_experiment(data: Path, output: Path, profiles=PROFILES) -> dict:
+async def run_experiment(data: Path, output: Path, profiles=DEFAULT_PROFILES) -> dict:
     scenarios = preflight(data)
     if not profiles or len(set(profiles)) != len(profiles) or set(profiles) - set(PROFILES):
         raise ValueError("Use distinct supported behavior profiles")
@@ -95,7 +98,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--profiles", nargs="+", choices=PROFILES, default=PROFILES)
+    parser.add_argument("--profiles", nargs="+", choices=PROFILES, default=DEFAULT_PROFILES)
     args = parser.parse_args()
     result = asyncio.run(run_experiment(args.data, args.output, args.profiles))
     print(f"Quality experiment {result['state']}")

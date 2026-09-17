@@ -6,7 +6,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from api.app.schemas import AgeBand
+from runpod.inference.schemas import AgeBand
 from runpod.settings import ROOT
 
 

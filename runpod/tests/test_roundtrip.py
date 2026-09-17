@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from api.app.service import POLICY
+from runpod.inference.service import POLICY
 from runpod.operations.candidate_review import export_csv, import_csv
 from runpod.operations.source_square import candidates
 from runpod.operations.verify_adapter import validate_manifest

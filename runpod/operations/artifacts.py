@@ -12,7 +12,6 @@ def code_files(root: Path = ROOT) -> list[Path]:
         for name in (
             "README.md",
             "runpod/operations/init_local.py",
-            "api/__init__.py",
             "runpod/pyproject.toml",
             "runpod/uv.lock",
             "runpod/.python-version",
@@ -23,13 +22,11 @@ def code_files(root: Path = ROOT) -> list[Path]:
         )
     ]
     for directory, pattern in (
-        ("api/app", "*.py"),
         ("runpod/operations", "*.py"),
+        ("runpod/inference", "*.py"),
         ("runpod", "*.py"),
         ("runpod/tests", "*.py"),
         ("runpod/configs", "*.json"),
-        ("api/tests", "*.py"),
-        ("api/configs", "*.json"),
         ("runpod/data", "*.json"),
         ("runpod/data", "*.jsonl"),
     ):

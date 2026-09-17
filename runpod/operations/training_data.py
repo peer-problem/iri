@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from api.app.service import generation_messages
+from runpod.inference.service import generation_messages
 from runpod.operations.prepare_training import TrainingRow
 from runpod.operations.source_square import normalized
 

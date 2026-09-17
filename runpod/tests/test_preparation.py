@@ -228,9 +228,9 @@ def test_unexpected_template_boundary_rejected():
 def test_bundle_excludes_secrets_docs_models_and_symlinks(tmp_path):
     root = tmp_path / "source"
     root.mkdir()
-    (root / "api/app").mkdir(parents=True)
+    (root / "runpod/inference").mkdir(parents=True)
     (root / ".keys").mkdir()
-    (root / "runpod").mkdir()
+    (root / "runpod").mkdir(exist_ok=True)
     for name in ("README.md", "runpod/pyproject.toml"):
         (root / name).write_text("public fixture")
     (root / ".keys/.env").write_text("SUPER_SECRET_KEY")
@@ -241,7 +241,7 @@ def test_bundle_excludes_secrets_docs_models_and_symlinks(tmp_path):
     (root / "runpod/data/raw").mkdir(parents=True)
     (root / "runpod/data/raw/private.json").write_text("PRIVATE_SOURCE")
     (root / "runpod/operations").mkdir(parents=True)
-    (root / "api/app/secret.py").symlink_to(root / ".keys/.env")
+    (root / "runpod/inference/secret.py").symlink_to(root / ".keys/.env")
     (root / "runpod/operations/example.py").write_text("PUBLIC_OPERATION = True")
     target = tmp_path / "source.zip"
     result = build_bundle(target, root)
@@ -249,7 +249,7 @@ def test_bundle_excludes_secrets_docs_models_and_symlinks(tmp_path):
         assert not any(name.startswith(".keys/") for name in archive.namelist())
         assert ".keys/runpod-ed25519" not in archive.namelist()
         assert "runpod/known_hosts" not in archive.namelist()
-        assert "api/app/secret.py" not in archive.namelist()
+        assert "runpod/inference/secret.py" not in archive.namelist()
         assert "runpod/data/raw/private.json" not in archive.namelist()
         assert "runpod/operations/example.py" in archive.namelist()
         assert "runpod/pyproject.toml" in archive.namelist()

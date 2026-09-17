@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 
-from api.app.service import generation_messages
+from runpod.inference.service import generation_messages
 from runpod.operations.data import load_scenarios
 from runpod.settings import ROOT
 

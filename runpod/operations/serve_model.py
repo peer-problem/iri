@@ -15,8 +15,14 @@ from runpod.settings import ENV_FILE, ROOT, Settings
 
 
 def build_command(
-    settings: Settings, executable: str, adapter_run: Path | None = None
+    settings: Settings,
+    executable: str,
+    adapter_run: Path | None = None,
+    *,
+    prefix_caching: str = "default",
 ) -> list[str]:
+    if prefix_caching not in {"default", "on", "off"}:
+        raise ValueError("Use default, on or off for prefix caching")
     evaluation_identity(settings, adapter_run)
     command = [
         executable,
@@ -45,6 +51,10 @@ def build_command(
         "--enforce-eager",
         "--no-enable-log-requests",
     ]
+    if prefix_caching != "default":
+        command.append(
+            "--enable-prefix-caching" if prefix_caching == "on" else "--no-enable-prefix-caching"
+        )
     if adapter_run:
         config = json.loads((adapter_run / "adapter/adapter_config.json").read_text())
         rank = config.get("r")
@@ -72,6 +82,8 @@ def build_command(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--adapter-run", type=Path)
+    parser.add_argument("--prefix-caching", choices=["default", "on", "off"], default="default")
+    parser.add_argument("--batch-invariant", action="store_true")
     args = parser.parse_args()
     load_dotenv(ENV_FILE)
     settings = Settings()
@@ -93,7 +105,11 @@ def main():
     )
     run_dir = (ROOT / "runs") / f"gpu-{settings.model_profile}-{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
     run_dir.mkdir(parents=True, exist_ok=False)
-    command = build_command(settings, executable, args.adapter_run)
+    command = build_command(
+        settings, executable, args.adapter_run, prefix_caching=args.prefix_caching
+    )
+    if args.batch_invariant:
+        os.environ["VLLM_BATCH_INVARIANT"] = "1"
     (run_dir / "gpu-environment.json").write_text(
         json.dumps(
             {
@@ -106,6 +122,8 @@ def main():
                 "model_id": settings.profile["model_id"],
                 "revision": settings.model_revision,
                 "command": command,
+                "prefix_caching_requested": args.prefix_caching,
+                "batch_invariant": os.environ.get("VLLM_BATCH_INVARIANT", "0"),
             },
             ensure_ascii=False,
             indent=2,

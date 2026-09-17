@@ -1,7 +1,7 @@
 import os
 import secrets
 
-from api.app.settings import ENV_FILE
+from runpod.settings import ENV_FILE
 
 
 def main():

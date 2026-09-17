@@ -7,8 +7,8 @@ from pathlib import Path
 
 import httpx
 
-from api.app.provider import ModelProvider
-from api.app.service import generation_messages
+from runpod.inference.provider import ModelProvider
+from runpod.inference.service import generation_messages
 from runpod.operations.data import load_scenarios
 from runpod.operations.experiments import digest, evaluation_identity
 from runpod.settings import ROOT, Settings

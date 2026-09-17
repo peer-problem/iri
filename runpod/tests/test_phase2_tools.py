@@ -4,8 +4,8 @@ import json
 import httpx
 import pytest
 
-from api.app.provider import ModelProvider, ModelUnavailable
-from api.app.service import POLICY, ChatService
+from runpod.inference.provider import ModelProvider, ModelUnavailable
+from runpod.inference.service import POLICY, ChatService
 from runpod.operations.development_review import export, import_labels
 from runpod.operations.experiments import digest, evaluation_identity
 from runpod.operations.rescore import rescore

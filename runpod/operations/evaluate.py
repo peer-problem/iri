@@ -10,12 +10,14 @@ import subprocess
 import time
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import get_args
 from uuid import uuid4
 
 import httpx
 
-from api.app.provider import ModelProvider, ModelUnavailable
-from api.app.service import POLICY, ChatService, generation_messages
+from runpod.inference.behavior import BehaviorProfile
+from runpod.inference.provider import ModelProvider, ModelUnavailable
+from runpod.inference.service import POLICY, ChatService, generation_messages
 from runpod.operations.artifacts import code_manifest
 from runpod.operations.data import load_scenarios
 from runpod.operations.experiments import evaluation_identity
@@ -87,7 +89,7 @@ async def evaluate(args):
             "git_dirty": bool(status.stdout.strip()),
             "python": platform.python_version(),
             "packages": {
-                name: importlib.metadata.version(name) for name in ("httpx", "pydantic", "fastapi")
+                name: importlib.metadata.version(name) for name in ("httpx", "pydantic", "pydantic-settings")
             },
             "generation": {
                 "temperature": 0,
@@ -213,9 +215,7 @@ def main():
     parser.add_argument("--mode", choices=["raw", "guarded", "both"], default="both")
     parser.add_argument("--allow-draft", action="store_true")
     parser.add_argument("--adapter-run", type=Path)
-    parser.add_argument(
-        "--behavior-profile", choices=["baseline", "input_v2", "support_v2", "full_v2"]
-    )
+    parser.add_argument("--behavior-profile", choices=get_args(BehaviorProfile))
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
     if args.limit is not None and args.limit < 1:

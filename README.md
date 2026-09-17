@@ -1,14 +1,18 @@
 # IRI
 
-한국어 4~10세 대상 모델의 응답 생성과 안전 검사, 학습 및 평가 도구다. 현재 API는 성인 팀 내부 검증용 단일 턴 API다.
+한국어 4~10세 대상 모델의 Runpod 학습과 서빙 및 평가 도구와 음성 API를 관리한다. 팀원의 [PR #1](https://github.com/peer-problem/iri/pull/1)을 통합해 `api/`를 복원했다. 제품 하네스와 API는 해당 팀원 구현을 유지하며, 모델 작업은 `runpod/`에서 진행한다. 화면과 마이크 녹음 UI는 아직 포함되지 않았다.
 
 ## 현재 상태
 
 Phase 2는 종료했다. 다음 단계 모델은 `kakaocorp/kanana-2-3b-instruct` 원본이며 리비전은 `6a5d7889964c4c590299d16e309eabab1f73f8a9`다. 이번 QLoRA 어댑터는 품질 향상이 확인되지 않아 채택하지 않았다.
 
-Phase 3의 첫 작업은 입력 판정과 피해 지원, 답변 정확도를 개선하는 비교 실험이다. 개선 설정은 선택해서 실행하며 기본값은 검증 전 후보를 자동 적용하지 않는 `baseline`이다.
+Phase 3에서는 모델 품질 개선과 독립 평가 및 모델 운영 인수인계를 진행한다. RTX 3090에서 두 번째 비교 800건을 완료했으며 실행 오류는 0건이다. 후보는 지원 대응과 안전 검사 및 지연 기준을 충족하지 못해 기본값 `baseline`을 유지한다.
+
+이후 재현성 진단 180회와 추가 비교 400건을 완료했다. 재현성 옵션을 적용한 두 평가의 raw 응답 100개는 모두 일치했다. 안전 후보는 지원 대응과 지연 기준 미충족으로 계속 미채택이다.
 
 - [Phase 3 첫 구현과 GPU 비교 결과](runpod/artifacts/phase3-quality-20260917/README.md)
+- [Phase 3 두 번째 비교와 미해결 문제](runpod/artifacts/phase3-quality-v3-20260917/README.md)
+- [Phase 3 재현성 진단과 재평가](runpod/artifacts/phase3-repro-20260917/README.md)
 - [Phase 2 종료 보고서](runpod/artifacts/phase2-evaluation-20260917/README.md)
 - [전체 검토와 보완 내역](runpod/artifacts/phase2-evaluation-20260917/audit.md)
 - [Phase 3 인수인계](runpod/artifacts/phase2-evaluation-20260917/phase3-handoff.md)
@@ -25,13 +29,25 @@ runpod/.venv/bin/python -m pytest -q -c runpod/pyproject.toml
 runpod/.venv/bin/ruff check --config runpod/pyproject.toml api runpod
 ```
 
-초기화는 `.keys/.env`에 별도 API 인증키를 생성하며 기존 파일은 덮어쓰지 않는다. 이 파일의 `MODEL_REVISION`을 위 리비전으로 설정하고, SSH 터널로 연결한 모델 서버 주소를 `MODEL_BASE_URL`에 지정한다. 원본 사용 시 `ADAPTER_NAME`은 비워 둔다. `.keys/`는 Git에 포함하지 않는다.
+초기화는 `.keys/.env`에 서로 다른 제품 API 인증키 `SANDBOX_API_KEY`와 모델 서버 인증키 `MODEL_API_KEY`를 생성하며 기존 파일은 덮어쓰지 않는다. 이 파일의 `MODEL_REVISION`을 위 리비전으로 설정하고, SSH 터널로 연결한 vLLM 서버 주소를 `MODEL_BASE_URL`에 지정한다. 원본 사용 시 `ADAPTER_NAME`은 비워 둔다. `.keys/`는 Git에 포함하지 않는다. `runpod.operations.doctor --online`으로 모델 연결을 확인할 수 있다.
+
+### 팀원 음성 API 실행
+
+기존 `.keys/.env`를 사용한다면 `SANDBOX_API_KEY`가 32자 이상인지 확인한다. 음성 전사와 TTS에는 `OPENAI_API_KEY`가 필요하며 텍스트 모델은 Runpod의 vLLM을 사용한다. 기본 행동 설정은 `baseline`이다. Runpod의 v3 후보는 미채택 실험이며 팀원 API에 자동 적용하지 않았다.
 
 ```sh
-runpod/.venv/bin/python -m uvicorn api.app.app:app --host 127.0.0.1 --port 8000
+runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000
 ```
 
-`GET /health`는 설정 상태만 확인한다. 모델 연결은 인증된 `GET /ready`로 확인한다. `POST /chat`은 `Authorization: Bearer <SANDBOX_API_KEY>`와 `{"age_band":"4-6","message":"비는 왜 내려?"}`를 받는다. 연령은 `4-6` 또는 `7-10`이다. 대화 기록은 요청 사이에 저장하지 않는다.
+모든 처리 요청은 `Authorization: Bearer <SANDBOX_API_KEY>` 인증을 사용한다.
+
+| 경로 | 요청 | 응답 |
+| --- | --- | --- |
+| `POST /transcribe` | 지원 음성 형식의 원본 바이트. `Content-Type`과 `X-Audio-Consent: true` 지정 | `text`와 `requires_confirmation` |
+| `POST /chat` | 확인한 전사문의 `message`와 `age_band` (`4-6` 또는 `7-10`) | `answer`, `action`, `request_id` |
+| `POST /speech` | `/chat`이 반환한 `answer`를 `text`로 전송 | MP3 바이트 |
+
+클라이언트가 전사문 확인 후 `/chat`을 호출하고 받은 답변을 `/speech`로 전달한다. 서버가 세 경로를 자동 연결하거나 임의의 `/speech` 텍스트에 추가 안전 검사를 수행하는 구조는 아니다. 실제 음성 제공자 연결과 마이크 및 재생 UI 검증은 별도로 남아 있다.
 
 ## GPU 실행과 평가
 
@@ -46,7 +62,7 @@ python -m runpod.operations.evaluate --data runpod/artifacts/phase2-evaluation-2
 
 ### Phase 3 품질 비교
 
-`BEHAVIOR_PROFILE`로 API 설정을 선택한다. 평가에서는 `--behavior-profile`로 같은 설정을 지정한다.
+`BEHAVIOR_PROFILE`로 모델 검사 설정을 선택한다. 평가에서는 `--behavior-profile`로 같은 설정을 지정한다.
 
 | 설정 | 기준선에서 바뀌는 내용 |
 | --- | --- |
@@ -54,6 +70,9 @@ python -m runpod.operations.evaluate --data runpod/artifacts/phase2-evaluation-2
 | `input_v2` | 피해 고백 우선 분류와 불필요한 재질문 축소 |
 | `support_v2` | `input_v2`에 상황별 지원 답변 생성과 출력 검사 추가 |
 | `full_v2` | `support_v2`에 사실 정확도와 간결한 설명 지침 추가 |
+| `input_v3` | 기존 정책을 유지하며 피해 주체와 실행 의도 및 현실 위험을 분류 |
+| `support_v3` | `input_v3`에 상황별 지원 생성과 비밀 보장 약속 금지 지침 추가 |
+| `safety_v3` | `support_v3`에 현실 위험 행동과 지원 답변의 출력 검사 보완 |
 
 지원 답변이 출력 검사에서 차단되면 안전한 지원 문구로 돌아간다. 피해 고백을 위험 요청으로 바꾸어 표시하지 않는다.
 
@@ -65,6 +84,29 @@ python -m runpod.operations.quality_experiment \
 
 네 설정 각각 동일한 개발 100문항을 raw와 guarded로 실행한다. 미검수 초안은 실행 전에 거부하며 결과 파일의 해시와 문항별 실행 쌍을 검사한다. 출력 폴더는 새 경로를 사용한다. `runpod/data/dev.jsonl`은 초안이므로 위의 동결된 검수본을 사용한다. 기대 행동 일치율은 정답률이나 유해 노출률을 대신하지 않는다.
 
+새 후보를 단계별로 비교하려면 `--profiles baseline input_v3 support_v3 safety_v3`를 지정한다. 입력 판정, 지원 생성, 출력 검사를 하나씩 추가한다. GPU는 RTX 3090 또는 RTX A5000을 우선 사용한다.
+
+### 응답 재현성 진단
+
+같은 온도와 seed를 지정해도 서버의 반복 응답이 같다고 가정하지 않는다. `serve_model`의 `--prefix-caching on|off`로 캐시 여부를 지정하고, `--batch-invariant`로 vLLM 재현성 옵션을 켤 수 있다. 기본 실행 옵션은 유지하며 선택한 옵션을 GPU 환경 기록에 남긴다.
+
+```sh
+python -m runpod.operations.serve_model --prefix-caching on --batch-invariant
+```
+
+별도 터미널에서 아래의 `<실행폴더>`를 서버가 출력한 환경 기록 폴더로 바꾼다. 출력은 새 경로를 사용한다.
+
+```sh
+python -m runpod.operations.repeatability \
+  --data runpod/artifacts/phase3-quality-v3-20260917/baseline-run/dataset.jsonl \
+  --launch-record 'runpod/runs/<실행폴더>/gpu-environment.json' \
+  --output runpod/runs/repeatability-probe
+```
+
+이 도구는 검수된 개발 자료에서 범주별로 고정한 20개 질문의 첫 턴을 세 번씩 보낸다. 두 번째 패스는 역순이며 실제 요청과 응답의 해시를 보관한다. 오류가 있거나 요청이 달라지면 반복 성공으로 집계하지 않는다. 작은 표본의 일치는 전체 의미 품질이나 모든 실행의 결정성을 보장하지 않는다. [vLLM의 재현성 안내](https://docs.vllm.ai/en/v0.29.0/usage/reproducibility/)를 함께 확인한다.
+
 ## 자료 보관
 
-`api/`는 HTTP API, `runpod/`는 학습과 평가를 담당한다. 공유 결과와 검수 자료는 `runpod/artifacts/`에서 Git으로 관리한다. 원본 가중치와 재개용 백업은 Git에서 제외한 `runpod/backups/`에 보관한다. 팀 검수 패킷의 `private/mapping.json`도 공유되므로 검수자는 먼저 자기 `reviewer_a/` 또는 `reviewer_b/`의 자료만 보고 판정한다.
+`api/`는 팀원의 제품 HTTP 서버와 전사 및 TTS를 포함한다. API 정책은 `api/configs/policy.json`에 둔다. `runpod/inference/`는 독립적인 모델 평가와 실험용 입력 및 출력 검사를 담당하며 정책은 `runpod/configs/policy.json`에 둔다. 공유 결과와 검수 자료는 `runpod/artifacts/`에서 Git으로 관리한다. 원본 가중치와 재개용 백업은 Git에서 제외한 `runpod/backups/`에 보관한다. 팀 검수 패킷의 `private/mapping.json`도 공유되므로 검수자는 먼저 자기 `reviewer_a/` 또는 `reviewer_b/`의 자료만 보고 판정한다.
+
+과거 평가 결과와 소스 백업은 실행 당시 증거로 보존한다. 하네스 삭제 기록은 해당 실행 시점의 상태이며 현재 API는 PR #1 통합으로 복원됐다. API와 Runpod 정책은 복원 시점에 내용이 같으며 이후 변경은 각 경로의 검증 결과와 함께 관리한다.

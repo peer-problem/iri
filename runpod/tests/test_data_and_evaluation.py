@@ -4,14 +4,13 @@ import json
 import httpx
 import pytest
 
-from api.app.provider import ModelUnavailable
-from api.tests.test_api import completion
+from runpod.inference.provider import ModelUnavailable
 from runpod.operations import evaluate
 from runpod.operations.compare import compare
 from runpod.operations.data import load_scenarios, validate_development
 from runpod.operations.serve_model import build_command
 from runpod.settings import ROOT
-from runpod.tests.helpers import configuration
+from runpod.tests.helpers import completion, configuration
 
 
 def test_development_data_is_balanced_and_has_explicit_review_status():

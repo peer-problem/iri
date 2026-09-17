@@ -7,7 +7,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from api.app.service import POLICY, generation_messages
+from runpod.inference.service import POLICY, generation_messages
 from runpod.operations.data import load_scenarios
 from runpod.settings import ENV_FILE, ROOT, Settings
 
