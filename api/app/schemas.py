@@ -19,6 +19,11 @@ class ChatResponse(BaseModel):
     request_id: UUID
 
 
+class SpeechRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+    text: str = Field(min_length=1, max_length=1000)
+
+
 class InputVerdict(BaseModel):
     model_config = ConfigDict(extra="forbid")
     decision: Literal["allow", "redirect", "support", "clarify"]

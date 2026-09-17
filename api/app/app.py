@@ -6,14 +6,15 @@ from uuid import uuid4
 import httpx
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.requests import ClientDisconnect
 
 from api.app.provider import ModelProvider, ModelUnavailable
-from api.app.schemas import ChatRequest, ChatResponse
+from api.app.schemas import ChatRequest, ChatResponse, SpeechRequest
 from api.app.service import FALLBACKS, ChatService, QueueFull, RequestGate
 from api.app.settings import Settings
+from api.app.speech import SpeechUnavailable, Synthesizer
 from api.app.transcription import FORMATS, Transcriber, TranscriptionUnavailable
 
 
@@ -21,6 +22,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
     settings = settings or Settings()
     gate = RequestGate(settings.max_waiting)
     audio_gate = RequestGate(0)
+    speech_gate = RequestGate(0)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -28,6 +30,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             app.state.provider = ModelProvider(settings, client)
             app.state.service = ChatService(app.state.provider)
             app.state.transcriber = Transcriber(settings, client)
+            app.state.synthesizer = Synthesizer(settings, client)
             yield
 
     app = FastAPI(title="Kids Sandbox: internal Phase 1 API", lifespan=lifespan)
@@ -120,6 +123,31 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
                 answer=FALLBACKS["unavailable"], action="unavailable", request_id=request_id
             ).model_dump(mode="json"),
         )
+
+    @app.post("/speech", dependencies=[Depends(authenticate)])
+    async def speech(body: SpeechRequest):
+        """Read an answer from POST /chat aloud. Returns MP3 bytes."""
+        if not settings.openai_api_key.get_secret_value():
+            raise HTTPException(503, "Speech is not configured")
+        if len(body.text) > settings.tts_max_chars:
+            raise HTTPException(413, "Text is too long")
+        try:
+            async with asyncio.timeout(settings.tts_timeout_seconds):
+                async with speech_gate.enter():
+                    audio = await app.state.synthesizer.synthesize(body.text)
+            return Response(
+                content=audio,
+                media_type="audio/mpeg",
+                headers={"Cache-Control": "no-store", "X-Request-Id": str(uuid4())},
+            )
+        except QueueFull:
+            raise HTTPException(429, "Speech is busy", headers={"Retry-After": "3"}) from None
+        except TimeoutError:
+            raise HTTPException(504, "Speech timed out") from None
+        except SpeechUnavailable:
+            raise HTTPException(503, "Speech is unavailable") from None
+        except ValueError:
+            raise HTTPException(413, "Text is too long") from None
 
     return app
 
