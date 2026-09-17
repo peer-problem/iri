@@ -87,8 +87,8 @@ async def test_speech_returns_mp3_with_configured_voice():
         "voice": "coral",
         "input": "안녕!",
         "instructions": (
-            "어린아이에게 천천히 다정하게 말한다. 일정한 음높이와 속도를 유지한다. "
-            "과장된 감정 표현이나 속삭임 없이 또렷하고 자연스럽게 한국어로 말한다."
+            "어린아이에게 말하듯 천천히, 밝고 따뜻하게 말한다. "
+            "자연스럽고 친근하게, 또렷한 한국어로 말한다."
         ),
         "speed": 0.95,
         "response_format": "mp3",
