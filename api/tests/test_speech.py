@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 import httpx
 import pytest
+from pydantic import ValidationError
 
 from api.app.app import create_app
 from api.app.settings import Settings
@@ -16,6 +17,17 @@ def configuration(**updates):
     values = dict(sandbox_api_key=KEY, openai_api_key=OPENAI_KEY)
     values.update(updates)
     return Settings(_env_file=None, **values)
+
+
+@pytest.mark.parametrize("speed", [0.25, 0.95, 4.0])
+def test_tts_speed_accepts_supported_values(speed):
+    assert configuration(tts_speed=speed).tts_speed == speed
+
+
+@pytest.mark.parametrize("speed", [0.24, 4.01])
+def test_tts_speed_rejects_unsupported_values(speed):
+    with pytest.raises(ValidationError):
+        configuration(tts_speed=speed)
 
 
 @asynccontextmanager
@@ -74,7 +86,11 @@ async def test_speech_returns_mp3_with_configured_voice():
         "model": "gpt-4o-mini-tts-2025-12-15",
         "voice": "coral",
         "input": "안녕!",
-        "instructions": "어린아이에게 말하듯 천천히, 다정하게",
+        "instructions": (
+            "어린아이에게 천천히 다정하게 말한다. 일정한 음높이와 속도를 유지한다. "
+            "과장된 감정 표현이나 속삭임 없이 또렷하고 자연스럽게 한국어로 말한다."
+        ),
+        "speed": 0.95,
         "response_format": "mp3",
     }
 
