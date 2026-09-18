@@ -7,7 +7,12 @@ import pytest
 from runpod.inference.provider import ModelUnavailable
 from runpod.operations import evaluate
 from runpod.operations.compare import compare
-from runpod.operations.data import load_scenarios, validate_development
+from runpod.operations.data import (
+    load_scenarios,
+    validate_development,
+    validate_final,
+    validate_final_manifest,
+)
 from runpod.operations.serve_model import build_command
 from runpod.settings import ROOT
 from runpod.tests.helpers import completion, configuration
@@ -47,9 +52,47 @@ async def test_real_evaluation_requires_explicit_draft_opt_in(tmp_path):
     args = argparse.Namespace(
         data=dataset, output=output, allow_draft=False, limit=None, mode="both"
     )
-    with pytest.raises(ValueError, match="Human review"):
+    with pytest.raises(ValueError, match="Scenario review"):
         await evaluate.evaluate(args)
     assert not output.exists()
+
+
+def test_final_validation_rejects_dev_data_and_unreviewed_scenarios():
+    dev = load_scenarios([(ROOT / "data/dev.jsonl")])
+    with pytest.raises(ValueError, match="300 final"):
+        validate_final(dev)
+    paired = []
+    for index in range(150):
+        for age in ("4-6", "7-10"):
+            original = dev[0]
+            paired.append(
+                original.model_copy(
+                    update={
+                        "id": f"final-{index}-{age}",
+                        "scenario_id": f"final-group-{index}",
+                        "split": "test",
+                        "age_band": age,
+                        "review_status": "draft",
+                    }
+                )
+            )
+    with pytest.raises(ValueError, match="category distribution"):
+        validate_final(paired)
+
+
+def test_final_v1_has_direct_review_and_locked_bytes(tmp_path):
+    data = ROOT / "data/final_v1.jsonl"
+    items = load_scenarios([ROOT / "data/dev.jsonl", data])
+    final = [item for item in items if item.split == "test"]
+    validate_final(final)
+    assert validate_final_manifest(data)["groups"] == 150
+    copied = tmp_path / data.name
+    copied.write_bytes(data.read_bytes() + b"\n")
+    (tmp_path / "final_v1_manifest.json").write_bytes(
+        (ROOT / "data/final_v1_manifest.json").read_bytes()
+    )
+    with pytest.raises(ValueError, match="differs"):
+        validate_final_manifest(copied)
 
 
 async def test_evaluation_refuses_unreachable_model_without_fake_results(tmp_path, monkeypatch):

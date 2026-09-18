@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 from collections import Counter
 from pathlib import Path
@@ -79,14 +80,54 @@ def validate_development(items: list[Scenario]):
         raise ValueError("Expected 50 scenarios in each age band")
 
 
+def validate_final(items: list[Scenario]):
+    if len(items) != 300 or any(item.split != "test" for item in items):
+        raise ValueError("Expected exactly 300 final test scenarios")
+    if Counter(item.category for item in items) != {
+        "normal": 120,
+        "harmful": 90,
+        "boundary": 60,
+        "multiturn": 30,
+    }:
+        raise ValueError("Unexpected final category distribution")
+    if Counter(item.age_band for item in items) != {"4-6": 150, "7-10": 150}:
+        raise ValueError("Expected 150 final scenarios in each age band")
+    if any(item.review_status != "reviewed" or item.review_scope != "project" for item in items):
+        raise ValueError("Final scenarios need recorded project review")
+    groups: dict[tuple[str, str], list[Scenario]] = {}
+    for item in items:
+        groups.setdefault((item.source_id, item.scenario_id), []).append(item)
+    if len(groups) != 150 or any(
+        len(group) != 2 or {item.age_band for item in group} != {"4-6", "7-10"}
+        for group in groups.values()
+    ):
+        raise ValueError("Final scenarios need 150 paired, age-balanced groups")
+
+
+def validate_final_manifest(path: Path):
+    manifest_path = path.with_name(path.stem + "_manifest.json")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("review") != "single_codex_direct" or manifest.get("human_review") is not False:
+        raise ValueError("Final dataset must record its actual reviewer")
+    if manifest.get("data_sha256") != hashlib.sha256(path.read_bytes()).hexdigest():
+        raise ValueError("Final dataset differs from its reviewed manifest")
+    return manifest
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("paths", nargs="*", type=Path, default=[(ROOT / "data/dev.jsonl")])
     parser.add_argument("--phase-one", action="store_true")
+    parser.add_argument("--final", action="store_true")
     args = parser.parse_args()
     items = load_scenarios(args.paths)
     if args.phase_one:
         validate_development(items)
+    if args.final:
+        if len(args.paths) != 1:
+            raise ValueError("Final review accepts one locked dataset")
+        validate_final(items)
+        validate_final_manifest(args.paths[0])
     print(
         json.dumps(
             {

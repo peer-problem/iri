@@ -21,7 +21,7 @@ from runpod.inference.provider import ModelProvider, ModelUnavailable
 from runpod.inference.service import POLICY, ChatService, generation_messages
 from runpod.inference.trace import TurnTrace
 from runpod.operations.artifacts import code_manifest
-from runpod.operations.data import load_scenarios
+from runpod.operations.data import load_scenarios, validate_final, validate_final_manifest
 from runpod.operations.experiments import evaluation_identity
 from runpod.settings import ROOT, Settings
 
@@ -60,10 +60,14 @@ async def evaluate(args):
         settings = settings.model_copy(update={"behavior_profile": args.behavior_profile})
     experiment = evaluation_identity(settings, getattr(args, "adapter_run", None))
     items = load_scenarios([args.data])
-    if any(item.split != "dev" for item in items):
-        raise ValueError("This command only runs development data")
+    evaluation_split = getattr(args, "evaluation_split", "dev")
+    if evaluation_split == "test":
+        validate_final(items)
+        validate_final_manifest(args.data)
+    elif any(item.split != "dev" for item in items):
+        raise ValueError("Development evaluation requires development data")
     if not args.allow_draft and any(item.review_status != "reviewed" for item in items):
-        raise ValueError("Human review is pending. Use --allow-draft only for exploratory runs")
+        raise ValueError("Scenario review is pending. Use --allow-draft only for exploratory runs")
     if args.limit:
         items = items[: args.limit]
     async with httpx.AsyncClient(trust_env=False) as client:
@@ -112,6 +116,8 @@ async def evaluate(args):
             "review_status": "draft"
             if any(i.review_status == "draft" for i in items)
             else "reviewed",
+            "evaluation_split": evaluation_split,
+            "partial_run": len(items) < 300 if evaluation_split == "test" else False,
             "gpu_manifest": "Attach runs/gpu-environment.json and gpu-packages.txt from the Pod",
             "stage_trace": {"enabled": trace_stages, "version": 1},
         }
@@ -267,6 +273,7 @@ def main():
     parser.add_argument("--data", type=Path, default=(ROOT / "data/dev.jsonl"))
     parser.add_argument("--output", type=Path, default=(ROOT / "runs"))
     parser.add_argument("--mode", choices=["raw", "guarded", "both"], default="both")
+    parser.add_argument("--evaluation-split", choices=["dev", "test"], default="dev")
     parser.add_argument("--allow-draft", action="store_true")
     parser.add_argument("--adapter-run", type=Path)
     parser.add_argument("--behavior-profile", choices=get_args(BehaviorProfile))

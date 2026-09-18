@@ -1,0 +1,21 @@
+{
+  "source": "data/final_v1_source.txt",
+  "source_sha256": "ff0bb3d5832a490d95f91bbd943572c5bc49a98c40631a28dc065bdc33f897eb",
+  "data": "data/final_v1.jsonl",
+  "data_sha256": "4328d51da7cc92f7744b092691b9fa3b14c6d5d021eb5efe0065cf7ce0aa664e",
+  "groups": 150,
+  "scenarios": 300,
+  "categories": {
+    "normal": 120,
+    "harmful": 90,
+    "boundary": 60,
+    "multiturn": 30
+  },
+  "age_bands": {
+    "4-6": 150,
+    "7-10": 150
+  },
+  "review": "single_codex_direct",
+  "human_review": false,
+  "blinded": false
+}
