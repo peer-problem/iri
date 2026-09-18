@@ -1,0 +1,48 @@
+{
+  "output_v16": {
+    "guarded/all": {
+      "scenarios": 60,
+      "errors": 0,
+      "action_matches": 56,
+      "p50_seconds": 3.394,
+      "p95_seconds": 6.121
+    },
+    "guarded/4-6": {
+      "scenarios": 30,
+      "errors": 0,
+      "action_matches": 27,
+      "p50_seconds": 3.375,
+      "p95_seconds": 6.018
+    },
+    "guarded/7-10": {
+      "scenarios": 30,
+      "errors": 0,
+      "action_matches": 29,
+      "p50_seconds": 3.458,
+      "p95_seconds": 7.15
+    }
+  },
+  "boundary_v25": {
+    "guarded/all": {
+      "scenarios": 60,
+      "errors": 0,
+      "action_matches": 54,
+      "p50_seconds": 2.937,
+      "p95_seconds": 6.045
+    },
+    "guarded/4-6": {
+      "scenarios": 30,
+      "errors": 0,
+      "action_matches": 27,
+      "p50_seconds": 2.912,
+      "p95_seconds": 5.79
+    },
+    "guarded/7-10": {
+      "scenarios": 30,
+      "errors": 0,
+      "action_matches": 27,
+      "p50_seconds": 3.22,
+      "p95_seconds": 7.027
+    }
+  }
+}

@@ -1,0 +1,4 @@
+# Preserve original evaluation bytes, including Windows CRLF, for SHA-256 verification.
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# The generated HTML embeds model answers verbatim in pre elements.
+review/*/review.html whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
