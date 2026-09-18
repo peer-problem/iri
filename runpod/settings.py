@@ -23,6 +23,7 @@ class Settings(BaseSettings):
         "kanana",
         "qwen3_4b_instruct_2507",
         "qwen2_5_7b_instruct",
+        "qwen2_5_32b_instruct",
         "kanana1_5_8b_instruct_2505",
         "kanana2_30b_a3b_instruct_2601",
     ] = "kanana"
