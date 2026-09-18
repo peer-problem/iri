@@ -8,7 +8,7 @@
 
 기본 흐름은 마이크 녹음 → STT → 인식 문장 확인 또는 수정 → 답변 생성 → TTS 재생이다. 텍스트로도 입력할 수 있고 모든 답변은 화면에 남는다. 재생 중지와 다시 듣기 및 음성 출력 끄기를 지원한다. 녹음은 최대 60초다.
 
-Kanana가 설정한 리비전으로 서빙 중이면 우선 사용한다. 준비되지 않았거나 요청이 실패하면 `gpt-5.6-luna`의 reasoning `high`로 입력 검사부터 출력 검사까지 다시 실행한다. STT는 `gpt-4o-mini-transcribe`, TTS는 `gpt-4o-mini-tts-2025-12-15`를 사용한다. GPU를 자동으로 시작하지 않는다.
+답변 모델은 고정된 Kanana 3B 원본과 이 프로젝트의 LoRA 어댑터만 사용한다. GPU가 중지됐거나 모델 요청이 실패하면 다른 답변 모델로 전환하지 않고 이용 불가를 알린다. STT는 `gpt-4o-mini-transcribe`, TTS는 `gpt-4o-mini-tts-2025-12-15`를 사용한다. GPU를 자동으로 시작하지 않는다.
 
 TTS는 서버에서 고정한 `coral` 음성을 속도 `0.95`로 사용한다. 어린아이에게 말하듯 천천히, 밝고 따뜻하며 자연스럽게 말하도록 모든 합성 요청에 같은 지시를 적용한다. 로컬에서 비교 실험할 때만 `.keys/.env`의 `TTS_SPEED` 또는 `TTS_INSTRUCTIONS`를 변경한다.
 
@@ -29,13 +29,9 @@ npm run dev --prefix web
 
 ## 현재 상태
 
-V63은 명시적으로 선택하는 후속 개발 후보다. [V63 실행·검증 안내](runpod/V63.md)에 코드 구조, 실행 명령과 평가 근거를 정리했다. 개발 행동 일치 98/100이며 지연 기준과 내용 안전성 검수는 미충족·미완료 상태다. 기본값은 `baseline`이며 제품 API에 자동 적용하지 않는다.
+Phase 3의 최신 범위인 Kanana 3B 어댑터 공개 게시, 실제 GPU 서빙 검증, Kanana 전용 API와 웹 배포 및 운영 인수인계를 마쳤다. [공개 어댑터](https://huggingface.co/jbaehova/Kanana-IRI-3B-QLoRA)는 고정된 `kakaocorp/kanana-2-3b-instruct` 리비전 `6a5d7889964c4c590299d16e309eabab1f73f8a9`에서 사용한다. 새 A40 Pod에서 공개 파일을 다시 내려받아 vLLM 로딩과 생성 응답을 확인하고 Pod를 중지 후 삭제했다.
 
-Phase 2는 종료했다. 다음 단계 모델은 `kakaocorp/kanana-2-3b-instruct` 원본이며 리비전은 `6a5d7889964c4c590299d16e309eabab1f73f8a9`다. 이번 QLoRA 어댑터는 품질 향상이 확인되지 않아 채택하지 않았다.
-
-Phase 3에서는 모델 품질 개선과 독립 평가 및 모델 운영 인수인계를 진행한다. RTX 3090에서 두 번째 비교 800건을 완료했으며 실행 오류는 0건이다. 후보는 지원 대응과 안전 검사 및 지연 기준을 충족하지 못해 기본값 `baseline`을 유지한다.
-
-이후 재현성 진단 180회와 추가 비교 400건을 완료했다. 재현성 옵션을 적용한 두 평가의 raw 응답 100개는 모두 일치했다. 안전 후보는 지원 대응과 지연 기준 미충족으로 계속 미채택이다.
+현재 상시 GPU는 꺼져 있다. 따라서 웹은 열리지만 채팅은 사용 불가 응답을 낸다. 데모 시간에만 GPU 한 대와 인증된 Contabo 터널을 열어 `/ready` 및 `/chat`을 다시 확인한다. 기존 개발 비교에서 어댑터의 품질 개선은 입증되지 않았고 최종 300문항 답변 평가는 미실행이다. 아동 대상 공개 출시는 승인하지 않았다. 이전 품질 실험과 후보는 기록으로 보존하며 제품 답변 경로에는 적용하지 않는다.
 
 - [Phase 3 첫 구현과 GPU 비교 결과](runpod/artifacts/phase3-quality-20260917/README.md)
 - [Phase 3 두 번째 비교와 미해결 문제](runpod/artifacts/phase3-quality-v3-20260917/README.md)
@@ -43,6 +39,8 @@ Phase 3에서는 모델 품질 개선과 독립 평가 및 모델 운영 인수�
 - [Phase 2 종료 보고서](runpod/artifacts/phase2-evaluation-20260917/README.md)
 - [전체 검토와 보완 내역](runpod/artifacts/phase2-evaluation-20260917/audit.md)
 - [Phase 3 인수인계](runpod/artifacts/phase2-evaluation-20260917/phase3-handoff.md)
+- [Kanana 3B 어댑터 게시와 서빙 안내](runpod/HF_SERVING.md)
+- [Phase 3 종료 보고서](runpod/artifacts/phase3-closeout-20260919/README.md)
 - [팀 검수 자료](runpod/artifacts/README.md)
 
 ## 로컬 개발
@@ -56,7 +54,7 @@ runpod/.venv/bin/python -m pytest -q -c runpod/pyproject.toml
 runpod/.venv/bin/ruff check --config runpod/pyproject.toml api runpod
 ```
 
-초기화는 `.keys/.env`에 서로 다른 제품 API 인증키 `SANDBOX_API_KEY`와 모델 서버 인증키 `MODEL_API_KEY`를 생성하며 기존 파일은 덮어쓰지 않는다. 이 파일의 `MODEL_REVISION`을 위 리비전으로 설정하고, SSH 터널로 연결한 vLLM 서버 주소를 `MODEL_BASE_URL`에 지정한다. 원본 사용 시 `ADAPTER_NAME`은 비워 둔다. `.keys/`는 Git에 포함하지 않는다. `runpod.operations.doctor --online`으로 모델 연결을 확인할 수 있다.
+초기화는 `.keys/.env`에 서로 다른 제품 API 인증키 `SANDBOX_API_KEY`와 모델 서버 인증키 `MODEL_API_KEY`를 생성하며 기존 파일은 덮어쓰지 않는다. 이 파일의 `MODEL_REVISION`을 위 리비전으로 설정하고 `ADAPTER_NAME=iri-kanana3b-tuned`와 SSH 터널로 연결한 vLLM 서버 주소를 `MODEL_BASE_URL`에 지정한다. `.keys/`는 Git에 포함하지 않는다. `runpod.operations.doctor --online`으로 모델 연결을 확인할 수 있다.
 
 ### 팀원 음성 API 실행
 

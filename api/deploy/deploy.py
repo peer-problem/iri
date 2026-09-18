@@ -66,6 +66,7 @@ def vps(origin):
         "MODEL_API_KEY",
         "MODEL_REVISION",
         "MODEL_PROFILE",
+        "ADAPTER_NAME",
         "MODEL_BASE_URL",
         "OPENAI_API_KEY",
         "DEMO_ACCESS_CODE",
@@ -76,8 +77,6 @@ def vps(origin):
         ALLOWED_ORIGINS=origin,
         STT_MODEL="gpt-4o-mini-transcribe",
         TTS_MODEL="gpt-4o-mini-tts-2025-12-15",
-        FALLBACK_MODEL="gpt-5.6-luna",
-        FALLBACK_REASONING_EFFORT="high",
         REQUEST_TIMEOUT_SECONDS="90",
     )
     env_content = "".join(f"{k}={json.dumps(v)}\n" for k, v in runtime.items())

@@ -1,11 +1,5 @@
 {
   "kanana": {
     "model_id": "kakaocorp/kanana-2-3b-instruct"
-  },
-  "kanana1_5_8b_instruct_2505": {
-    "model_id": "kakaocorp/kanana-1.5-8b-instruct-2505"
-  },
-  "kanana2_30b_a3b_instruct_2601": {
-    "model_id": "kakaocorp/kanana-2-30b-a3b-instruct-2601"
   }
 }

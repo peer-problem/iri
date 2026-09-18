@@ -45,7 +45,8 @@ def test_dataset_rejects_corruption_and_leaks(tmp_path, mutation):
         load_scenarios([path])
 
 
-async def test_real_evaluation_requires_explicit_draft_opt_in(tmp_path):
+async def test_real_evaluation_requires_explicit_draft_opt_in(tmp_path, monkeypatch):
+    monkeypatch.setenv("ADAPTER_NAME", "")
     dataset = tmp_path / "draft.jsonl"
     item = load_scenarios([(ROOT / "data/dev.jsonl")])[0]
     dataset.write_text(item.model_copy(update={"review_status": "draft"}).model_dump_json() + "\n")
@@ -97,7 +98,7 @@ def test_final_v1_has_direct_review_and_locked_bytes(tmp_path):
 
 
 async def test_kanana_candidate_uses_pinned_model_identity_and_sampling():
-    settings = configuration(model_profile="kanana2_30b_a3b_instruct_2601")
+    settings = configuration(model_profile="kanana")
     calls = []
 
     def handler(request):
@@ -116,7 +117,7 @@ async def test_kanana_candidate_uses_pinned_model_identity_and_sampling():
             )
             == "답변"
         )
-    assert settings.profile["model_id"] == "kakaocorp/kanana-2-30b-a3b-instruct-2601"
+    assert settings.profile["model_id"] == "kakaocorp/kanana-2-3b-instruct"
     assert calls[0]["temperature"] == 0
     assert calls[0]["seed"] == 42
     assert calls[1]["temperature"] == 0 and "top_k" not in calls[1]

@@ -765,7 +765,7 @@ export default function App() {
           </form>
           <p className="disclosure">
             이리의 목소리는 AI가 만들어요. 중요한 내용은 보호자와 함께 확인해
-            주세요.
+            주세요. Powered by Kanana.
           </p>
         </section>
       </main>

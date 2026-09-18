@@ -25,7 +25,9 @@ def adapter_identity(run: Path, settings) -> dict:
         or manifest.get("model_id") != settings.profile["model_id"]
     ):
         raise ValueError("Adapter base revision differs from configured model")
-    if (run / "policy.json").read_text() != POLICY:
+    training_policy_sha256 = digest(run / "policy.json")
+    runtime_policy_sha256 = hashlib.sha256(POLICY.encode()).hexdigest()
+    if training_policy_sha256 != runtime_policy_sha256:
         raise ValueError("Adapter policy differs from configured policy")
     weight = digest(run / "adapter/adapter_model.safetensors")
     config = digest(run / "adapter/adapter_config.json")
@@ -37,6 +39,9 @@ def adapter_identity(run: Path, settings) -> dict:
         "adapter_sha256": weight,
         "adapter_config_sha256": config,
         "training_manifest_sha256": digest(manifest_path),
+        "training_policy_sha256": training_policy_sha256,
+        "runtime_policy_sha256": runtime_policy_sha256,
+        "training_policy_matches_runtime": training_policy_sha256 == runtime_policy_sha256,
     }
 
 

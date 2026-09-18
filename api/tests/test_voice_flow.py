@@ -50,4 +50,4 @@ async def test_transcript_to_guarded_answer_to_speech():
         assert spoken.status_code == 200
         assert spoken.content == MP3
         assert spoken.headers["content-type"] == "audio/mpeg"
-    assert called == ["/v1/audio/transcriptions", "/v1/models", *["/v1/chat/completions"] * 3, "/v1/audio/speech"]
+    assert called == ["/v1/audio/transcriptions", *["/v1/chat/completions"] * 3, "/v1/audio/speech"]
