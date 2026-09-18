@@ -7,10 +7,20 @@ from runpod.settings import Settings
 class ModelUnavailable(Exception):
     """Public handlers must not return the upstream error body."""
 
-    def __init__(self, message: str, *, code: str = "model_unavailable", stage: str | None = None):
+    def __init__(
+        self,
+        message: str,
+        *,
+        code: str = "model_unavailable",
+        stage: str | None = None,
+        http_status: int | None = None,
+        failure_kind: str | None = None,
+    ):
         super().__init__(message)
         self.code = code
         self.stage = stage
+        self.http_status = http_status
+        self.failure_kind = failure_kind
 
 
 class ModelProvider:
@@ -95,8 +105,20 @@ class ModelProvider:
         except httpx.TimeoutException as exc:
             raise TimeoutError from exc
         except httpx.HTTPStatusError as exc:
-            raise ModelUnavailable("Upstream HTTP error", code="upstream_http_error") from exc
+            raise ModelUnavailable(
+                "Upstream HTTP error",
+                code="upstream_http_error",
+                http_status=exc.response.status_code,
+            ) from exc
         except httpx.HTTPError as exc:
-            raise ModelUnavailable("Upstream transport error", code="transport_error") from exc
+            raise ModelUnavailable(
+                "Upstream transport error",
+                code="transport_error",
+                failure_kind=type(exc).__name__,
+            ) from exc
         except (ValueError, KeyError, IndexError, TypeError) as exc:
-            raise ModelUnavailable("Invalid upstream response", code="invalid_response") from exc
+            raise ModelUnavailable(
+                "Invalid upstream response",
+                code="invalid_response",
+                failure_kind=type(exc).__name__,
+            ) from exc

@@ -178,3 +178,55 @@ async def test_evaluation_records_safe_failure_diagnostics(tmp_path, monkeypatch
         json.loads((run / "metadata.json").read_text())["generation"]["guard_response_format"]
         == "json_schema"
     )
+
+
+async def test_evaluation_identifies_second_turn_upstream_status_without_body(
+    tmp_path, monkeypatch
+):
+    settings = configuration()
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        if request.url.path.endswith("/models"):
+            return httpx.Response(200, json={"data": [{"id": settings.served_model}]})
+        calls += 1
+        if calls == 4:
+            return httpx.Response(422, text="PRIVATE_UPSTREAM_ERROR_BODY")
+        body = json.loads(request.content)
+        if "response_format" in body:
+            return completion('{"decision":"allow"}', settings)
+        return completion("첫 질문에 답했어.", settings)
+
+    client_class = httpx.AsyncClient
+    monkeypatch.setattr(
+        evaluate.httpx,
+        "AsyncClient",
+        lambda **kwargs: client_class(transport=httpx.MockTransport(handler), **kwargs),
+    )
+    monkeypatch.setattr(evaluate, "Settings", lambda: settings)
+    item = next(item for item in load_scenarios([ROOT / "data/dev.jsonl"]) if item.id == "dev-092")
+    data = tmp_path / "dev-092.jsonl"
+    data.write_text(item.model_dump_json() + "\n", encoding="utf-8")
+    args = argparse.Namespace(
+        data=data,
+        output=tmp_path / "runs",
+        allow_draft=True,
+        limit=None,
+        mode="guarded",
+        trace_stages=True,
+    )
+
+    assert await evaluate.evaluate(args) == 2
+    run = next(args.output.iterdir())
+    row = json.loads((run / "results.jsonl").read_text(encoding="utf-8"))
+    assert len(row["turns"]) == 1
+    assert row["error_detail"] == {
+        "code": "upstream_http_error",
+        "stage": "input_guard",
+        "turn": 2,
+        "http_status": 422,
+    }
+    trace = json.loads((run / "stage-traces.jsonl").read_text(encoding="utf-8"))
+    assert trace["turns"][1]["stages"]["input_guard"]["status"] == "error"
+    assert "PRIVATE_UPSTREAM_ERROR_BODY" not in (run / "results.jsonl").read_text()
