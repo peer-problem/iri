@@ -96,8 +96,8 @@ def test_final_v1_has_direct_review_and_locked_bytes(tmp_path):
         validate_final_manifest(copied)
 
 
-async def test_qwen_candidate_uses_pinned_model_identity_and_sampling():
-    settings = configuration(model_profile="qwen3_4b_instruct_2507")
+async def test_kanana_candidate_uses_pinned_model_identity_and_sampling():
+    settings = configuration(model_profile="kanana2_30b_a3b_instruct_2601")
     calls = []
 
     def handler(request):
@@ -116,9 +116,9 @@ async def test_qwen_candidate_uses_pinned_model_identity_and_sampling():
             )
             == "답변"
         )
-    assert settings.profile["model_id"] == "Qwen/Qwen3-4B-Instruct-2507"
-    assert calls[0]["temperature"] == 0.7
-    assert calls[0]["top_p"] == 0.8 and calls[0]["top_k"] == 20
+    assert settings.profile["model_id"] == "kakaocorp/kanana-2-30b-a3b-instruct-2601"
+    assert calls[0]["temperature"] == 0
+    assert calls[0]["seed"] == 42
     assert calls[1]["temperature"] == 0 and "top_k" not in calls[1]
     assert evaluation_identity(settings)["model_id"] == settings.profile["model_id"]
 

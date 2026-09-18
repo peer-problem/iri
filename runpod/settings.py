@@ -21,9 +21,6 @@ class Settings(BaseSettings):
     model_serve_port: int = Field(default=8002, ge=1024, le=65535)
     model_profile: Literal[
         "kanana",
-        "qwen3_4b_instruct_2507",
-        "qwen2_5_7b_instruct",
-        "qwen2_5_32b_instruct",
         "kanana1_5_8b_instruct_2505",
         "kanana2_30b_a3b_instruct_2601",
     ] = "kanana"
@@ -76,6 +73,4 @@ class Settings(BaseSettings):
 
     @property
     def generation_sampling(self) -> dict:
-        if self.model_profile == "qwen3_4b_instruct_2507":
-            return {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "seed": 42}
         return {"temperature": 0, "seed": 42}
