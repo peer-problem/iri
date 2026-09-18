@@ -11,6 +11,12 @@ from runpod.inference.behavior import (
     SUPPORT_V3,
     BehaviorProfile,
 )
+from runpod.inference.quality_v1 import (
+    GENERAL_GUIDANCE as QUALITY_GENERAL_GUIDANCE,
+)
+from runpod.inference.quality_v1 import INPUT_GUIDANCE as QUALITY_INPUT_GUIDANCE
+from runpod.inference.quality_v1 import OUTPUT_GUIDANCE as QUALITY_OUTPUT_GUIDANCE
+from runpod.inference.quality_v1 import SUPPORT_GUIDANCE as QUALITY_SUPPORT_GUIDANCE
 from runpod.inference.v63 import (
     GENERAL_GUIDANCE,
     INPUT_INTENT_CLARIFICATION,
@@ -54,5 +60,12 @@ PROFILES: dict[BehaviorProfile, ProfileSpec] = {
         output_guidance=OUTPUT_V3 + "\n" + OUTPUT_CONTEXT_CLARIFICATION,
         general_guidance=GENERAL_GUIDANCE,
         recheck=True,
+    ),
+    "phase3_quality_v1": replace(
+        _SAFETY_V3,
+        input_guidance=QUALITY_INPUT_GUIDANCE,
+        output_guidance=QUALITY_OUTPUT_GUIDANCE,
+        general_guidance=QUALITY_GENERAL_GUIDANCE,
+        support_guidance=QUALITY_SUPPORT_GUIDANCE,
     ),
 }
