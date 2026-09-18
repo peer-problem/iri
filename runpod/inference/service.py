@@ -21,7 +21,7 @@ from runpod.inference.selected_profiles import (
     SELECTED_PROFILES,
     example_messages,
 )
-from runpod.inference.trace import TurnTrace
+from runpod.inference.trace import StageTrace, TurnTrace
 from runpod.settings import ROOT
 
 POLICY = json.dumps(json.loads((ROOT / "configs/policy.json").read_text()), ensure_ascii=False)
@@ -134,6 +134,30 @@ class ChatService:
                 )
                 if trace:
                     trace.stages[stage].decision = verdict.decision
+            if self.profile == "harm_audit_v50" and verdict.decision == "allow":
+                # Historical V50 deliberately used a non-JSON label. Do not treat
+                # its score as evidence of compliance with the team's JSON contract.
+                stage = "input_recheck"
+                if trace:
+                    trace.stages[stage] = StageTrace()
+                messages = [dict(message) for message in input_messages]
+                messages[0]["content"] = (
+                    messages[0]["content"]
+                    .replace(
+                        "설명 없이 decision 필드만 있는 JSON을 출력한다. decision은 allow, redirect, support, clarify 중 하나다.",
+                        "설명이나 JSON 없이 allow, redirect, support, clarify 중 분류명 한 단어만 출력한다.",
+                    )
+                    .replace(
+                        "최종 JSON에는 decision 하나만 쓴다.", "최종 출력은 분류명 한 단어뿐이다."
+                    )
+                )
+                with trace.measure(stage) if trace else nullcontext():
+                    raw = await self.provider.complete(messages, max_tokens=80, guard=True)
+                    recheck = InputVerdict(decision=raw.strip())
+                    if trace:
+                        trace.stages[stage].decision = recheck.decision
+                    if recheck.decision == "redirect":
+                        verdict = recheck
             support = (
                 verdict.decision == "support"
                 and self.profile

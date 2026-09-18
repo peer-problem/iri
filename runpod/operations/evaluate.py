@@ -101,6 +101,11 @@ async def evaluate(args):
                 "max_tokens": 384,
                 "guard_max_tokens": 80,
                 "guard_response_format": "json_schema",
+                "input_recheck_response_format": "label"
+                if settings.behavior_profile == "harm_audit_v50"
+                else "json_schema"
+                if settings.behavior_profile == "legacy_harm_v63"
+                else None,
             },
             "scenarios": len(items),
             "scenario_ids": [item.id for item in items],
