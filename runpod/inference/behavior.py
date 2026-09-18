@@ -3,7 +3,15 @@
 from typing import Literal
 
 BehaviorProfile = Literal[
-    "baseline", "input_v2", "support_v2", "full_v2", "input_v3", "support_v3", "safety_v3", "trim_v10"
+    "baseline",
+    "input_v2",
+    "support_v2",
+    "full_v2",
+    "input_v3",
+    "support_v3",
+    "safety_v3",
+    "trim_v10",
+    "output_v16",
 ]
 
 # Opt-in V3 candidate; only general generation receives this instruction.

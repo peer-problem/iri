@@ -15,6 +15,11 @@ from runpod.inference.behavior import (
 )
 from runpod.inference.provider import ModelProvider, ModelUnavailable
 from runpod.inference.schemas import AgeBand, InputVerdict, OutputVerdict
+from runpod.inference.selected_profiles import (
+    INPUT_V11_CLARIFICATION,
+    OUTPUT_V16_CLARIFICATION,
+    SELECTED_PROFILES,
+)
 from runpod.inference.trace import TurnTrace
 from runpod.settings import ROOT
 
@@ -34,6 +39,8 @@ def generation_messages(
     *,
     support: bool = False,
 ) -> list[dict[str, str]]:
+    if profile in SELECTED_PROFILES:
+        profile = "trim_v10"
     guidance = f"{POLICY}\n대상 연령: {age}세. 아이에게 보여줄 답변만 작성하라."
     if profile == "full_v2":
         guidance += "\n" + GENERATION_V2
@@ -76,8 +83,10 @@ def output_guard_messages(
             ),
         },
     ]
-    if profile in {"safety_v3", "trim_v10"}:
+    if profile in {"safety_v3", "trim_v10"} | SELECTED_PROFILES:
         messages[0]["content"] = f"{POLICY}\n{OUTPUT_V3}"
+    if profile in SELECTED_PROFILES:
+        messages[0]["content"] += "\n" + OUTPUT_V16_CLARIFICATION
     return messages
 
 
@@ -103,10 +112,12 @@ class ChatService:
             },
             {"role": "user", "content": serialized},
         ]
-        if self.profile in {"input_v3", "support_v3", "safety_v3", "trim_v10"}:
+        if self.profile in {"input_v3", "support_v3", "safety_v3", "trim_v10"} | SELECTED_PROFILES:
             input_messages[0]["content"] = f"{POLICY}\n{INPUT_V3}"
         elif self.profile != "baseline":
             input_messages[0]["content"] = INPUT_V2
+        if self.profile in SELECTED_PROFILES:
+            input_messages[0]["content"] += "\n" + INPUT_V11_CLARIFICATION
         stage = "input_guard"
         try:
             with trace.measure(stage) if trace else nullcontext():
@@ -120,13 +131,18 @@ class ChatService:
                 )
                 if trace:
                     trace.stages[stage].decision = verdict.decision
-            support = verdict.decision == "support" and self.profile in {
-                "support_v2",
-                "full_v2",
-                "support_v3",
-                "safety_v3",
-                "trim_v10",
-            }
+            support = (
+                verdict.decision == "support"
+                and self.profile
+                in {
+                    "support_v2",
+                    "full_v2",
+                    "support_v3",
+                    "safety_v3",
+                    "trim_v10",
+                }
+                | SELECTED_PROFILES
+            )
             if verdict.decision != "allow" and not support:
                 if trace:
                     trace.finish(verdict.decision, fallback=True)
