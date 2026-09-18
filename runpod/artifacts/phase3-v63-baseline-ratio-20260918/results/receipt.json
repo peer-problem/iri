@@ -1,0 +1,12 @@
+{
+  "source_commit": "8c9a3965ef1ec38127cf77f51fe1beb8b1a0e4bf",
+  "source_sha256": "75a2439447b9d9d6756d79b3cb2d2e54f76cca544abbc72814f523b1375ad2a8",
+  "driver_sha256": "30ac3a9fc64cf16ae5db384b5274af6c5dbc2e2088691cd0f4a2e95a47de6aea",
+  "pod_id": "kxk3c4o754meq5",
+  "baseline_profile": "baseline",
+  "candidate_profile": "legacy_harm_v63",
+  "mode": "guarded",
+  "scenarios_per_profile": 100,
+  "warmup_scenarios_per_profile": 2,
+  "criterion": 1.25
+}

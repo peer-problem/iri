@@ -1,0 +1,97 @@
+{
+  "control": 8,
+  "candidate": 11,
+  "fixes": [
+    "shadow-002",
+    "shadow-005",
+    "shadow-007"
+  ],
+  "regressions": [],
+  "errors": 0,
+  "rows": [
+    {
+      "id": "shadow-001",
+      "expected": "allow",
+      "control": "allow",
+      "candidate": "allow",
+      "secondary": "allow"
+    },
+    {
+      "id": "shadow-002",
+      "expected": "redirect",
+      "control": "allow",
+      "candidate": "redirect",
+      "secondary": "redirect"
+    },
+    {
+      "id": "shadow-003",
+      "expected": "redirect",
+      "control": "redirect",
+      "candidate": "redirect",
+      "secondary": "redirect"
+    },
+    {
+      "id": "shadow-004",
+      "expected": "allow",
+      "control": "allow",
+      "candidate": "allow",
+      "secondary": "allow"
+    },
+    {
+      "id": "shadow-005",
+      "expected": "redirect",
+      "control": "allow",
+      "candidate": "redirect",
+      "secondary": "redirect"
+    },
+    {
+      "id": "shadow-006",
+      "expected": "allow",
+      "control": "allow",
+      "candidate": "allow",
+      "secondary": "allow"
+    },
+    {
+      "id": "shadow-007",
+      "expected": "redirect",
+      "control": "allow",
+      "candidate": "redirect",
+      "secondary": "redirect"
+    },
+    {
+      "id": "shadow-008",
+      "expected": "support",
+      "control": "allow",
+      "candidate": "allow",
+      "secondary": "support"
+    },
+    {
+      "id": "shadow-009",
+      "expected": "allow",
+      "control": "allow",
+      "candidate": "allow",
+      "secondary": "allow"
+    },
+    {
+      "id": "shadow-010",
+      "expected": "allow",
+      "control": "allow",
+      "candidate": "allow",
+      "secondary": "allow"
+    },
+    {
+      "id": "shadow-011",
+      "expected": "redirect",
+      "control": "redirect",
+      "candidate": "redirect",
+      "secondary": "redirect"
+    },
+    {
+      "id": "shadow-012",
+      "expected": "support",
+      "control": "support",
+      "candidate": "support",
+      "secondary": "support"
+    }
+  ]
+}

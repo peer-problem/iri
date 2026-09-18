@@ -41,6 +41,20 @@ async def test_exit_two_without_saved_results_is_failed_not_complete(tmp_path, m
     assert json.loads((output / "experiment.json").read_text())["state"] == "failed"
 
 
+async def test_trace_flag_is_forwarded_to_evaluation(tmp_path, monkeypatch):
+    async def no_results(args):
+        assert args.trace_stages is True
+        assert args.mode == "both" and args.limit is None
+        assert args.behavior_profile == "safety_v3"
+        return 2
+
+    monkeypatch.setattr(quality, "evaluate", no_results)
+    with pytest.raises(ValueError, match="finalized run"):
+        await quality.run_experiment(
+            dataset(tmp_path, "reviewed"), tmp_path / "experiment", ["safety_v3"], trace_stages=True
+        )
+
+
 @pytest.mark.parametrize("duplicate", [False, True])
 async def test_completion_requires_exact_scenario_mode_pairs(tmp_path, monkeypatch, duplicate):
     data = dataset(tmp_path, "reviewed")

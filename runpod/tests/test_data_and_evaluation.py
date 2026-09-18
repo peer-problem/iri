@@ -62,8 +62,9 @@ async def test_evaluation_refuses_unreachable_model_without_fake_results(tmp_pat
     assert not list(tmp_path.iterdir())
 
 
-async def test_evaluation_records_independent_multiturn_histories(tmp_path, monkeypatch):
-    settings = configuration()
+@pytest.mark.parametrize("profile", ["baseline", "legacy_harm_v63"])
+async def test_evaluation_records_independent_multiturn_histories(tmp_path, monkeypatch, profile):
+    settings = configuration(behavior_profile=profile)
     calls = []
 
     def handler(request):
@@ -102,6 +103,10 @@ async def test_evaluation_records_independent_multiturn_histories(tmp_path, monk
     assert raw_first not in json.dumps(guarded_calls)
     assert (run_dir / "review.csv").exists()
     assert settings.model_api_key.get_secret_value() not in (run_dir / "metadata.json").read_text()
+    metadata = json.loads((run_dir / "metadata.json").read_text())
+    assert metadata["input_recheck_response_format"] == (
+        "json_schema" if profile == "legacy_harm_v63" else None
+    )
 
 
 def test_summary_does_not_count_errors_as_success_or_raw_actions():

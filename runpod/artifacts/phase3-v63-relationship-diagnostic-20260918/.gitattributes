@@ -1,0 +1,5 @@
+# Preserve original evidence bytes, including Windows CRLF, for SHA-256 verification.
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Markdown hard breaks and model answer whitespace are part of the original record.
+ANSWERS.md whitespace=-blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+driver.log whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

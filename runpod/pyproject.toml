@@ -22,6 +22,8 @@ pythonpath = [".."]
 cache-dir = "runpod/.ruff_cache"
 target-version = "py312"
 line-length = 100
+# Archived V63 drivers retain their original bytes and hashes.
+extend-exclude = ["**/artifacts/**"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
