@@ -6,7 +6,7 @@
 
 ## 확인된 산출물
 
-- Hugging Face: `jbaehova/Kanana-IRI-3B-QLoRA`, 커밋 `6eb9580da2e2e92875e30f6a6b41a7493fdccf15`
+- Hugging Face: `peerproblem/Kanana-IRI-3B-QLoRA`, 커밋 `6eb9580da2e2e92875e30f6a6b41a7493fdccf15`
 - 기본 모델: `kakaocorp/kanana-2-3b-instruct`, 리비전 `6a5d7889964c4c590299d16e309eabab1f73f8a9`
 - 어댑터 가중치 SHA-256: `7e65cf058a51407cef1a0526673253f30f5aafd4d2e192843e71516e43fe71d5`
 - 새 A40 Pod의 vLLM 0.29.0에서 원본과 어댑터 별칭, 실제 생성 응답 다섯 건을 검증했다. 실행 보고서는 로컬 백업 `runpod/backups/phase3-hf-serving-20260919/iri-serving-verification.json`에 있다.

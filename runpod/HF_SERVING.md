@@ -4,7 +4,7 @@
 
 ## 게시물
 
-- Hugging Face 저장소: `jbaehova/Kanana-IRI-3B-QLoRA`
+- Hugging Face 저장소: `peerproblem/Kanana-IRI-3B-QLoRA`
 - 게시 커밋: `6eb9580da2e2e92875e30f6a6b41a7493fdccf15`
 - 기본 모델 리비전: `6a5d7889964c4c590299d16e309eabab1f73f8a9`
 - 어댑터 SHA-256: `7e65cf058a51407cef1a0526673253f30f5aafd4d2e192843e71516e43fe71d5`

@@ -29,7 +29,7 @@ npm run dev --prefix web
 
 ## 현재 상태
 
-Phase 3의 최신 범위인 Kanana 3B 어댑터 공개 게시, 실제 GPU 서빙 검증, Kanana 우선 API와 웹 배포 및 운영 인수인계를 마쳤다. [공개 어댑터](https://huggingface.co/jbaehova/Kanana-IRI-3B-QLoRA)는 고정된 `kakaocorp/kanana-2-3b-instruct` 리비전 `6a5d7889964c4c590299d16e309eabab1f73f8a9`에서 사용한다. 새 A40 Pod에서 공개 파일을 다시 내려받아 vLLM 로딩과 생성 응답을 확인하고 Pod를 중지 후 삭제했다.
+Phase 3의 최신 범위인 Kanana 3B 어댑터 공개 게시, 실제 GPU 서빙 검증, Kanana 우선 API와 웹 배포 및 운영 인수인계를 마쳤다. [공개 어댑터](https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA)는 `peerproblem` 조직이 관리하며 고정된 `kakaocorp/kanana-2-3b-instruct` 리비전 `6a5d7889964c4c590299d16e309eabab1f73f8a9`에서 사용한다. 새 A40 Pod에서 공개 파일을 다시 내려받아 vLLM 로딩과 생성 응답을 확인하고 Pod를 중지 후 삭제했다.
 
 현재 상시 GPU는 꺼져 있어 `/ready`는 503을 반환하고 채팅은 Luna high 경로를 사용한다. 데모 시간에 GPU 한 대와 인증된 Contabo 터널을 열면 Kanana 경로가 우선 사용되는지 `/ready` 및 `/chat`으로 확인한다. 기존 개발 비교에서 어댑터의 품질 개선은 입증되지 않았고 최종 300문항 답변 평가는 미실행이다. 아동 대상 공개 출시는 승인하지 않았다. 이전 품질 실험과 Qwen 후보는 기록으로만 보존한다.
 
