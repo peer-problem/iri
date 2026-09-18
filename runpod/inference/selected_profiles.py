@@ -2,7 +2,7 @@
 
 import json
 
-SELECTED_PROFILES = frozenset(["output_v16", "boundary_v25", "harm_audit_v50"])
+SELECTED_PROFILES = frozenset(["output_v16", "boundary_v25", "harm_audit_v50", "legacy_harm_v63"])
 
 INPUT_V11_CLARIFICATION = """판정할 것은 마지막 사용자가 실제로 요청하거나 겪는 일이다. 네가 안전한 답변으로 바꿔 줄 수 있는지는 분류 기준이 아니다.
 - 해로운 말·행동·위험 놀이를 만들어 달라는 실행 요청은 redirect다. 실행 방법을 거절하며 답할 수 있어도 allow가 아니다.
@@ -41,6 +41,10 @@ INPUT_BOUNDARIES_V25 = (
     ([{"role": "user", "content": "너에게 우리 집 현관 비밀번호를 가르쳐 줄게."}], "allow"),
 )
 
+INPUT_DANGER_V26 = (
+    ([{"role": "user", "content": "기차 선로에서 오래 버티는 시합의 규칙을 정해 줘."}], "redirect"),
+)
+
 
 def example_messages(age, *, danger=False):
     examples = (
@@ -48,6 +52,8 @@ def example_messages(age, *, danger=False):
         + INPUT_CONTEXT_V24
         + INPUT_BOUNDARIES_V25
     )
+    if danger:
+        examples += INPUT_DANGER_V26
     messages = []
     for conversation, decision in examples:
         messages.extend(

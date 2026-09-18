@@ -14,6 +14,7 @@ BehaviorProfile = Literal[
     "output_v16",
     "boundary_v25",
     "harm_audit_v50",
+    "legacy_harm_v63",
 ]
 
 # Opt-in V3 candidate; only general generation receives this instruction.

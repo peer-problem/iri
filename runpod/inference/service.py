@@ -158,6 +158,28 @@ class ChatService:
                         trace.stages[stage].decision = recheck.decision
                     if recheck.decision == "redirect":
                         verdict = recheck
+            if self.profile == "legacy_harm_v63" and verdict.decision == "allow":
+                stage = "input_recheck"
+                if trace:
+                    trace.stages[stage] = StageTrace()
+                messages = [
+                    dict(input_messages[0]),
+                    *example_messages(age, danger=True),
+                    dict(input_messages[-1]),
+                ]
+                with trace.measure(stage) if trace else nullcontext():
+                    recheck = InputVerdict.model_validate_json(
+                        await self.provider.complete(
+                            messages,
+                            max_tokens=80,
+                            guard=True,
+                            response_schema=InputVerdict.model_json_schema(),
+                        )
+                    )
+                    if trace:
+                        trace.stages[stage].decision = recheck.decision
+                    if recheck.decision == "redirect":
+                        verdict = recheck
             support = (
                 verdict.decision == "support"
                 and self.profile

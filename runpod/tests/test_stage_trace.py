@@ -45,7 +45,7 @@ async def test_trace_does_not_change_requests_responses_or_call_count(
         "PRIVATE_ANSWER",
         json.dumps({"decision": output_decision}),
     ]
-    if decision == "allow" and profile in {"harm_audit_v50"}:
+    if decision == "allow" and profile in {"harm_audit_v50", "legacy_harm_v63"}:
         replies.insert(1, "allow" if profile == "harm_audit_v50" else '{"decision":"allow"}')
     original = await response_with_trace(profile, replies, None)
     trace = TurnTrace()
