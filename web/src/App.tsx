@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { ApiError, jsonRequest, request } from "./api";
+import { PcmStreamPlayer } from "./pcm";
 
 type Phase =
   | "idle"
@@ -31,6 +32,9 @@ type Phase =
   | "synthesizing"
   | "speaking";
 type Message = { id: string; role: "user" | "assistant"; text: string };
+type AudioClip =
+  | { format: "pcm"; bytes: ArrayBuffer }
+  | { format: "mp3"; bytes: ArrayBuffer; url: string };
 const suggestions = [
   "하늘은 왜 파란색이야?",
   "공룡에 대해 알려줘",
@@ -69,9 +73,10 @@ export default function App() {
   const audio = useRef<HTMLAudioElement | null>(null);
   const playbackContext = useRef<AudioContext | null>(null);
   const playbackSource = useRef<AudioBufferSourceNode | null>(null);
-  const audioClips = useRef(
-    new Map<string, { bytes: ArrayBuffer; url: string }>(),
-  );
+  const pcmPlayer = useRef<PcmStreamPlayer | null>(null);
+  const playbackAbort = useRef<AbortController | null>(null);
+  const playbackAttempt = useRef(0);
+  const audioClips = useRef(new Map<string, AudioClip>());
   const audioContext = useRef<AudioContext | null>(null);
   const frame = useRef(0);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -115,8 +120,19 @@ export default function App() {
   }, [messages, phase]);
 
   function clearAudio() {
-    audioClips.current.forEach(({ url }) => URL.revokeObjectURL(url));
+    audioClips.current.forEach((clip) => {
+      if (clip.format === "mp3") URL.revokeObjectURL(clip.url);
+    });
     audioClips.current.clear();
+  }
+  function cacheAudio(id: string, clip: AudioClip) {
+    audioClips.current.set(id, clip);
+    if (audioClips.current.size > 12) {
+      const oldest = audioClips.current.keys().next().value!;
+      const previous = audioClips.current.get(oldest)!;
+      if (previous.format === "mp3") URL.revokeObjectURL(previous.url);
+      audioClips.current.delete(oldest);
+    }
   }
   function cancelRecording() {
     recordingAttempt.current++;
@@ -140,6 +156,11 @@ export default function App() {
     audioContext.current = null;
   }
   function stopPlayback() {
+    playbackAttempt.current++;
+    playbackAbort.current?.abort();
+    playbackAbort.current = null;
+    pcmPlayer.current?.stop();
+    pcmPlayer.current = null;
     if (playbackSource.current) {
       playbackSource.current.onended = null;
       playbackSource.current.stop();
@@ -232,25 +253,71 @@ export default function App() {
   async function speak(message: Message, userGesture = false) {
     if (userGesture) preparePlayback();
     stopPlayback();
+    const attempt = playbackAttempt.current;
     setError("");
     setPhase("synthesizing");
     try {
       let clip = audioClips.current.get(message.id);
-      if (!clip) {
+      const context = playbackContext.current;
+      if (!clip && context?.state === "running") {
+        const abort = new AbortController();
+        playbackAbort.current = abort;
+        const response = await jsonRequest(
+          "/speech-stream",
+          { text: message.text },
+          AbortSignal.any([abort.signal, AbortSignal.timeout(65_000)]),
+        );
+        if (!response.body) throw new Error("Streaming is unavailable");
+        const player = new PcmStreamPlayer(context, () => {
+          if (playbackAttempt.current === attempt) {
+            pcmPlayer.current = null;
+            setPhase("idle");
+          }
+        });
+        pcmPlayer.current = player;
+        const reader = response.body.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (playbackAttempt.current !== attempt) {
+            await reader.cancel();
+            return;
+          }
+          if (done) break;
+          player.push(value);
+          if (player.hasStarted) setPhase("speaking");
+        }
+        const bytes = player.finish();
+        cacheAudio(message.id, { format: "pcm", bytes });
+        playbackAbort.current = null;
+        return;
+      }
+      if (!clip || (clip.format === "pcm" && context?.state !== "running")) {
         const response = await jsonRequest("/speech", { text: message.text });
+        if (playbackAttempt.current !== attempt) return;
         const bytes = await response.arrayBuffer();
+        if (playbackAttempt.current !== attempt) return;
         clip = {
+          format: "mp3",
           bytes,
           url: URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" })),
         };
-        audioClips.current.set(message.id, clip);
-        if (audioClips.current.size > 12) {
-          const oldest = audioClips.current.keys().next().value!;
-          URL.revokeObjectURL(audioClips.current.get(oldest)!.url);
-          audioClips.current.delete(oldest);
-        }
+        cacheAudio(message.id, clip);
       }
-      const context = playbackContext.current;
+      if (playbackAttempt.current !== attempt) return;
+      if (clip.format === "pcm" && context?.state === "running") {
+        const player = new PcmStreamPlayer(context, () => {
+          if (playbackAttempt.current === attempt) {
+            pcmPlayer.current = null;
+            setPhase("idle");
+          }
+        });
+        pcmPlayer.current = player;
+        player.push(new Uint8Array(clip.bytes));
+        setPhase("speaking");
+        player.finish();
+        return;
+      }
+      if (clip.format !== "mp3") throw new Error("Audio playback is unavailable");
       if (context?.state === "running") {
         try {
           const buffer = await context.decodeAudioData(clip.bytes.slice(0));
@@ -287,6 +354,9 @@ export default function App() {
         setError("답변 듣기를 누르면 목소리를 들을 수 있어요.");
       }
     } catch (e) {
+      if (playbackAttempt.current !== attempt) return;
+      pcmPlayer.current?.stop();
+      pcmPlayer.current = null;
       fail(e);
       if (!(e instanceof ApiError && e.status === 401)) {
         setError(

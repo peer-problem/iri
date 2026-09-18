@@ -102,6 +102,7 @@ async def test_demo_session_history_isolation_clear_logout_and_csrf():
         assert saved.status_code == 200
         assert saved.json()['messages'][0]['content'] == '첫 질문'
         assert (await client.post('/speech', json={"text": "unchecked"})).status_code == 403
+        assert (await client.post('/speech-stream', json={"text": "unchecked"})).status_code == 403
         assert (await client.delete('/conversation', headers={"Origin": "https://evil.test"})).status_code == 403
         assert (await client.delete('/conversation')).status_code == 200
         await client.post('/chat', json={"message": "새 질문", "age_band": "4-6"})

@@ -6,7 +6,7 @@ from uuid import uuid4
 import httpx
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, Response, StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.requests import ClientDisconnect
 
@@ -222,6 +222,35 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             raise HTTPException(503, "Speech is unavailable") from None
         except ValueError:
             raise HTTPException(413, "Text is too long") from None
+
+    @app.post("/speech-stream", dependencies=[Depends(authenticate)])
+    async def speech_stream(body: SpeechRequest, request: Request):
+        """Stream 24 kHz, mono, signed 16-bit little-endian PCM speech."""
+        session = request.state.demo_session
+        if session and not any(
+            item["role"] == "assistant" and item["content"] == body.text for item in session.history
+        ):
+            raise HTTPException(403, "Only a checked conversation answer can be read aloud")
+        if not settings.openai_api_key.get_secret_value():
+            raise HTTPException(503, "Speech is not configured")
+        if len(body.text) > settings.tts_max_chars:
+            raise HTTPException(413, "Text is too long")
+
+        async def chunks():
+            async with asyncio.timeout(settings.tts_timeout_seconds):
+                async with speech_gate.enter():
+                    async for chunk in app.state.synthesizer.stream_pcm(body.text):
+                        yield chunk
+
+        return StreamingResponse(
+            chunks(),
+            media_type="application/octet-stream",
+            headers={
+                "Cache-Control": "no-store",
+                "X-Request-Id": str(uuid4()),
+                "X-Audio-Format": "pcm_s16le;rate=24000;channels=1",
+            },
+        )
 
     return app
 

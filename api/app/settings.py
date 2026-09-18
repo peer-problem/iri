@@ -33,8 +33,9 @@ class Settings(BaseSettings):
     tts_voice: str = Field(default="coral", pattern=r"^[a-z]+$")
     tts_instructions: str = Field(
         default=(
-            "어린아이에게 말하듯 천천히, 밝고 따뜻하게 말한다. "
-            "자연스럽고 친근하게, 또렷한 한국어로 말한다."
+            "항상 같은 한 명의 화자로 말한다. 답변마다 목소리의 높이, 음색, 말투를 일정하게 유지한다. "
+            "어린아이에게 말하듯 차분하고 따뜻하게, 자연스럽고 또렷한 한국어로 말한다. "
+            "과장된 연기, 캐릭터 목소리, 큰 감정 변화는 피한다."
         ),
         max_length=500,
     )

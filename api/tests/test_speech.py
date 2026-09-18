@@ -11,6 +11,7 @@ from api.app.settings import Settings
 KEY = "test-only-api-key-" + "x" * 32
 OPENAI_KEY = "test-only-openai-key"
 MP3 = b"ID3" + b"\x00" * 64
+PCM = b"\x00\x00\x01\x00\xff\x7f\x00\x80"
 
 
 def configuration(**updates):
@@ -86,12 +87,34 @@ async def test_speech_returns_mp3_with_configured_voice():
         "model": "gpt-4o-mini-tts-2025-12-15",
         "voice": "coral",
         "input": "안녕!",
-        "instructions": (
-            "어린아이에게 말하듯 천천히, 밝고 따뜻하게 말한다. "
-            "자연스럽고 친근하게, 또렷한 한국어로 말한다."
-        ),
+        "instructions": configuration().tts_instructions,
         "speed": 0.95,
         "response_format": "mp3",
+    }
+
+
+async def test_speech_stream_returns_pcm_with_same_voice_profile():
+    seen = {}
+
+    def handler(request):
+        seen["body"] = json.loads(request.content)
+        return httpx.Response(200, content=PCM, headers={"content-type": "application/octet-stream"})
+
+    async with api(handler) as client:
+        response = await client.post(
+            "/speech-stream", headers={"Authorization": f"Bearer {KEY}"}, json={"text": "안녕!"}
+        )
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/octet-stream"
+    assert response.headers["x-audio-format"] == "pcm_s16le;rate=24000;channels=1"
+    assert response.content == PCM
+    assert seen["body"] == {
+        "model": "gpt-4o-mini-tts-2025-12-15",
+        "voice": "coral",
+        "input": "안녕!",
+        "instructions": configuration().tts_instructions,
+        "speed": 0.95,
+        "response_format": "pcm",
     }
 
 
