@@ -1,0 +1,17 @@
+{
+  "control": "historical A5000 V11, action/content reference only",
+  "candidate": "current RTX3090 V16",
+  "fixes": [
+    "dev-076"
+  ],
+  "regressions": [],
+  "changed_answers": [
+    "dev-076"
+  ],
+  "remaining": [
+    "dev-046",
+    "dev-053",
+    "dev-078",
+    "dev-097"
+  ]
+}
