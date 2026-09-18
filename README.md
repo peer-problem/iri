@@ -10,6 +10,8 @@
 
 Kanana가 설정한 리비전으로 서빙 중이면 우선 사용한다. 준비되지 않았거나 요청이 실패하면 `gpt-5.6-luna`의 reasoning `high`로 입력 검사부터 출력 검사까지 다시 실행한다. STT는 `gpt-4o-mini-transcribe`, TTS는 `gpt-4o-mini-tts-2025-12-15`를 사용한다. GPU를 자동으로 시작하지 않는다.
 
+TTS는 서버에서 고정한 `coral` 음성을 속도 `0.95`로 사용한다. 어린아이에게 말하듯 천천히, 밝고 따뜻하며 자연스럽게 말하도록 모든 합성 요청에 같은 지시를 적용한다. 로컬에서 비교 실험할 때만 `.keys/.env`의 `TTS_SPEED` 또는 `TTS_INSTRUCTIONS`를 변경한다.
+
 브라우저 세션에는 최근 6턴을 서버 메모리에 보관한다. 새 이야기와 연령 변경 및 로그아웃으로 해당 문맥을 삭제한다. 세션은 1시간 뒤 만료되며 만료 자료는 30초 간격으로 정리한다. 녹음과 대화를 디스크에 저장하지 않으며 외부 AI 서비스의 처리는 별도다.
 
 로컬 실행은 터미널 두 개에서 다음 명령을 실행한다.
@@ -26,6 +28,8 @@ npm run dev --prefix web
 화면은 http://127.0.0.1:5173 에서 연다. API 설정은 `.keys/.env`를 읽는다. 배포와 롤백은 [운영 안내](api/deploy/README.md)를 참고한다.
 
 ## 현재 상태
+
+V63 실행 후보와 주요 과거 후보를 공개했다. [V63 코드 검토 안내](runpod/V63_REVIEW.md)에서 구성과 남은 문제를, [실행 안내](runpod/SELECTED_PROFILES.md)에서 새 PC의 준비·평가 명령을 확인한다. 최신 동일 장비 평가에서 V63은 행동 98/100, guarded p95는 baseline의 1.562배로 지연 기준 미충족이다. 관계 대응의 내용 결함도 남아 있으며 제품 API에 자동 적용하지 않았다.
 
 Phase 2는 종료했다. 다음 단계 모델은 `kakaocorp/kanana-2-3b-instruct` 원본이며 리비전은 `6a5d7889964c4c590299d16e309eabab1f73f8a9`다. 이번 QLoRA 어댑터는 품질 향상이 확인되지 않아 채택하지 않았다.
 
@@ -72,6 +76,12 @@ runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000
 
 화면이 전사문 확인 후 `/chat`을 호출하고 받은 답변을 `/speech`로 전달한다. 데모 세션은 최근 검사된 답변만 음성으로 읽을 수 있다. 내부 Bearer 클라이언트는 검사된 답변만 전송해야 한다. 실제 OpenAI STT와 TTS 및 Luna 대체 응답을 확인했다. 개인 기기의 마이크와 스피커 품질 검증은 별도로 필요하다.
 
+### AnswerProfile v1
+
+아이에게 보여 주는 답변의 정체성과 말투 및 상황별 대응은 `api/app/answer_profile.py`의 단일 `ANSWER_PROFILE`에서 관리한다. 현재 버전은 `v1`이며 Kanana와 Luna의 답변 생성 단계에 똑같이 적용된다. Luna가 별도의 정체성이나 말투 지침을 덧붙이지 않는다.
+
+처리 순서는 입력 안전 검사 → 공통 AnswerProfile을 적용한 답변 생성 → 출력 안전 검사다. AnswerProfile은 생성 단계에만 적용하며 `api/configs/policy.json`, 입력 판정과 출력 차단 규칙 및 기본 `behavior_profile=baseline`은 그대로 유지한다. 프로필의 대표 예시는 행동 유도용이며 개발 또는 최종 평가의 정답으로 재사용하지 않는다.
+
 ## GPU 실행과 평가
 
 모델 서빙은 NVIDIA GPU Linux 환경에서 `runpod/requirements-gpu.txt`의 vLLM 버전을 사용한다. 로컬 개발과 검수에는 GPU가 필요 없다. GPU 실행 전에 비용과 중지 시한을 정하고 결과 저장 후 실제 Pod 중지를 확인한다.
@@ -89,7 +99,7 @@ python -m runpod.operations.evaluate --data runpod/artifacts/phase2-evaluation-2
 
 | 설정 | 기준선에서 바뀌는 내용 |
 | --- | --- |
-| `baseline` | 기존 정책과 고정 피해 지원 문구 |
+| `baseline` | 기존 입력·출력 안전 검사 설정. AnswerProfile v1은 모든 설정에 공통 적용 |
 | `input_v2` | 피해 고백 우선 분류와 불필요한 재질문 축소 |
 | `support_v2` | `input_v2`에 상황별 지원 답변 생성과 출력 검사 추가 |
 | `full_v2` | `support_v2`에 사실 정확도와 간결한 설명 지침 추가 |

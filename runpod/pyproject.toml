@@ -22,6 +22,8 @@ pythonpath = [".."]
 cache-dir = "runpod/.ruff_cache"
 target-version = "py312"
 line-length = 100
+# Archived experiment drivers are immutable evidence, not maintained runtime code.
+extend-exclude = ["**/artifacts/**"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

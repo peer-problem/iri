@@ -31,7 +31,14 @@ class Settings(BaseSettings):
     stt_max_bytes: int = Field(default=10 * 1024 * 1024, ge=1, le=25_000_000)
     tts_model: Literal["gpt-4o-mini-tts-2025-12-15"] = "gpt-4o-mini-tts-2025-12-15"
     tts_voice: str = Field(default="coral", pattern=r"^[a-z]+$")
-    tts_instructions: str = Field(default="어린아이에게 말하듯 천천히, 다정하게", max_length=500)
+    tts_instructions: str = Field(
+        default=(
+            "어린아이에게 말하듯 천천히, 밝고 따뜻하게 말한다. "
+            "자연스럽고 친근하게, 또렷한 한국어로 말한다."
+        ),
+        max_length=500,
+    )
+    tts_speed: float = Field(default=0.95, ge=0.25, le=4.0)
     tts_timeout_seconds: float = Field(default=60, gt=0, le=120)
     tts_max_chars: int = Field(default=1000, ge=1, le=4000)
     fallback_model: str = "gpt-5.6-luna"

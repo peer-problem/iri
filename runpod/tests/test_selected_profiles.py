@@ -3,13 +3,20 @@
 import hashlib
 import json
 from pathlib import Path
+from typing import get_args
 
 import pytest
 
+from runpod.inference.behavior import BehaviorProfile
+from runpod.inference.profiles import PROFILES
 from runpod.inference.selected_profiles import SELECTED_PROFILES
 from runpod.inference.service import generation_messages
 from runpod.settings import Settings
 from runpod.tests.selected_contract_helpers import capture, cases
+
+
+def test_every_public_profile_has_an_explicit_configuration():
+    assert set(PROFILES) == set(get_args(BehaviorProfile))
 
 
 @pytest.mark.parametrize("profile", sorted(SELECTED_PROFILES))

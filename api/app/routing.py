@@ -14,12 +14,6 @@ class LunaProvider(ModelProvider):
         key = self.settings.openai_api_key.get_secret_value()
         if not key:
             raise ModelUnavailable("Fallback is not configured", code="not_configured")
-        if not guard:
-            messages = [dict(message) for message in messages]
-            messages[0]["content"] += (
-                "\n너의 이름은 이리다. 답변을 소리 내어 읽으므로 마크다운, 이모지, 목록 기호 없이 "
-                "자연스러운 한국어 문장으로 답하라. 어린아이에게 맞게 2~4문장으로 간결하게 말하라."
-            )
         body = {
             "model": self.settings.fallback_model,
             "input": messages,
