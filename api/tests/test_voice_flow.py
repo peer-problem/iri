@@ -25,6 +25,8 @@ async def test_transcript_to_guarded_answer_to_speech():
             return completion(next(model_outputs), settings)
         assert request.url.path == "/v1/audio/speech"
         assert body["input"] == answer
+        assert body["voice"] == "coral"
+        assert body["speed"] == 0.95
         return httpx.Response(200, content=MP3)
 
     async with api(handler, settings) as client:

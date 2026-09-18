@@ -35,6 +35,7 @@ class Synthesizer:
                     "voice": self.settings.tts_voice,
                     "input": text,
                     "instructions": self.settings.tts_instructions,
+                    "speed": self.settings.tts_speed,
                     "response_format": "mp3",
                 },
                 timeout=self.settings.tts_timeout_seconds,
