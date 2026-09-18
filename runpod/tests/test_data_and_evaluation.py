@@ -4,7 +4,7 @@ import json
 import httpx
 import pytest
 
-from runpod.inference.provider import ModelUnavailable
+from runpod.inference.provider import ModelProvider, ModelUnavailable
 from runpod.operations import evaluate
 from runpod.operations.compare import compare
 from runpod.operations.data import (
@@ -13,6 +13,7 @@ from runpod.operations.data import (
     validate_final,
     validate_final_manifest,
 )
+from runpod.operations.experiments import evaluation_identity
 from runpod.operations.serve_model import build_command
 from runpod.settings import ROOT
 from runpod.tests.helpers import completion, configuration
@@ -93,6 +94,33 @@ def test_final_v1_has_direct_review_and_locked_bytes(tmp_path):
     )
     with pytest.raises(ValueError, match="differs"):
         validate_final_manifest(copied)
+
+
+async def test_qwen_candidate_uses_pinned_model_identity_and_sampling():
+    settings = configuration(model_profile="qwen3_4b_instruct_2507")
+    calls = []
+
+    def handler(request):
+        body = json.loads(request.content)
+        calls.append(body)
+        return completion("답변", settings)
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        provider = ModelProvider(settings, client)
+        assert await provider.complete([{"role": "user", "content": "안녕"}]) == "답변"
+        assert (
+            await provider.complete(
+                [{"role": "user", "content": "검사"}],
+                guard=True,
+                response_schema={"type": "object"},
+            )
+            == "답변"
+        )
+    assert settings.profile["model_id"] == "Qwen/Qwen3-4B-Instruct-2507"
+    assert calls[0]["temperature"] == 0.7
+    assert calls[0]["top_p"] == 0.8 and calls[0]["top_k"] == 20
+    assert calls[1]["temperature"] == 0 and "top_k" not in calls[1]
+    assert evaluation_identity(settings)["model_id"] == settings.profile["model_id"]
 
 
 async def test_evaluation_refuses_unreachable_model_without_fake_results(tmp_path, monkeypatch):

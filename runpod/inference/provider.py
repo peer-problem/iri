@@ -67,8 +67,7 @@ class ModelProvider:
         body = {
             "model": model,
             "messages": self.prepare_messages(messages),
-            "temperature": 0,
-            "seed": 42,
+            **({"temperature": 0, "seed": 42} if guard else self.settings.generation_sampling),
             "max_tokens": max_tokens,
             "stream": False,
         }

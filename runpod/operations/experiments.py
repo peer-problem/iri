@@ -56,7 +56,9 @@ def evaluation_identity(settings, adapter_run: Path | None = None) -> dict:
             "training_manifest_sha256": None,
         }
     )
+    identity["model_id"] = settings.profile["model_id"]
     identity["behavior_profile"] = settings.behavior_profile
+    identity["generation_sampling"] = settings.generation_sampling
     fingerprint = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
     return {
         **identity,

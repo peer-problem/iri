@@ -100,11 +100,12 @@ async def evaluate(args):
                 for name in ("httpx", "pydantic", "pydantic-settings")
             },
             "generation": {
-                "temperature": 0,
-                "seed": 42,
+                **settings.generation_sampling,
                 "max_tokens": 384,
                 "guard_max_tokens": 80,
                 "guard_response_format": "json_schema",
+                "guard_temperature": 0,
+                "guard_seed": 42,
             },
             # Profile-specific protocol; common generation settings stay comparable.
             "input_recheck_response_format": "json_schema"

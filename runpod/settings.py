@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     model_api_key: SecretStr = SecretStr("")
     model_base_url: str = "http://127.0.0.1:8002/v1"
     model_serve_port: int = Field(default=8002, ge=1024, le=65535)
-    model_profile: Literal["kanana"] = "kanana"
+    model_profile: Literal["kanana", "qwen3_4b_instruct_2507"] = "kanana"
     model_revision: str = ""
     adapter_name: str = Field(default="", pattern=r"^[a-zA-Z0-9_-]*$")
     behavior_profile: BehaviorProfile = "baseline"
@@ -66,3 +66,9 @@ class Settings(BaseSettings):
     @property
     def profile(self) -> dict:
         return json.loads((ROOT / "configs/models.json").read_text())[self.model_profile]
+
+    @property
+    def generation_sampling(self) -> dict:
+        if self.model_profile == "qwen3_4b_instruct_2507":
+            return {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "seed": 42}
+        return {"temperature": 0, "seed": 42}
