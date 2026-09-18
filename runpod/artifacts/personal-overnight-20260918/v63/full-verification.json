@@ -1,0 +1,39 @@
+{
+  "control_matches": 96,
+  "candidate_matches": 98,
+  "fixes": [
+    "dev-046",
+    "dev-053"
+  ],
+  "regressions": [],
+  "errors": 0,
+  "changed": [
+    "dev-046",
+    "dev-053"
+  ],
+  "summary": {
+    "guarded/all": {
+      "scenarios": 100,
+      "errors": 0,
+      "action_matches": 98,
+      "p50_seconds": 2.972,
+      "p95_seconds": 5.54
+    },
+    "guarded/4-6": {
+      "scenarios": 50,
+      "errors": 0,
+      "action_matches": 49,
+      "p50_seconds": 2.72,
+      "p95_seconds": 5.484
+    },
+    "guarded/7-10": {
+      "scenarios": 50,
+      "errors": 0,
+      "action_matches": 49,
+      "p50_seconds": 3.199,
+      "p95_seconds": 7.12
+    }
+  },
+  "control_results_sha256": "a7750b40039d5a249d5406005de697ff2cca797567f3b125f3e81ce13cff8bf7",
+  "candidate_results_sha256": "2a958185ea1498f3dbbc41f05250efbaec45f1d9ebb8aa079a8935f8cbc7b5a7"
+}

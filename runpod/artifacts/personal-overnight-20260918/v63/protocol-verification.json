@@ -1,0 +1,6 @@
+{
+  "secondary_request_hashes_exact_match_to_frozen_V26_diagnostic": 20,
+  "other_28_scenarios_all_non_audit_requests_identical_to_V16": true,
+  "strict_JSON": true,
+  "tests_passed": 467
+}
