@@ -67,7 +67,11 @@ export default function App() {
   const recordingAttempt = useRef(0);
   const stream = useRef<MediaStream | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  const audioUrls = useRef(new Map<string, string>());
+  const playbackContext = useRef<AudioContext | null>(null);
+  const playbackSource = useRef<AudioBufferSourceNode | null>(null);
+  const audioClips = useRef(
+    new Map<string, { bytes: ArrayBuffer; url: string }>(),
+  );
   const audioContext = useRef<AudioContext | null>(null);
   const frame = useRef(0);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -99,6 +103,8 @@ export default function App() {
       stopPlayback();
       controller.current?.abort();
       clearAudio();
+      void playbackContext.current?.close();
+      playbackContext.current = null;
     };
   }, []);
   useEffect(() => {
@@ -109,8 +115,8 @@ export default function App() {
   }, [messages, phase]);
 
   function clearAudio() {
-    audioUrls.current.forEach((url) => URL.revokeObjectURL(url));
-    audioUrls.current.clear();
+    audioClips.current.forEach(({ url }) => URL.revokeObjectURL(url));
+    audioClips.current.clear();
   }
   function cancelRecording() {
     recordingAttempt.current++;
@@ -134,8 +140,29 @@ export default function App() {
     audioContext.current = null;
   }
   function stopPlayback() {
+    if (playbackSource.current) {
+      playbackSource.current.onended = null;
+      playbackSource.current.stop();
+      playbackSource.current.disconnect();
+      playbackSource.current = null;
+    }
     audio.current?.pause();
     audio.current = null;
+  }
+  function preparePlayback() {
+    // Safari requires the audio context to start while the send/listen gesture is active.
+    try {
+      const context = playbackContext.current ?? new AudioContext();
+      playbackContext.current = context;
+      if (context.state === "suspended") void context.resume().catch(() => {});
+      const silent = context.createBufferSource();
+      silent.buffer = context.createBuffer(1, 1, context.sampleRate);
+      silent.connect(context.destination);
+      silent.onended = () => silent.disconnect();
+      silent.start();
+    } catch {
+      // A directly clicked replay can still use the media-element path below.
+    }
   }
   function fail(e: unknown) {
     if (e instanceof ApiError && e.status === 401) {
@@ -202,23 +229,50 @@ export default function App() {
     setSettingsOpen(false);
     setPhase("idle");
   }
-  async function speak(message: Message) {
+  async function speak(message: Message, userGesture = false) {
+    if (userGesture) preparePlayback();
     stopPlayback();
     setError("");
     setPhase("synthesizing");
     try {
-      let url = audioUrls.current.get(message.id);
-      if (!url) {
+      let clip = audioClips.current.get(message.id);
+      if (!clip) {
         const response = await jsonRequest("/speech", { text: message.text });
-        url = URL.createObjectURL(await response.blob());
-        audioUrls.current.set(message.id, url);
-        if (audioUrls.current.size > 12) {
-          const oldest = audioUrls.current.keys().next().value!;
-          URL.revokeObjectURL(audioUrls.current.get(oldest)!);
-          audioUrls.current.delete(oldest);
+        const bytes = await response.arrayBuffer();
+        clip = {
+          bytes,
+          url: URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" })),
+        };
+        audioClips.current.set(message.id, clip);
+        if (audioClips.current.size > 12) {
+          const oldest = audioClips.current.keys().next().value!;
+          URL.revokeObjectURL(audioClips.current.get(oldest)!.url);
+          audioClips.current.delete(oldest);
         }
       }
-      const player = new Audio(url);
+      const context = playbackContext.current;
+      if (context?.state === "running") {
+        try {
+          const buffer = await context.decodeAudioData(clip.bytes.slice(0));
+          const source = context.createBufferSource();
+          source.buffer = buffer;
+          source.connect(context.destination);
+          playbackSource.current = source;
+          source.onended = () => {
+            if (playbackSource.current === source) {
+              playbackSource.current = null;
+              source.disconnect();
+              setPhase("idle");
+            }
+          };
+          source.start();
+          setPhase("speaking");
+          return;
+        } catch {
+          // Keep the existing replay path if decoding is unavailable.
+        }
+      }
+      const player = new Audio(clip.url);
       audio.current = player;
       player.onended = () => setPhase("idle");
       player.onerror = () => {
@@ -245,6 +299,7 @@ export default function App() {
     e?.preventDefault();
     if (!draft.trim() || busy) return;
     const question = draft.trim();
+    if (autoRead) preparePlayback();
     stopPlayback();
     setPhase("thinking");
     setError("");
@@ -497,7 +552,7 @@ export default function App() {
                       <Button
                         className="text-button"
                         disabled={busy}
-                        onClick={() => void speak(message)}
+                        onClick={() => void speak(message, true)}
                       >
                         <Volume2 />
                         답변 듣기
