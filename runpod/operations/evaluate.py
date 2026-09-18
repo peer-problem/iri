@@ -191,6 +191,8 @@ async def evaluate(args):
                                     error_detail["http_status"] = exc.http_status
                                 if exc.failure_kind is not None:
                                     error_detail["failure_kind"] = exc.failure_kind
+                                if exc.finish_reason is not None:
+                                    error_detail["finish_reason"] = exc.finish_reason
                             elif isinstance(exc.__cause__, httpx.TimeoutException):
                                 error_detail["failure_kind"] = type(exc.__cause__).__name__
                             break

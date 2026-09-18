@@ -15,12 +15,14 @@ class ModelUnavailable(Exception):
         stage: str | None = None,
         http_status: int | None = None,
         failure_kind: str | None = None,
+        finish_reason: str | None = None,
     ):
         super().__init__(message)
         self.code = code
         self.stage = stage
         self.http_status = http_status
         self.failure_kind = failure_kind
+        self.finish_reason = finish_reason
 
 
 class ModelProvider:
@@ -95,7 +97,11 @@ class ModelProvider:
             text = choice["message"]["content"]
             record_completion(payload, text, choice["finish_reason"])
             if choice["finish_reason"] != "stop":
-                raise ModelUnavailable("Incomplete model response", code="incomplete_response")
+                raise ModelUnavailable(
+                    "Incomplete model response",
+                    code="incomplete_response",
+                    finish_reason=choice["finish_reason"],
+                )
             if not isinstance(text, str) or not text.strip():
                 raise ModelUnavailable("Empty model response", code="empty_response")
             if len(text) > 8000:

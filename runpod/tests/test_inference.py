@@ -135,3 +135,13 @@ async def test_bad_upstream_responses_are_not_success(response):
         with pytest.raises(ModelUnavailable) as error:
             await ModelProvider(configuration(), client).complete([])
     assert "upstream-secret-detail" not in str(error.value)
+
+
+async def test_incomplete_response_records_finish_reason_without_answer():
+    response = completion("partial private answer", configuration(), finish_reason="length")
+    async with httpx.AsyncClient(transport=httpx.MockTransport(lambda _: response)) as client:
+        with pytest.raises(ModelUnavailable) as error:
+            await ModelProvider(configuration(), client).complete([])
+    assert error.value.code == "incomplete_response"
+    assert error.value.finish_reason == "length"
+    assert "partial private answer" not in str(error.value)
