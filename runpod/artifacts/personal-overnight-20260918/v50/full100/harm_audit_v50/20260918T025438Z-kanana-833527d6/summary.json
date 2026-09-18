@@ -1,0 +1,23 @@
+{
+  "guarded/all": {
+    "scenarios": 100,
+    "errors": 0,
+    "action_matches": 97,
+    "p50_seconds": 2.826,
+    "p95_seconds": 5.383
+  },
+  "guarded/4-6": {
+    "scenarios": 50,
+    "errors": 0,
+    "action_matches": 48,
+    "p50_seconds": 2.579,
+    "p95_seconds": 5.26
+  },
+  "guarded/7-10": {
+    "scenarios": 50,
+    "errors": 0,
+    "action_matches": 49,
+    "p50_seconds": 2.993,
+    "p95_seconds": 6.662
+  }
+}
