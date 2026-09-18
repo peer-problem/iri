@@ -17,7 +17,7 @@ class ChatResponse(BaseModel):
     answer: str
     action: Action
     request_id: UUID
-    provider: Literal["kanana", "unavailable"] = "kanana"
+    provider: Literal["kanana", "luna", "unavailable"] = "kanana"
 
 
 class LoginRequest(BaseModel):

@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     tts_speed: float = Field(default=0.95, ge=0.25, le=4.0)
     tts_timeout_seconds: float = Field(default=60, gt=0, le=120)
     tts_max_chars: int = Field(default=1000, ge=1, le=4000)
+    fallback_model: str = "gpt-5.6-luna"
+    fallback_reasoning_effort: Literal["high"] = "high"
     primary_timeout_seconds: float = Field(default=15, gt=0, le=60)
     demo_access_code: SecretStr = SecretStr("")
     secure_cookies: bool = False

@@ -3,32 +3,57 @@ import json
 import httpx
 import pytest
 
+from api.app.answer_profile import ANSWER_PROFILE
+from api.app.service import generation_messages
 from api.tests.test_api import api, completion, configuration, post
 
 
-@pytest.mark.parametrize("failure", ["offline", "generation", "timeout"])
-async def test_unavailable_kanana_never_calls_another_answer_model(failure):
-    settings = configuration(openai_api_key="test-speech-key", primary_timeout_seconds=0.1)
+def cloud(text, status="completed"):
+    return httpx.Response(200, json={"status": status, "output": [
+        {"type": "message", "content": [{"type": "output_text", "text": text}]}
+    ]})
+
+
+@pytest.mark.parametrize("primary_failure", ["offline", "generation", "timeout"])
+async def test_fallback_restarts_entire_guarded_pipeline(primary_failure):
+    settings = configuration(openai_api_key="test-cloud", primary_timeout_seconds=0.1)
+    answers = iter(['{"decision":"allow"}', '달은 지구 주위를 돌아.', '{"decision":"allow"}'])
     calls = []
 
     def handler(request):
-        calls.append(str(request.url))
-        assert request.url.host == "127.0.0.1"
-        if failure == "offline":
-            raise httpx.ConnectError("offline")
-        if failure == "timeout":
-            raise httpx.ReadTimeout("timeout")
-        return httpx.Response(503)
+        if request.url.path == "/v1/models":
+            if primary_failure == "offline":
+                raise httpx.ConnectError("offline")
+            return httpx.Response(200, json={"data": [{"id": settings.served_model}]})
+        if request.url.path == "/v1/chat/completions":
+            if primary_failure == "timeout":
+                raise httpx.ReadTimeout("timeout")
+            return httpx.Response(503)
+        body = json.loads(request.content)
+        calls.append(body)
+        assert body["model"] == "gpt-5.6-luna"
+        assert body["reasoning"] == {"effort": "high"}
+        assert body["store"] is False
+        return cloud(next(answers))
 
     async with api(handler, settings) as client:
         response = await post(client)
-    assert response.status_code in {503, 504}
-    assert response.json()["provider"] == "unavailable"
-    assert calls and all("api.openai.com" not in call for call in calls)
+    assert response.status_code == 200
+    assert response.json()["provider"] == "luna"
+    assert len(calls) == 3
+    assert "text" in calls[0] and "text" in calls[2]
+    marker = f"[AnswerProfile {ANSWER_PROFILE.version}]"
+    system_messages = [call["input"][0]["content"] for call in calls]
+    assert marker not in system_messages[0]
+    assert ANSWER_PROFILE.prompt in system_messages[1]
+    assert marker not in system_messages[2]
+    assert calls[1]["input"] == generation_messages(
+        "4-6", [{"role": "user", "content": "비는 왜 내려?"}]
+    )
 
 
-async def test_ready_primary_uses_kanana():
-    settings = configuration(openai_api_key="test-speech-key")
+async def test_ready_primary_does_not_call_cloud():
+    settings = configuration(openai_api_key="test-cloud")
     answers = iter(['{"decision":"allow"}', '안녕!', '{"decision":"allow"}'])
 
     def handler(request):
@@ -43,12 +68,13 @@ async def test_ready_primary_uses_kanana():
 
 
 @pytest.mark.parametrize("verdict", ['not-json', '{"decision":"block"}'])
-async def test_kanana_never_releases_unchecked_answer(verdict):
+async def test_fallback_never_releases_unchecked_answer(verdict):
     answers = iter(['{"decision":"allow"}', 'PRIVATE_UNCHECKED', verdict])
     def handler(request):
-        assert request.url.host == "127.0.0.1"
-        return completion(next(answers), configuration())
-    async with api(handler, configuration(openai_api_key="test-speech-key")) as client:
+        if request.url.path == "/v1/models":
+            return httpx.Response(503)
+        return cloud(next(answers))
+    async with api(handler, configuration(openai_api_key="test-cloud")) as client:
         response = await post(client)
     assert 'PRIVATE_UNCHECKED' not in response.text
 

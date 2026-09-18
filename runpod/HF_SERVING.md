@@ -1,6 +1,6 @@
 # Kanana 3B 어댑터 게시와 서빙
 
-제품의 답변 생성 모델은 `kakaocorp/kanana-2-3b-instruct`와 이 프로젝트의 LoRA 어댑터로만 구성한다. 입력 및 출력 검사는 같은 Kanana 3B 원본 별칭으로 처리한다. 음성 인식과 음성 합성은 답변 모델과 별도 서비스다. GPU가 중지되면 제품은 다른 답변 모델로 전환하지 않고 `unavailable`을 반환한다.
+제품의 우선 답변 모델은 `kakaocorp/kanana-2-3b-instruct`와 이 프로젝트의 LoRA 어댑터다. 입력 및 출력 검사는 같은 Kanana 3B 원본 별칭으로 처리한다. GPU가 중지되거나 Kanana 요청이 실패하면 Luna high가 입력 검사부터 출력 검사까지 전체 경로를 다시 실행한다. Qwen 등 다른 개발 후보는 사용하지 않는다. 음성 인식과 음성 합성은 답변 모델과 별도 서비스다.
 
 ## 게시물
 
@@ -32,7 +32,7 @@ python -m runpod.operations.serve_model --adapter-run /workspace/iri-adapter-run
 
 ## 제품 연결
 
-Contabo의 `MODEL_PROFILE=kanana`, `MODEL_REVISION`, `ADAPTER_NAME=iri-kanana3b-tuned`, `MODEL_API_KEY`를 Pod와 일치시킨다. Contabo에서 Pod로 가는 인증된 HTTPS 엔드포인트 또는 `127.0.0.1:8002`에만 묶인 SSH 터널을 구성한다. 공개 HTTP 포트로 모델 서버를 노출하지 않는다. `GET /ready`가 원본과 어댑터의 실제 준비 상태를 확인하고, `POST /chat` 응답은 `provider: kanana`여야 한다. GPU가 중지되거나 연결이 끊기면 `503`과 `provider: unavailable`을 반환한다.
+Contabo의 `MODEL_PROFILE=kanana`, `MODEL_REVISION`, `ADAPTER_NAME=iri-kanana3b-tuned`, `MODEL_API_KEY`를 Pod와 일치시킨다. Contabo에서 Pod로 가는 인증된 HTTPS 엔드포인트 또는 `127.0.0.1:8002`에만 묶인 SSH 터널을 구성한다. 공개 HTTP 포트로 모델 서버를 노출하지 않는다. `GET /ready`가 원본과 어댑터의 실제 준비 상태를 확인하고, 준비된 동안 `POST /chat` 응답은 `provider: kanana`여야 한다. GPU가 중지되거나 연결이 끊기면 `/ready`는 503이고 `/chat`은 `provider: luna`로 응답한다. 두 답변 제공자가 모두 실패할 때만 503과 `provider: unavailable`을 반환한다.
 
 개발자 컴퓨터를 거치는 짧은 데모에서는 아래의 두 SSH 연결을 각기 다른 터미널에서 유지할 수 있다. 첫 연결은 Pod의 로컬 모델 포트를 개발자 컴퓨터의 `18002`로 가져오고, 두 번째 연결은 그 포트를 Contabo의 로컬 `8002`로 전달한다. 실제 Pod 주소와 SSH 포트 및 VPS 계정은 당일 Runpod 및 Contabo 설정에서 확인한다. 개발자 컴퓨터가 연결을 유지해야 하므로 지속 운영에는 인증된 HTTPS 엔드포인트를 사용한다.
 

@@ -8,7 +8,7 @@
 
 기본 흐름은 마이크 녹음 → STT → 인식 문장 확인 또는 수정 → 답변 생성 → TTS 재생이다. 텍스트로도 입력할 수 있고 모든 답변은 화면에 남는다. 재생 중지와 다시 듣기 및 음성 출력 끄기를 지원한다. 녹음은 최대 60초다.
 
-답변 모델은 고정된 Kanana 3B 원본과 이 프로젝트의 LoRA 어댑터만 사용한다. GPU가 중지됐거나 모델 요청이 실패하면 다른 답변 모델로 전환하지 않고 이용 불가를 알린다. STT는 `gpt-4o-mini-transcribe`, TTS는 `gpt-4o-mini-tts-2025-12-15`를 사용한다. GPU를 자동으로 시작하지 않는다.
+답변은 고정된 Kanana 3B 원본과 이 프로젝트의 LoRA 어댑터를 우선 사용한다. GPU가 중지됐거나 모델 요청이 실패하면 Luna high가 동일한 입력 검사, 생성, 출력 검사 전체를 다시 실행한다. Qwen 등 다른 개발 후보는 제품 답변에 사용하지 않는다. STT는 `gpt-4o-mini-transcribe`, TTS는 `gpt-4o-mini-tts-2025-12-15`를 사용한다. GPU를 자동으로 시작하지 않는다.
 
 TTS는 서버에서 고정한 `coral` 음성을 속도 `0.95`로 사용한다. 어린아이에게 말하듯 천천히, 밝고 따뜻하며 자연스럽게 말하도록 모든 합성 요청에 같은 지시를 적용한다. 로컬에서 비교 실험할 때만 `.keys/.env`의 `TTS_SPEED` 또는 `TTS_INSTRUCTIONS`를 변경한다.
 
@@ -29,9 +29,9 @@ npm run dev --prefix web
 
 ## 현재 상태
 
-Phase 3의 최신 범위인 Kanana 3B 어댑터 공개 게시, 실제 GPU 서빙 검증, Kanana 전용 API와 웹 배포 및 운영 인수인계를 마쳤다. [공개 어댑터](https://huggingface.co/jbaehova/Kanana-IRI-3B-QLoRA)는 고정된 `kakaocorp/kanana-2-3b-instruct` 리비전 `6a5d7889964c4c590299d16e309eabab1f73f8a9`에서 사용한다. 새 A40 Pod에서 공개 파일을 다시 내려받아 vLLM 로딩과 생성 응답을 확인하고 Pod를 중지 후 삭제했다.
+Phase 3의 최신 범위인 Kanana 3B 어댑터 공개 게시, 실제 GPU 서빙 검증, Kanana 우선 API와 웹 배포 및 운영 인수인계를 마쳤다. [공개 어댑터](https://huggingface.co/jbaehova/Kanana-IRI-3B-QLoRA)는 고정된 `kakaocorp/kanana-2-3b-instruct` 리비전 `6a5d7889964c4c590299d16e309eabab1f73f8a9`에서 사용한다. 새 A40 Pod에서 공개 파일을 다시 내려받아 vLLM 로딩과 생성 응답을 확인하고 Pod를 중지 후 삭제했다.
 
-현재 상시 GPU는 꺼져 있다. 따라서 웹은 열리지만 채팅은 사용 불가 응답을 낸다. 데모 시간에만 GPU 한 대와 인증된 Contabo 터널을 열어 `/ready` 및 `/chat`을 다시 확인한다. 기존 개발 비교에서 어댑터의 품질 개선은 입증되지 않았고 최종 300문항 답변 평가는 미실행이다. 아동 대상 공개 출시는 승인하지 않았다. 이전 품질 실험과 후보는 기록으로 보존하며 제품 답변 경로에는 적용하지 않는다.
+현재 상시 GPU는 꺼져 있어 `/ready`는 503을 반환하고 채팅은 Luna high 경로를 사용한다. 데모 시간에 GPU 한 대와 인증된 Contabo 터널을 열면 Kanana 경로가 우선 사용되는지 `/ready` 및 `/chat`으로 확인한다. 기존 개발 비교에서 어댑터의 품질 개선은 입증되지 않았고 최종 300문항 답변 평가는 미실행이다. 아동 대상 공개 출시는 승인하지 않았다. 이전 품질 실험과 Qwen 후보는 기록으로만 보존한다.
 
 - [Phase 3 첫 구현과 GPU 비교 결과](runpod/artifacts/phase3-quality-20260917/README.md)
 - [Phase 3 두 번째 비교와 미해결 문제](runpod/artifacts/phase3-quality-v3-20260917/README.md)

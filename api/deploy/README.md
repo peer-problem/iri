@@ -12,7 +12,7 @@ Required runtime values: `SANDBOX_API_KEY`, `MODEL_API_KEY`, `MODEL_REVISION`, `
 
 Deployment layout: `/opt/iri/releases/<release>/api`, `/opt/iri/current` symlink and `/opt/iri/venv`. Retain the previous release for rollback. To roll back, repoint `current` to the recorded previous release and restart only `iri-api.service`.
 
-The answer model is Kanana 3B only. The base alias handles input and output checks while `ADAPTER_NAME` handles generation. A 15-second model request deadline applies. If the model is unavailable, `/chat` returns 503 with `provider: "unavailable"`. Serving must expose both the pinned base alias and the adapter alias. No GPU is automatically started by the application. The adapter release and manual serving procedure are in `runpod/HF_SERVING.md`.
+The primary answer model is Kanana 3B. The base alias handles input and output checks while `ADAPTER_NAME` handles generation. A 15-second primary-model deadline applies. If Kanana is unavailable, Luna high reruns the complete guarded pipeline and `/chat` reports `provider: "luna"`. If both providers fail, `/chat` returns 503 with `provider: "unavailable"`. Serving must expose both the pinned base alias and the adapter alias. No GPU is automatically started by the application. The adapter release and manual serving procedure are in `runpod/HF_SERVING.md`.
 
 ### Connecting a resumed Kanana server
 
@@ -20,7 +20,7 @@ The Contabo configuration may point to `http://127.0.0.1:8002/v1`. This refers t
 
 Before resuming GPU serving, choose either an authenticated HTTPS model endpoint or a verified SSH tunnel running on Contabo and bound only to `127.0.0.1:8002`. Do not expose the model's unauthenticated HTTP port publicly. Set `MODEL_BASE_URL` and matching `MODEL_API_KEY` in the VPS runtime environment, preserving the pinned `MODEL_REVISION`. Restart only `iri-api.service` if its configuration changes. Keep the local deployment configuration consistent before a subsequent deploy overwrites runtime values.
 
-Verify the authenticated product `/ready` endpoint from Contabo, then verify that a `/chat` response reports `provider: "kanana"`. `/health` only reports configuration, not an active model connection. When the serving connection disappears, `/chat` should return 503 with `provider: "unavailable"`. The application neither creates nor starts GPU pods; GPU timing, backup and stop verification remain separate operator responsibilities.
+Verify the authenticated product `/ready` endpoint from Contabo, then verify that a `/chat` response reports `provider: "kanana"`. `/health` only reports configuration, not an active model connection. When the serving connection disappears, `/ready` should return 503 and `/chat` should report `provider: "luna"`. If Luna is also unavailable, `/chat` returns 503 with `provider: "unavailable"`. The application neither creates nor starts GPU pods; GPU timing, backup and stop verification remain separate operator responsibilities.
 
 Default audio models: `gpt-4o-mini-transcribe` and `gpt-4o-mini-tts-2025-12-15`. Audio consent and transcript confirmation happen before chat. Text answers remain available if speech generation or autoplay fails. Demo-cookie speech requests can read only recently checked assistant answers; the internal Bearer endpoint retains the trusted-client API contract.
 
