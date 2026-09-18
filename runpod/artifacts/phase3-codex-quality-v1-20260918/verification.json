@@ -1,0 +1,45 @@
+{
+  "source_commit": "5bfda586dd82a3aed6b9d3e94662c25d74d46fb9",
+  "gpu": "NVIDIA A40 46068 MiB",
+  "vllm": "0.29.0",
+  "same_model_server": true,
+  "full_runs": {
+    "baseline": {
+      "run": "baseline/20260918T123824Z-kanana-7d3c0afd",
+      "results_sha256": "296a138a0227ba61e928df9284ba7cd234b3d485088365f06df9a99861527308",
+      "code_sha256": "fc22f58c3ec205bf462d14d74cbef5f598c656e419f836d3f2d828f2194e97de",
+      "data_sha256": "026c3c85fa2ab1622e721f2a5d70cb3f6194ba10869e3465b581f6cd68371297",
+      "policy_sha256": "bc44c826a0644d50b4f5e113fa8447333ca55f7789b8c7dec881c74eb3a6a738",
+      "guarded_all": {
+        "scenarios": 100,
+        "errors": 0,
+        "action_matches": 72,
+        "p50_seconds": 0.525,
+        "p95_seconds": 3.602
+      }
+    },
+    "quality_v1": {
+      "run": "quality_v1/20260918T124106Z-kanana-6ed1a1f5",
+      "results_sha256": "262d7751d07b7839a6592552ccf11fd820eee657d1ed860547d84ddba399debc",
+      "code_sha256": "fc22f58c3ec205bf462d14d74cbef5f598c656e419f836d3f2d828f2194e97de",
+      "data_sha256": "026c3c85fa2ab1622e721f2a5d70cb3f6194ba10869e3465b581f6cd68371297",
+      "policy_sha256": "bc44c826a0644d50b4f5e113fa8447333ca55f7789b8c7dec881c74eb3a6a738",
+      "guarded_all": {
+        "scenarios": 100,
+        "errors": 0,
+        "action_matches": 92,
+        "p50_seconds": 2.765,
+        "p95_seconds": 5.516
+      }
+    }
+  },
+  "guarded_p95_ratio": 1.531371,
+  "target_ratio": 1.25,
+  "local_archive_sha256": "18fde50ca327c9c8112acef33fb7a6c8b2cd448fca384145dc1970d3dbbc1614",
+  "remote_archive_sha256": "18fde50ca327c9c8112acef33fb7a6c8b2cd448fca384145dc1970d3dbbc1614",
+  "pod_id": "alj5yk19zuhnvp",
+  "pod_status_after": "EXITED",
+  "started_at": "2026-09-18 12:32:21 UTC",
+  "stopped_at": "2026-09-18 12:46:22 UTC",
+  "estimated_gpu_usd": 0.1144
+}

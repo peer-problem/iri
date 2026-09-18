@@ -16,6 +16,13 @@ from runpod.settings import ENV_FILE, REPO_ROOT
 API = "https://rest.runpod.io/v1"
 STATE_DIR = REPO_ROOT / ".logs/runpod/watchdog"
 POD_NAME = "kids-sandbox-baseline"
+KNOWN_PODS = {
+    "egw5ndth2lsus8": POD_NAME,
+    "9l7neo7d5wu3ec": "iri-phase3-v3-preferred-20260917",
+    "ttb34ziuu2ovrd": "iri-v10-full-new-20260917-01",
+    "ihxof0nqownkzw": "iri-phase3-quality-20260917",
+    "apu0j7ndp42wqd": "iri-phase2-training-v2",
+}
 
 
 def write_state(path, state):
@@ -39,7 +46,10 @@ def owned_pod(client, pod_id):
     if not re.fullmatch(r"[a-zA-Z0-9_-]{1,100}", pod_id):
         raise ValueError("Invalid Pod ID")
     pod = request(client, "GET", f"/pods/{pod_id}").json()
-    if pod.get("id") != pod_id or pod.get("name") != POD_NAME:
+    expected_name = KNOWN_PODS.get(pod_id) or os.environ.get(
+        "IRI_RUNPOD_EXPECTED_POD_NAME", POD_NAME
+    )
+    if pod.get("id") != pod_id or pod.get("name") != expected_name:
         raise ValueError("Pod identity does not match this project; no action taken")
     return pod
 
