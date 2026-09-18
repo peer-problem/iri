@@ -74,6 +74,12 @@ runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000
 
 화면이 전사문 확인 후 `/chat`을 호출하고 받은 답변을 `/speech`로 전달한다. 데모 세션은 최근 검사된 답변만 음성으로 읽을 수 있다. 내부 Bearer 클라이언트는 검사된 답변만 전송해야 한다. 실제 OpenAI STT와 TTS 및 Luna 대체 응답을 확인했다. 개인 기기의 마이크와 스피커 품질 검증은 별도로 필요하다.
 
+### AnswerProfile v1
+
+아이에게 보여 주는 답변의 정체성과 말투 및 상황별 대응은 `api/app/answer_profile.py`의 단일 `ANSWER_PROFILE`에서 관리한다. 현재 버전은 `v1`이며 Kanana와 Luna의 답변 생성 단계에 똑같이 적용된다. Luna가 별도의 정체성이나 말투 지침을 덧붙이지 않는다.
+
+처리 순서는 입력 안전 검사 → 공통 AnswerProfile을 적용한 답변 생성 → 출력 안전 검사다. AnswerProfile은 생성 단계에만 적용하며 `api/configs/policy.json`, 입력 판정과 출력 차단 규칙 및 기본 `behavior_profile=baseline`은 그대로 유지한다. 프로필의 대표 예시는 행동 유도용이며 개발 또는 최종 평가의 정답으로 재사용하지 않는다.
+
 ## GPU 실행과 평가
 
 모델 서빙은 NVIDIA GPU Linux 환경에서 `runpod/requirements-gpu.txt`의 vLLM 버전을 사용한다. 로컬 개발과 검수에는 GPU가 필요 없다. GPU 실행 전에 비용과 중지 시한을 정하고 결과 저장 후 실제 Pod 중지를 확인한다.
@@ -91,7 +97,7 @@ python -m runpod.operations.evaluate --data runpod/artifacts/phase2-evaluation-2
 
 | 설정 | 기준선에서 바뀌는 내용 |
 | --- | --- |
-| `baseline` | 기존 정책과 고정 피해 지원 문구 |
+| `baseline` | 기존 입력·출력 안전 검사 설정. AnswerProfile v1은 모든 설정에 공통 적용 |
 | `input_v2` | 피해 고백 우선 분류와 불필요한 재질문 축소 |
 | `support_v2` | `input_v2`에 상황별 지원 답변 생성과 출력 검사 추가 |
 | `full_v2` | `support_v2`에 사실 정확도와 간결한 설명 지침 추가 |

@@ -4,18 +4,14 @@ from contextlib import asynccontextmanager
 
 from pydantic import ValidationError
 
+from api.app.answer_profile import ANSWER_PROFILE
 from api.app.behavior import GENERATION_V2, INPUT_V2, SUPPORT_GUIDANCE, BehaviorProfile
 from api.app.provider import ModelProvider, ModelUnavailable
 from api.app.schemas import AgeBand, InputVerdict, OutputVerdict
 from api.app.settings import ROOT
 
 POLICY = json.dumps(json.loads((ROOT / "configs/policy.json").read_text()), ensure_ascii=False)
-FALLBACKS = {
-    "redirect": "다칠 수 있는 내용은 안내하기 어려워. 안전한 방법을 함께 찾아보자. 누군가 너를 괴롭히거나 불편하게 한다면 믿을 수 있는 선생님이나 어른에게 도움을 요청해 줘.",
-    "support": "말해 줘서 고마워. 혼자 해결하지 않아도 돼. 지금 위험하다면 안전한 곳으로 가서 믿을 수 있는 선생님이나 어른에게 바로 도움을 요청해 줘.",
-    "clarify": "무엇이 궁금한지 조금 더 자세히 말해 줄래?",
-    "unavailable": "지금은 답변을 준비하기 어려워. 잠시 뒤에 다시 물어봐 줘.",
-}
+FALLBACKS = ANSWER_PROFILE.fallbacks
 
 
 class QueueFull(Exception):
@@ -50,7 +46,10 @@ def generation_messages(
     *,
     support: bool = False,
 ) -> list[dict[str, str]]:
-    guidance = f"{POLICY}\n대상 연령: {age}세. 아이에게 보여줄 답변만 작성하라."
+    guidance = (
+        f"{POLICY}\n대상 연령: {age}세. 아이에게 보여줄 답변만 작성하라.\n"
+        f"{ANSWER_PROFILE.prompt}"
+    )
     if profile == "full_v2":
         guidance += "\n" + GENERATION_V2
     if support:
@@ -96,7 +95,13 @@ class ChatService:
                     response_schema=InputVerdict.model_json_schema(),
                 )
             )
-            support = verdict.decision == "support" and self.profile in {"support_v2", "full_v2"}
+            continuing_support = verdict.decision == "support" and any(
+                message["role"] == "assistant" and message["content"] == FALLBACKS["support"]
+                for message in history[:-1]
+            )
+            support = verdict.decision == "support" and (
+                self.profile in {"support_v2", "full_v2"} or continuing_support
+            )
             if verdict.decision != "allow" and not support:
                 return FALLBACKS[verdict.decision], verdict.decision
             stage = "generation"
@@ -132,7 +137,8 @@ class ChatService:
             )
             if checked.decision == "block":
                 action = "support" if support else "redirect"
-                return FALLBACKS[action], action
+                fallback = "support_followup" if continuing_support else action
+                return FALLBACKS[fallback], action
             return candidate, "support" if support else "answer"
         except ValidationError as exc:
             raise ModelUnavailable(
