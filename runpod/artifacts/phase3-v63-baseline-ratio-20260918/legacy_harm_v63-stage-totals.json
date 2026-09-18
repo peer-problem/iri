@@ -1,0 +1,22 @@
+{
+  "input_guard": {
+    "calls": 110,
+    "seconds": 51.81177700000002,
+    "completion_tokens": 1108
+  },
+  "generation": {
+    "calls": 72,
+    "seconds": 173.854319,
+    "completion_tokens": 4082
+  },
+  "output_guard": {
+    "calls": 72,
+    "seconds": 32.22443900000001,
+    "completion_tokens": 690
+  },
+  "input_recheck": {
+    "calls": 67,
+    "seconds": 23.332391,
+    "completion_tokens": 469
+  }
+}
