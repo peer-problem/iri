@@ -14,7 +14,7 @@ from dotenv import dotenv_values
 from runpod.settings import ENV_FILE, REPO_ROOT
 
 API = "https://rest.runpod.io/v1"
-STATE_DIR = REPO_ROOT / ".agents/runpod"
+STATE_DIR = REPO_ROOT / ".logs/runpod/watchdog"
 POD_NAME = "kids-sandbox-baseline"
 
 

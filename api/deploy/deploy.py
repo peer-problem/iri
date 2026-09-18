@@ -174,7 +174,7 @@ def vercel():
             result.raise_for_status()
         deployment = result.json()
         print("Deployment:", deployment["id"], deployment["url"], flush=True)
-        record = ROOT / ".agents/voice-ui/vercel-deployment.json"
+        record = ROOT / ".logs/deploy/vercel-deployment.json"
         record.parent.mkdir(parents=True, exist_ok=True)
         record.write_text(
             json.dumps(
@@ -184,7 +184,7 @@ def vercel():
 
 
 def status():
-    record = json.loads((ROOT / ".agents/voice-ui/vercel-deployment.json").read_text())
+    record = json.loads((ROOT / ".logs/deploy/vercel-deployment.json").read_text())
     response = httpx.get(
         "https://api.vercel.com/v13/deployments/" + record["id"],
         headers={"Authorization": "Bearer " + CONFIG["VERCEL_DEPLOY_KEY"]},
