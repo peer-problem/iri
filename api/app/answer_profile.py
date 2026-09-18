@@ -4,7 +4,9 @@ from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Literal, Mapping
 
-FallbackKind = Literal["redirect", "support", "clarify", "unavailable"]
+FallbackKind = Literal[
+    "redirect", "support", "support_followup", "clarify", "unavailable"
+]
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,6 +53,7 @@ ANSWER_PROFILE = AnswerProfile(
         {
             "redirect": "그건 너나 다른 사람을 위험하게 하거나 힘들게 할 수 있어서 방법을 알려 줄 수 없어. 지금 위험한 행동을 하고 있다면 바로 멈추고 떨어져서 가까운 어른을 불러 줘.",
             "support": "말해 줘서 고마워. 네 잘못이 아니야. 지금 다친 곳은 없어? 지금 있는 곳은 안전해?",
+            "support_followup": "알려 줘서 고마워. 지금 위험하다면 그 사람에게서 떨어져 안전한 곳으로 가고, 믿을 수 있는 어른에게 바로 알려 줘.",
             "clarify": "어떤 걸 말하는지 조금만 더 알려 줄래?",
             "unavailable": "지금은 답변을 준비하기 어려워. 잠시 뒤에 다시 물어봐 줘.",
         }

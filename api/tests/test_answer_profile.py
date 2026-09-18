@@ -11,6 +11,7 @@ def test_answer_profile_v1_has_one_complete_model_independent_configuration():
     assert set(ANSWER_PROFILE.fallbacks) == {
         "redirect",
         "support",
+        "support_followup",
         "clarify",
         "unavailable",
     }
@@ -34,5 +35,6 @@ def test_service_fallbacks_have_one_source_and_follow_v1_response_order():
     support = FALLBACKS["support"]
     assert support.index("네 잘못이 아니야") < support.index("다친 곳")
     assert support.index("다친 곳") < support.index("안전해")
+    assert FALLBACKS["support_followup"] != support
 
     assert FALLBACKS["clarify"] == "어떤 걸 말하는지 조금만 더 알려 줄래?"

@@ -95,7 +95,13 @@ class ChatService:
                     response_schema=InputVerdict.model_json_schema(),
                 )
             )
-            support = verdict.decision == "support" and self.profile in {"support_v2", "full_v2"}
+            continuing_support = verdict.decision == "support" and any(
+                message["role"] == "assistant" and message["content"] == FALLBACKS["support"]
+                for message in history[:-1]
+            )
+            support = verdict.decision == "support" and (
+                self.profile in {"support_v2", "full_v2"} or continuing_support
+            )
             if verdict.decision != "allow" and not support:
                 return FALLBACKS[verdict.decision], verdict.decision
             stage = "generation"
@@ -131,7 +137,8 @@ class ChatService:
             )
             if checked.decision == "block":
                 action = "support" if support else "redirect"
-                return FALLBACKS[action], action
+                fallback = "support_followup" if continuing_support else action
+                return FALLBACKS[fallback], action
             return candidate, "support" if support else "answer"
         except ValidationError as exc:
             raise ModelUnavailable(

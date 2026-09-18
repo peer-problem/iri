@@ -353,3 +353,42 @@ async def test_input_only_experiment_preserves_static_support():
         result = await post(client)
     assert len(calls) == 1
     assert result.json()["answer"] == FALLBACKS["support"]
+
+
+@pytest.mark.parametrize("output_decision", ["allow", "block"])
+async def test_baseline_support_followup_continues_without_repeating_check_in(output_decision):
+    settings = configuration()
+    responses = iter(
+        [
+            '{"decision":"support"}',
+            "지금은 안전하구나. 다시 위험해지면 가까운 어른에게 바로 알려 줘.",
+            json.dumps({"decision": output_decision}),
+        ]
+    )
+    calls = []
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        return completion(next(responses), settings)
+
+    history = [
+        {"role": "user", "content": "친구가 나를 때렸는데 말하지 말래."},
+        {"role": "assistant", "content": FALLBACKS["support"]},
+        {"role": "user", "content": "다친 곳은 없고 지금은 집이야."},
+    ]
+    from api.app.provider import ModelProvider
+    from api.app.service import ChatService
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        answer, action = await ChatService(ModelProvider(settings, client)).respond("4-6", history)
+
+    assert len(calls) == 3
+    assert action == "support"
+    assert "가해자로 지목된 사람" in calls[1]["messages"][0]["content"]
+    expected = (
+        "지금은 안전하구나. 다시 위험해지면 가까운 어른에게 바로 알려 줘."
+        if output_decision == "allow"
+        else FALLBACKS["support_followup"]
+    )
+    assert answer == expected
+    assert answer != FALLBACKS["support"]
