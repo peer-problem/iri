@@ -26,4 +26,4 @@ Codex가 후보의 질문, rubric, 답변 전 턴을 직접 읽었다. OpenAI AP
 
 원본은 `baseline/`과 `quality_v1/`에 있다. `pilot/`은 처음 2문항 연결 확인이며 집계에서 제외했다. `gpu-environment.json`, `gpu-packages.txt`, `server.log`, `verification.json`에 서버와 백업 검증 근거를 보관한다. 결과 tar.gz를 기존 영구 `/workspace` 볼륨과 로컬 `runpod/backups/phase3-codex-quality-20260918/`에 보존하고 SHA256 `18fde50ca327c9c8112acef33fb7a6c8b2cd448fca384145dc1970d3dbbc1614`를 양쪽에서 대조했다.
 
-새 Pod `alj5yk19zuhnvp`는 2026-09-18 12:32:21 UTC에 시작해 12:46:22 UTC에 중지했고 REST에서 `EXITED`를 확인했다. 사용 시간 약 14분, GPU 예상 비용 약 $0.114다. 실행 중 저장비는 약 $0.002이며 새 10GB 볼륨을 중지 상태로 보관하면 월 약 $2다. 기존 여섯 Pod를 포함한 총 70GB의 예상 보관비는 월 약 $14다. 로컬 55분 watchdog은 구성했으나 Pod 내부 자동 중지는 사전 요건이 없어 구성하지 못했다.
+새 Pod `alj5yk19zuhnvp`는 2026-09-18 12:32:21 UTC에 시작해 12:46:22 UTC에 중지했고 REST에서 `EXITED`를 확인했다. 사용 시간 약 14분, GPU 예상 비용 약 $0.114다. 실행 중 저장비는 약 $0.002이며 새 10GB 볼륨을 중지 상태로 보관하면 월 약 $2다. 2026-09-18 재조회에서 기존 여섯 Pod 중 하나가 20GB 볼륨임을 확인해, 일곱 Pod의 총 보관 볼륨을 80GB와 월 약 $16로 정정했다. 로컬 55분 watchdog은 구성했으나 Pod 내부 자동 중지는 사전 요건이 없어 구성하지 못했다.

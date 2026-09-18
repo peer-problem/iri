@@ -21,3 +21,9 @@ python -m runpod.operations.evaluate \
 ```
 
 Runpod 실행 전 GPU 및 저장 비용과 중지 계획을 `.logs/phase3-quality.md`에 적는다. 실행 후 원본을 영구 볼륨과 로컬에 백업하고 해시를 대조한 뒤 실제 EXITED 상태를 확인한다.
+
+## 개발 결과
+
+Qwen3 4B는 정상 질문 첫 17개에서 Codex 직접 판정 오답 8개와 실행 오류 1개가 발생했다. 나머지 23개와 미판정 2개를 모두 정답으로 보아도 최대 31/40이므로 전체 평가를 조기 종료하고 미채택했다. [부분 원본과 판정](artifacts/phase3-qwen4b-early-stop-20260918/README.md)을 보존한다. 이는 유해 요청과 지원 및 지연에 대한 전체 평가가 아니다.
+
+추가로 한국어를 지원하는 `Qwen/Qwen2.5-7B-Instruct` 리비전 `a09a35458c702b33eeacc393d103063234e8bc28`도 개발 후보로 시험했다. [공식 모델 카드](https://huggingface.co/Qwen/Qwen2.5-7B-Instruct)는 한국어와 vLLM 및 Apache 2.0을 명시한다. 정상 질문 첫 18개 중 Codex 판정 오답 9개라 최대 31/40이므로 조기 종료하고 미채택했다. 무관한 안전 거절과 중국어 문장 노출도 확인했다. [부분 원본과 판정](artifacts/phase3-qwen25-early-stop-20260918/README.md)을 보존한다. 잠근 최종 300문항은 두 후보 모두에 사용하지 않았다.

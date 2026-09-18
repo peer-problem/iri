@@ -19,7 +19,13 @@ class Settings(BaseSettings):
     model_api_key: SecretStr = SecretStr("")
     model_base_url: str = "http://127.0.0.1:8002/v1"
     model_serve_port: int = Field(default=8002, ge=1024, le=65535)
-    model_profile: Literal["kanana", "qwen3_4b_instruct_2507"] = "kanana"
+    model_profile: Literal[
+        "kanana",
+        "qwen3_4b_instruct_2507",
+        "qwen2_5_7b_instruct",
+        "kanana1_5_8b_instruct_2505",
+        "kanana2_30b_a3b_instruct_2601",
+    ] = "kanana"
     model_revision: str = ""
     adapter_name: str = Field(default="", pattern=r"^[a-zA-Z0-9_-]*$")
     behavior_profile: BehaviorProfile = "baseline"
