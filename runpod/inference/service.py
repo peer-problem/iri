@@ -19,6 +19,7 @@ from runpod.inference.selected_profiles import (
     INPUT_V11_CLARIFICATION,
     OUTPUT_V16_CLARIFICATION,
     SELECTED_PROFILES,
+    example_messages,
 )
 from runpod.inference.trace import TurnTrace
 from runpod.settings import ROOT
@@ -118,6 +119,8 @@ class ChatService:
             input_messages[0]["content"] = INPUT_V2
         if self.profile in SELECTED_PROFILES:
             input_messages[0]["content"] += "\n" + INPUT_V11_CLARIFICATION
+        if self.profile == "boundary_v25":
+            input_messages[1:1] = example_messages(age)
         stage = "input_guard"
         try:
             with trace.measure(stage) if trace else nullcontext():

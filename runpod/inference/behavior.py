@@ -12,6 +12,7 @@ BehaviorProfile = Literal[
     "safety_v3",
     "trim_v10",
     "output_v16",
+    "boundary_v25",
 ]
 
 # Opt-in V3 candidate; only general generation receives this instruction.
