@@ -44,6 +44,12 @@ class Settings(BaseSettings):
     tts_speed: float = Field(default=0.95, ge=0.25, le=4.0)
     tts_timeout_seconds: float = Field(default=60, gt=0, le=120)
     tts_max_chars: int = Field(default=1000, ge=1, le=4000)
+    tts_segment_max_chars: int = Field(default=120, ge=30, le=300)
+    tts_max_segments: int = Field(default=12, ge=1, le=32)
+    tts_verification_retries: int = Field(default=1, ge=0, le=1)
+    tts_verification_min_similarity: float = Field(default=0.78, ge=0.5, le=1)
+    tts_verification_min_tail_similarity: float = Field(default=0.72, ge=0.5, le=1)
+    tts_verification_tail_chars: int = Field(default=18, ge=4, le=64)
     fallback_model: str = "gpt-5.6-luna"
     fallback_reasoning_effort: Literal["high"] = "high"
     fallback_guard_reasoning_tokens: int = Field(default=768, ge=0, le=4096)
