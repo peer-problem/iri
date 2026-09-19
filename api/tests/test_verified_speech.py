@@ -127,9 +127,12 @@ async def test_verified_speech_preserves_segment_order():
             return httpx.Response(200, content=speech_events(sample))
         return httpx.Response(200, json={"text": spoken[-1]})
 
-    text = "첫 번째 문장이야. 두 번째 문장이야."
+    text = "첫 번째 문장은 끝까지 정확하게 읽어 줘. 두 번째 문장도 순서대로 정확하게 읽어 줘."
     async with synthesizer(handler, tts_segment_max_chars=30) as current:
         audio = await current.synthesize_verified_pcm(text)
 
-    assert spoken == ["첫 번째 문장이야.", "두 번째 문장이야."]
+    assert spoken == [
+        "첫 번째 문장은 끝까지 정확하게 읽어 줘.",
+        "두 번째 문장도 순서대로 정확하게 읽어 줘.",
+    ]
     assert audio == b"\x01\x00\x02\x00"

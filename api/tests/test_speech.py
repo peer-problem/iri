@@ -194,7 +194,7 @@ async def test_speech_stream_returns_verified_pcm_events_with_same_voice_profile
 async def test_speech_stream_reports_later_semantic_failure_without_done(caplog):
     transcripts = iter(
         [
-            "첫 번째 문장이야.",
+            "첫 번째 문장은 끝까지 정확하게 읽어 줘.",
             "마지막 절 앞에서",
             "마지막 절 앞에서",
         ]
@@ -206,11 +206,13 @@ async def test_speech_stream_reports_later_semantic_failure_without_done(caplog)
         return httpx.Response(200, json={"text": next(transcripts)})
 
     with caplog.at_level(logging.WARNING, logger="api.app.app"):
-        async with api(handler) as client:
+        async with api(handler, configuration(tts_segment_max_chars=30)) as client:
             response = await client.post(
                 "/speech-stream",
                 headers={"Authorization": f"Bearer {KEY}"},
-                json={"text": "첫 번째 문장이야. 마지막 절까지 말해도 돼."},
+                json={
+                    "text": "첫 번째 문장은 끝까지 정확하게 읽어 줘. 마지막 절까지 말해도 돼."
+                },
             )
 
     events = parse_sse(response.content)
@@ -230,7 +232,7 @@ async def test_speech_stream_reports_later_semantic_failure_without_done(caplog)
     assert "segments=1" in records[0]
     assert f"bytes={len(PCM)}" in records[0]
     assert "completed=false code=incomplete" in records[0]
-    assert "첫 번째 문장이야" not in records[0]
+    assert "첫 번째 문장은" not in records[0]
 
 
 async def test_missing_openai_key_is_unavailable_without_call():

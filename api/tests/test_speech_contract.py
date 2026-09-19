@@ -45,7 +45,26 @@ def test_segmentation_prefers_natural_boundaries_for_long_korean_text():
 
 def test_segmentation_rejects_unbounded_segment_count():
     with pytest.raises(ValueError, match="too many"):
-        segment_speech_text("하나. 둘. 셋.", max_chars=30, max_segments=2)
+        segment_speech_text("가" * 61, max_chars=30, max_segments=2)
+
+
+def test_segmentation_packs_short_sentences_within_the_segment_budget():
+    unit = (
+        "비가 내린 뒤에는 공기 속 작은 물방울을 햇빛이 통과하면서 여러 색으로 나뉘어 보여. "
+        "우리는 이것을 무지개라고 부르고, 해를 등진 채 비가 오는 쪽을 바라보면 더 잘 볼 수 있어. "
+    )
+    suffix = "마지막 검증 문구: 보라색 고래가 바다 위로 힘차게 뛰어올랐어."
+    text = ""
+    while len(text) + len(unit) + len(suffix) < 950:
+        text += unit
+    text += suffix
+
+    segments = segment_speech_text(text, max_chars=120, max_segments=12)
+
+    assert len(text) == 944
+    assert len(segments) <= 12
+    assert all(len(segment) <= 120 for segment in segments)
+    assert compact_speech_text("".join(segments)) == compact_speech_text(text)
 
 
 @pytest.mark.parametrize(

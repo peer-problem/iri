@@ -60,11 +60,19 @@ def segment_speech_text(text: str, *, max_chars: int, max_segments: int) -> list
     if not stripped:
         raise ValueError("Speech text must not be empty")
 
-    segments: list[str] = []
+    natural_parts: list[str] = []
     for paragraph in re.split(r"\n+", stripped):
         for sentence in SENTENCE_BOUNDARY.split(paragraph.strip()):
             if sentence.strip():
-                segments.extend(_split_long_part(sentence, max_chars))
+                natural_parts.extend(_split_long_part(sentence, max_chars))
+
+    segments: list[str] = []
+    for part in natural_parts:
+        combined = f"{segments[-1]} {part}" if segments else part
+        if segments and len(combined) <= max_chars:
+            segments[-1] = combined
+        else:
+            segments.append(part)
     if len(segments) > max_segments:
         raise ValueError("Speech requires too many segments")
     if compact_speech_text("".join(segments)) != compact_speech_text(stripped):
