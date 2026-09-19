@@ -470,7 +470,6 @@ export default function App() {
                         ) : (
                           <VolumeIcon />
                         )}
-                        <span>{preparing ? "준비 중" : speaking ? "멈추기" : "듣기"}</span>
                       </button>
                     )}
                   </div>
