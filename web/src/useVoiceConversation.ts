@@ -44,6 +44,7 @@ export function useVoiceConversation() {
   const [consentOpen, setConsentOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
+  const [playbackMessageId, setPlaybackMessageId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [transcript, setTranscript] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -230,8 +231,13 @@ export function useVoiceConversation() {
       playbackSource.current.disconnect();
       playbackSource.current = null;
     }
-    mediaAudio.current?.pause();
+    if (mediaAudio.current) {
+      mediaAudio.current.onended = null;
+      mediaAudio.current.onerror = null;
+      mediaAudio.current.pause();
+    }
     mediaAudio.current = null;
+    setPlaybackMessageId(null);
   }
 
   function preparePlayback() {
@@ -280,6 +286,7 @@ export function useVoiceConversation() {
     if (userGesture) preparePlayback();
     stopPlayback();
     const attempt = playbackAttempt.current;
+    setPlaybackMessageId(message.id);
     setError("");
     setPhase("synthesizing");
     try {
@@ -301,6 +308,7 @@ export function useVoiceConversation() {
           () => {
             if (playbackAttempt.current === attempt) {
               pcmPlayer.current = null;
+              setPlaybackMessageId(null);
               setPhase("idle");
             }
           },
@@ -347,6 +355,7 @@ export function useVoiceConversation() {
           () => {
             if (playbackAttempt.current === attempt) {
               pcmPlayer.current = null;
+              setPlaybackMessageId(null);
               setPhase("idle");
             }
           },
@@ -372,6 +381,7 @@ export function useVoiceConversation() {
             if (playbackSource.current === source) {
               playbackSource.current = null;
               source.disconnect();
+              setPlaybackMessageId(null);
               setPhase("idle");
             }
           };
@@ -386,8 +396,16 @@ export function useVoiceConversation() {
 
       const player = new Audio(clip.url);
       mediaAudio.current = player;
-      player.onended = () => setPhase("idle");
+      player.onended = () => {
+        if (playbackAttempt.current !== attempt || mediaAudio.current !== player) return;
+        mediaAudio.current = null;
+        setPlaybackMessageId(null);
+        setPhase("idle");
+      };
       player.onerror = () => {
+        if (playbackAttempt.current !== attempt || mediaAudio.current !== player) return;
+        mediaAudio.current = null;
+        setPlaybackMessageId(null);
         setPhase("idle");
         setError("음성을 재생하지 못했어요. 다시 듣기를 눌러 주세요.");
       };
@@ -396,6 +414,9 @@ export function useVoiceConversation() {
         syntheticSpeechStarted.current = performance.now();
         setPhase("speaking");
       } catch {
+        if (playbackAttempt.current !== attempt) return;
+        mediaAudio.current = null;
+        setPlaybackMessageId(null);
         setPhase("idle");
         setError("다시 듣기를 누르면 이리의 목소리를 들을 수 있어요.");
       }
@@ -403,6 +424,7 @@ export function useVoiceConversation() {
       if (playbackAttempt.current !== attempt) return;
       pcmPlayer.current?.stop();
       pcmPlayer.current = null;
+      setPlaybackMessageId(null);
       fail(reason);
       if (!(reason instanceof ApiError && reason.status === 401)) {
         setError(
@@ -594,6 +616,7 @@ export function useVoiceConversation() {
     settingsOpen,
     setSettingsOpen,
     phase,
+    playbackMessageId,
     draft,
     setDraft,
     transcript,

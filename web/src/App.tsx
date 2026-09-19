@@ -170,6 +170,11 @@ export default function App() {
         ? "말하기 마치기"
         : "마이크로 이야기하기";
 
+  const closeHistory = () => {
+    if (voice.playbackMessageId) voice.stopSpeaking();
+    setHistoryOpen(false);
+  };
+
   return (
     <main className="orb-app" data-phase={voice.phase}>
       <a className="iri-brand" href="/" aria-label="이리 홈">
@@ -425,18 +430,52 @@ export default function App() {
             <button
               className="plain-icon"
               aria-label="대화 기록 닫기"
-              onClick={() => setHistoryOpen(false)}
+              onClick={closeHistory}
             >
               <CloseIcon />
             </button>
           </div>
           <div className="history-list" role="log">
-            {voice.messages.map((message) => (
-              <article key={message.id} data-role={message.role}>
-                <span>{message.role === "user" ? "나" : "이리"}</span>
-                <p>{message.text}</p>
-              </article>
-            ))}
+            {voice.messages.map((message) => {
+              const active = voice.playbackMessageId === message.id;
+              const preparing = active && voice.phase === "synthesizing";
+              const speaking = active && voice.phase === "speaking";
+
+              return (
+                <article key={message.id} data-role={message.role}>
+                  <span>{message.role === "user" ? "나" : "이리"}</span>
+                  <div className="history-message">
+                    <p>{message.text}</p>
+                    {message.role === "assistant" && (
+                      <button
+                        className="history-replay"
+                        data-active={active || undefined}
+                        disabled={voice.busy && !active}
+                        aria-label={
+                          preparing
+                            ? "이 답변 음성 준비 중지"
+                            : speaking
+                              ? "이 답변 재생 멈추기"
+                              : "이 답변 듣기"
+                        }
+                        onClick={() => {
+                          if (active) voice.stopSpeaking();
+                          else void voice.speak(message, true);
+                        }}
+                      >
+                        {preparing ? (
+                          <span className="history-replay-spinner" aria-hidden="true" />
+                        ) : speaking ? (
+                          <StopIcon />
+                        ) : (
+                          <VolumeIcon />
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       )}
