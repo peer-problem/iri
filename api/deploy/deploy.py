@@ -5,7 +5,6 @@ import base64
 import io
 import json
 import os
-import socket
 import subprocess
 import tarfile
 import time
@@ -48,13 +47,16 @@ def ssh(command, data=None, timeout=180):
 
 def require_api_dns():
     expected_ip = CONFIG["CONTABO_VPS_IP_ADDRESS"]
-    try:
-        addresses = {
-            item[4][0]
-            for item in socket.getaddrinfo(API_DOMAIN, 443, family=socket.AF_INET)
-        }
-    except socket.gaierror as exc:
-        raise RuntimeError(f"{API_DOMAIN} does not resolve yet") from exc
+    result = subprocess.run(
+        ["dig", "+short", "A", API_DOMAIN, "@1.1.1.1"],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    if result.returncode:
+        raise RuntimeError(f"Could not verify public DNS for {API_DOMAIN}")
+    addresses = set(result.stdout.splitlines())
     if expected_ip not in addresses:
         raise RuntimeError(f"{API_DOMAIN} does not resolve to the configured Contabo VPS")
 
