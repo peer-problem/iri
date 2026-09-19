@@ -1,4 +1,6 @@
 import asyncio
+import base64
+import hashlib
 import logging
 import secrets
 from contextlib import asynccontextmanager, suppress
@@ -17,7 +19,8 @@ from api.app.schemas import ChatRequest, ChatResponse, SpeechRequest
 from api.app.service import FALLBACKS, QueueFull, RequestGate
 from api.app.sessions import COOKIE, TTL, Sessions
 from api.app.settings import Settings
-from api.app.speech import SpeechUnavailable, Synthesizer
+from api.app.speech import SpeechIncomplete, SpeechUnavailable, Synthesizer
+from api.app.speech_events import speech_event
 from api.app.transcription import (
     FORMATS,
     NoSpeechDetected,
@@ -264,7 +267,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
 
     @app.post("/speech", dependencies=[Depends(access)])
     async def speech(body: SpeechRequest, request: Request):
-        """Read an answer from POST /chat aloud. Returns MP3 bytes."""
+        """Read an answer from POST /chat aloud. Returns verified WAV bytes."""
         session = request.state.demo_session
         if session and not any(
             item["role"] == "assistant" and item["content"] == body.text for item in session.history
@@ -277,17 +280,18 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
         try:
             async with asyncio.timeout(settings.tts_timeout_seconds):
                 async with speech_gate.enter():
-                    audio = await app.state.synthesizer.synthesize(body.text)
+                    pcm = await app.state.synthesizer.synthesize_verified_pcm(body.text)
+                    audio = app.state.synthesizer.pcm_to_wav(pcm)
             return Response(
                 content=audio,
-                media_type="audio/mpeg",
+                media_type="audio/wav",
                 headers={"Cache-Control": "no-store", "X-Request-Id": str(uuid4())},
             )
         except QueueFull:
             raise HTTPException(429, "Speech is busy", headers={"Retry-After": "3"}) from None
         except TimeoutError:
             raise HTTPException(504, "Speech timed out") from None
-        except SpeechUnavailable:
+        except (SpeechIncomplete, SpeechUnavailable):
             raise HTTPException(503, "Speech is unavailable") from None
         except ValueError:
             raise HTTPException(413, "Text is too long") from None
@@ -305,7 +309,8 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
         if len(body.text) > settings.tts_max_chars:
             raise HTTPException(413, "Text is too long")
 
-        stream = app.state.synthesizer.stream_pcm(body.text).__aiter__()
+        request_id = str(uuid4())
+        stream = app.state.synthesizer.verified_segments(body.text).__aiter__()
         gate_context = speech_gate.enter()
         entered = False
         deadline = asyncio.get_running_loop().time() + settings.tts_timeout_seconds
@@ -325,7 +330,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             with suppress(Exception):
                 await stream.aclose()
             raise HTTPException(504, "Speech timed out") from None
-        except (SpeechUnavailable, StopAsyncIteration):
+        except (SpeechIncomplete, SpeechUnavailable, StopAsyncIteration):
             if entered:
                 await gate_context.__aexit__(None, None, None)
             with suppress(Exception):
@@ -345,11 +350,77 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             raise
 
         async def chunks():
+            total = 0
+            count = 0
+            digest = hashlib.sha256()
+
+            def segment_events(segment):
+                nonlocal total, count
+                for offset in range(0, len(segment.pcm), 48 * 1024):
+                    audio = segment.pcm[offset : offset + 48 * 1024]
+                    digest.update(audio)
+                    total += len(audio)
+                    yield speech_event(
+                        "audio.delta",
+                        {
+                            "requestId": request_id,
+                            "segment": segment.index,
+                            "audio": base64.b64encode(audio).decode(),
+                        },
+                    )
+                count += 1
+                yield speech_event(
+                    "audio.segment_done",
+                    {
+                        "requestId": request_id,
+                        "segment": segment.index,
+                        "segmentBytes": len(segment.pcm),
+                        "totalBytes": total,
+                        "attempts": segment.attempts,
+                    },
+                )
+
             try:
-                yield first
-                async with asyncio.timeout_at(deadline):
-                    async for chunk in stream:
-                        yield chunk
+                yield speech_event(
+                    "audio.started",
+                    {
+                        "requestId": request_id,
+                        "encoding": "pcm_s16le",
+                        "sampleRate": 24_000,
+                        "channels": 1,
+                    },
+                )
+                for event in segment_events(first):
+                    yield event
+                try:
+                    async with asyncio.timeout_at(deadline):
+                        async for segment in stream:
+                            for event in segment_events(segment):
+                                yield event
+                except (TimeoutError, asyncio.TimeoutError):
+                    yield speech_event(
+                        "audio.error", {"requestId": request_id, "code": "timeout"}
+                    )
+                    return
+                except SpeechIncomplete:
+                    yield speech_event(
+                        "audio.error", {"requestId": request_id, "code": "incomplete"}
+                    )
+                    return
+                except SpeechUnavailable:
+                    yield speech_event(
+                        "audio.error", {"requestId": request_id, "code": "unavailable"}
+                    )
+                    return
+                yield speech_event(
+                    "audio.done",
+                    {
+                        "requestId": request_id,
+                        "bytes": total,
+                        "segments": count,
+                        "sha256": digest.hexdigest(),
+                    },
+                )
             finally:
                 with suppress(Exception):
                     await stream.aclose()
@@ -357,11 +428,12 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
 
         return StreamingResponse(
             chunks(),
-            media_type="application/octet-stream",
+            media_type="text/event-stream",
             headers={
                 "Cache-Control": "no-store",
-                "X-Request-Id": str(uuid4()),
+                "X-Request-Id": request_id,
                 "X-Audio-Format": "pcm_s16le;rate=24000;channels=1",
+                "X-Accel-Buffering": "no",
             },
         )
 
