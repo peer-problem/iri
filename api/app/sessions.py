@@ -10,6 +10,7 @@ from fastapi import HTTPException, Request
 
 COOKIE = "iri_session"
 TTL = 3600
+DEV_ACCESS_CODE = "dev"
 
 
 @dataclass
@@ -49,23 +50,32 @@ class Sessions:
     def login(self, request: Request, code: str):
         self.origin(request)
         now = time.time()
+        is_dev_code = secrets.compare_digest(code.encode(), DEV_ACCESS_CODE.encode())
         # Trust only the immediate reverse proxy's real client address as configured in Uvicorn.
         ip = request.client.host if request.client else "unknown"
-        self.attempts = {k: v for k, v in self.attempts.items() if v and v[-1] > now - 300}
-        if ip not in self.attempts and len(self.attempts) >= 2000:
-            raise HTTPException(429, "Try again later")
-        attempts = self.attempts.setdefault(ip, deque())
-        while attempts and attempts[0] <= now - 300:
-            attempts.popleft()
-        if len(attempts) >= 10:
-            raise HTTPException(429, "Try again later", headers={"Retry-After": "300"})
-        attempts.append(now)
-        expected = self.settings.demo_access_code.get_secret_value()
-        if not expected or not secrets.compare_digest(code.encode(), expected.encode()):
-            raise HTTPException(401, "Invalid access code")
+        if not is_dev_code:
+            self.attempts = {
+                key: value
+                for key, value in self.attempts.items()
+                if value and value[-1] > now - 300
+            }
+            if ip not in self.attempts and len(self.attempts) >= 2000:
+                raise HTTPException(429, "Try again later")
+            attempts = self.attempts.setdefault(ip, deque())
+            while attempts and attempts[0] <= now - 300:
+                attempts.popleft()
+            if len(attempts) >= 10:
+                raise HTTPException(429, "Try again later", headers={"Retry-After": "300"})
+            attempts.append(now)
+            expected = self.settings.demo_access_code.get_secret_value()
+            if not expected or not secrets.compare_digest(code.encode(), expected.encode()):
+                raise HTTPException(401, "Invalid access code")
         self.items = {k: v for k, v in self.items.items() if v.expires > now}
         if len(self.items) >= 1000:
-            raise HTTPException(429, "Demo is busy")
+            if not is_dev_code:
+                raise HTTPException(429, "Demo is busy")
+            oldest = min(self.items, key=lambda key: self.items[key].expires)
+            self.items.pop(oldest)
         token = secrets.token_urlsafe(32)
         self.items[hashlib.sha256(token.encode()).hexdigest()] = Session(now + TTL)
         return token

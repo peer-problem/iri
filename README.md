@@ -4,7 +4,7 @@
 
 ## 음성 대화 데모
 
-[배포된 화면](https://iri-voice.vercel.app)을 사용한다. Vercel의 화면에서 Contabo HTTPS API로 연결한다. 참여 코드는 Git에서 제외한 `.keys/.env`의 `DEMO_ACCESS_CODE`에 보관한다. 실제 계정 키는 브라우저에 전달하지 않는다.
+[배포된 화면](https://iri-voice.vercel.app)을 사용한다. Vercel의 화면에서 Contabo HTTPS API로 연결한다. 참여 코드 `dev`는 모든 환경에서 사용할 수 있다. Git에서 제외한 `.keys/.env`의 `DEMO_ACCESS_CODE`를 추가 참여 코드로 사용할 수도 있다. 실제 계정 키는 브라우저에 전달하지 않는다.
 
 기본 흐름은 마이크 녹음 → STT → 인식 문장 확인 또는 수정 → 답변 생성 → TTS 재생이다. 텍스트로도 입력할 수 있고 모든 답변은 대화 기록에서 확인할 수 있다. 중앙 Orb는 듣기와 생각하기 및 말하기 상태에 반응한다. 재생 중지와 다시 듣기 및 음성 출력 끄기를 지원한다. 녹음은 최대 60초다.
 

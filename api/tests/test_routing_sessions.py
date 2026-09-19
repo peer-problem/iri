@@ -116,9 +116,21 @@ async def test_demo_session_history_isolation_clear_logout_and_csrf():
         assert (await client.get('/session')).status_code == 200
 
 
+@pytest.mark.parametrize("configured_code", ["", "another-code"])
+async def test_dev_access_code_always_creates_session(configured_code):
+    settings = configuration(demo_access_code=configured_code)
+    async with api(lambda _: pytest.fail("No upstream call"), settings) as client:
+        login = await client.post('/session', json={"code": "dev"})
+        assert login.status_code == 200
+        assert 'HttpOnly' in login.headers['set-cookie']
+        assert (await client.get('/session')).status_code == 200
+
+
 async def test_login_rate_limit_and_cross_origin_protection():
     async with api(lambda _: pytest.fail("No upstream call"), configuration(demo_access_code="test")) as client:
         assert (await client.post('/session', json={"code": "test"}, headers={"Origin": "https://evil.test"})).status_code == 403
+        assert (await client.post('/session', json={"code": "dev"}, headers={"Origin": "https://evil.test"})).status_code == 403
         for _ in range(10):
             assert (await client.post('/session', json={"code": "wrong"})).status_code == 401
         assert (await client.post('/session', json={"code": "test"})).status_code == 429
+        assert (await client.post('/session', json={"code": "dev"})).status_code == 200
