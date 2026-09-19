@@ -2,8 +2,9 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="$ROOT/runpod/.venv/bin/python"
+PYTHON_BIN="${PYTHON_BIN:-$ROOT/runpod/.venv/bin/python}"
+PRODUCTION_ORIGIN="${PRODUCTION_ORIGIN:-https://iri-voice.vercel.app}"
 
 cd "$ROOT"
-"$PYTHON_BIN" api/deploy/deploy.py vps
+"$PYTHON_BIN" api/deploy/deploy.py vps --origin "$PRODUCTION_ORIGIN"
 exec "$PYTHON_BIN" api/deploy/deploy.py vercel
