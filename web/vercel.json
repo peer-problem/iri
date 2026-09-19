@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://iri.5.104.87.93.sslip.io/:path*"
+      "destination": "https://api.iri.today/:path*"
     },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],

@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://iri-voice.vercel.app"><img alt="Live demo" src="https://img.shields.io/badge/Try_the_demo-iri--voice.vercel.app-A98BD4?style=flat-square"></a>
+  <a href="https://iri.today"><img alt="Live demo" src="https://img.shields.io/badge/Try_the_demo-iri.today-A98BD4?style=flat-square"></a>
   <a href="https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA"><img alt="Hugging Face model" src="https://img.shields.io/badge/Model-Kanana_3B_%2B_QLoRA-F3C84B?style=flat-square&logo=huggingface&logoColor=111827"></a>
   <img alt="Python 3.12" src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white">
   <img alt="React 19" src="https://img.shields.io/badge/React-19-20232A?style=flat-square&logo=react&logoColor=61DAFB">
@@ -30,7 +30,7 @@ IRI is a research demo, not a safety-certified child product. The current model 
 
 ## Try the Demo
 
-Open **[iri-voice.vercel.app](https://iri-voice.vercel.app)** with a guardian and start talking or typing. No account, participant code, or login step is required.
+Open **[iri.today](https://iri.today)** with a guardian and start talking or typing. No account, participant code, or login step is required.
 
 The hosted GPU is normally stopped. When Kanana is unavailable, the API reruns the complete input, generation, and output-checking path with the configured Luna fallback. The demo never starts a GPU automatically.
 

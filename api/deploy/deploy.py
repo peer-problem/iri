@@ -5,6 +5,7 @@ import base64
 import io
 import json
 import os
+import socket
 import subprocess
 import tarfile
 import time
@@ -16,7 +17,9 @@ from dotenv import dotenv_values
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = dotenv_values(ROOT / ".keys/.env")
 PROJECT = "iri-voice"
-DOMAIN = "iri.5.104.87.93.sslip.io"
+PUBLIC_DOMAIN = "iri.today"
+API_DOMAIN = f"api.{PUBLIC_DOMAIN}"
+PRODUCTION_ORIGIN = f"https://{PUBLIC_DOMAIN}"
 
 
 def ssh(command, data=None, timeout=180):
@@ -43,7 +46,21 @@ def ssh(command, data=None, timeout=180):
     return result.stdout.decode()
 
 
+def require_api_dns():
+    expected_ip = CONFIG["CONTABO_VPS_IP_ADDRESS"]
+    try:
+        addresses = {
+            item[4][0]
+            for item in socket.getaddrinfo(API_DOMAIN, 443, family=socket.AF_INET)
+        }
+    except socket.gaierror as exc:
+        raise RuntimeError(f"{API_DOMAIN} does not resolve yet") from exc
+    if expected_ip not in addresses:
+        raise RuntimeError(f"{API_DOMAIN} does not resolve to the configured Contabo VPS")
+
+
 def vps(origin):
+    require_api_dns()
     release = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     folder = f"/opt/iri/releases/{release}"
     ssh(
@@ -103,12 +120,12 @@ systemctl enable iri-api.service
 systemctl restart iri-api.service
 """)
     ssh(f"""set -eu
-if ! test -f /etc/letsencrypt/live/{DOMAIN}/fullchain.pem; then
+if ! test -f /etc/letsencrypt/live/{API_DOMAIN}/fullchain.pem; then
  install -m 644 {folder}/api/deploy/nginx-http.conf /etc/nginx/sites-available/iri-api
  ln -sfn /etc/nginx/sites-available/iri-api /etc/nginx/sites-enabled/iri-api
  nginx -t
  systemctl reload nginx
- certbot certonly --webroot -w /var/www/iri-acme -d {DOMAIN} --non-interactive --agree-tos --register-unsafely-without-email
+ certbot certonly --webroot -w /var/www/iri-acme -d {API_DOMAIN} --non-interactive --agree-tos --register-unsafely-without-email
 fi
 install -m 644 {folder}/api/deploy/nginx.conf /etc/nginx/sites-available/iri-api
 install -m 755 {folder}/api/deploy/renew-iri-cert.sh /etc/letsencrypt/renewal-hooks/deploy/iri-nginx
@@ -121,18 +138,84 @@ curl -fsS --retry 8 --retry-connrefused --retry-delay 1 http://127.0.0.1:8300/he
     print("VPS release:", release)
 
 
-def vercel():
-    headers = {"Authorization": "Bearer " + CONFIG["VERCEL_DEPLOY_KEY"]}
-    with httpx.Client(headers=headers, timeout=120) as client:
-        base = "https://api.vercel.com"
-        project = client.get(f"{base}/v9/projects/{PROJECT}")
-        if project.status_code == 404:
-            project = client.post(
-                f"{base}/v10/projects", json={"name": PROJECT, "framework": "vite"}
+def ensure_public_domains(client, base, details):
+    params = {"teamId": details["accountId"]}
+    response = client.get(f"{base}/v9/projects/{details['id']}/domains", params=params)
+    response.raise_for_status()
+    domains = {item["name"]: item for item in response.json().get("domains", [])}
+    expected = [
+        {"name": PUBLIC_DOMAIN},
+        {
+            "name": f"www.{PUBLIC_DOMAIN}",
+            "redirect": PUBLIC_DOMAIN,
+            "redirectStatusCode": 308,
+        },
+    ]
+    for desired in expected:
+        current = domains.get(desired["name"])
+        if current is None:
+            added = client.post(
+                f"{base}/v10/projects/{details['id']}/domains",
+                params=params,
+                json=desired,
             )
-        project.raise_for_status()
-        details = project.json()
+            added.raise_for_status()
+            continue
+        if any(current.get(key) != value for key, value in desired.items() if key != "name"):
+            raise RuntimeError(f"Vercel domain settings differ for {desired['name']}")
+
+    response = client.get(f"{base}/v4/domains/{PUBLIC_DOMAIN}/records", params=params)
+    response.raise_for_status()
+    records = response.json().get("records", [])
+    api_records = [
+        item for item in records if item.get("name") == "api" and item.get("type") == "A"
+    ]
+    expected_ip = CONFIG["CONTABO_VPS_IP_ADDRESS"]
+    if not api_records:
+        created = client.post(
+            f"{base}/v2/domains/{PUBLIC_DOMAIN}/records",
+            params=params,
+            json={
+                "name": "api",
+                "type": "A",
+                "value": expected_ip,
+                "ttl": 60,
+                "comment": "IRI production API on Contabo",
+            },
+        )
+        created.raise_for_status()
+    elif len(api_records) != 1 or api_records[0].get("value") != expected_ip:
+        raise RuntimeError(f"DNS A record differs for {API_DOMAIN}")
+
+
+def vercel_client():
+    headers = {"Authorization": "Bearer " + CONFIG["VERCEL_DEPLOY_KEY"]}
+    client = httpx.Client(headers=headers, timeout=120)
+    base = "https://api.vercel.com"
+    project = client.get(f"{base}/v9/projects/{PROJECT}")
+    if project.status_code == 404:
+        project = client.post(
+            f"{base}/v10/projects", json={"name": PROJECT, "framework": "vite"}
+        )
+    project.raise_for_status()
+    details = project.json()
+    return client, base, details
+
+
+def domains():
+    client, base, details = vercel_client()
+    try:
+        ensure_public_domains(client, base, details)
+    finally:
+        client.close()
+    print("Domains ready:", PUBLIC_DOMAIN, API_DOMAIN)
+
+
+def vercel():
+    client, base, details = vercel_client()
+    try:
         print("Vercel project:", details["name"], details["id"], flush=True)
+        ensure_public_domains(client, base, details)
         files = []
         web = ROOT / "web"
         for path in web.rglob("*"):
@@ -190,6 +273,8 @@ def vercel():
                 indent=2,
             )
         )
+    finally:
+        client.close()
 
 
 def status():
@@ -212,7 +297,12 @@ def status():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=["vps", "vercel", "status"])
-    parser.add_argument("--origin", default="https://iri-voice.vercel.app")
+    parser.add_argument("action", choices=["domains", "vps", "vercel", "status"])
+    parser.add_argument("--origin", default=PRODUCTION_ORIGIN)
     args = parser.parse_args()
-    {"vps": lambda: vps(args.origin), "vercel": vercel, "status": status}[args.action]()
+    {
+        "domains": domains,
+        "vps": lambda: vps(args.origin),
+        "vercel": vercel,
+        "status": status,
+    }[args.action]()
