@@ -143,6 +143,10 @@ export default function App() {
   ];
 
   useEffect(() => {
+    document.title = "IRI | 함께 나누는 이야기";
+  }, []);
+
+  useEffect(() => {
     if (voice.transcript) {
       setComposerOpen(true);
       window.setTimeout(() => textarea.current?.focus(), 0);
