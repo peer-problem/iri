@@ -1,418 +1,113 @@
-import { useEffect, useRef } from "react";
-import type { AudioSignal } from "./audio-level";
-import { Orb } from "./Orb";
+import { Fragment, useEffect } from "react";
 
-const processSteps = [
-  {
-    number: "01",
-    title: "말하고 적어요",
-    body: "아이의 질문을 마이크나 글로 받습니다.",
-  },
-  {
-    number: "02",
-    title: "먼저 확인해요",
-    body: "음성을 글로 바꾼 뒤, 아이가 들은 문장을 직접 확인합니다.",
-  },
-  {
-    number: "03",
-    title: "질문의 맥락을 살펴요",
-    body: "생성 전에 입력을 검사해 답하기, 안내하기, 되묻기를 구분합니다.",
-  },
-  {
-    number: "04",
-    title: "Kanana가 답해요",
-    body: "Kanana 2 3B Instruct에 IRI v5 QLoRA를 더해 나이에 맞는 한국어 답을 만듭니다.",
-  },
-  {
-    number: "05",
-    title: "답을 한 번 더 살펴요",
-    body: "아이에게 전달하기 전에 출력 검사와 제품 정책을 다시 통과합니다.",
-  },
-  {
-    number: "06",
-    title: "목소리로 들려줘요",
-    body: "승인된 답만 따뜻한 음성과 반응하는 오브로 전달합니다.",
-  },
+const HF = "https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA";
+const GITHUB = "https://github.com/peer-problem/iri";
+const steps = [
+  ["입력 및 전사", "음성 또는 텍스트로 질문합니다. 음성은 글로 변환한 뒤 사용자가 확인하고 수정합니다.", "gpt-4o-mini-transcribe"],
+  ["입력 분류", "질문을 검사해 답변을 생성할지, 안내하거나 다시 질문할지 결정합니다.", "Base model + product policy"],
+  ["답변 생성", "연령 설정과 최근 대화를 반영해 한국어 답변을 생성합니다.", "Kanana 2 3B + IRI v5 QLoRA"],
+  ["출력 검사", "생성된 답변을 다시 검사하고 제품 정책에 따라 전달 여부를 결정합니다.", "Base model + product policy"],
+  ["음성 합성", "출력 검사를 통과한 답변을 음성으로 변환합니다. 재생 중지와 이전 답변 다시 듣기를 지원합니다.", "gpt-4o-mini-tts-2025-12-15"],
+];
+const experiments = [
+  ["v1", "50", "12", "해당 없음", "초기 실험. 일반 질문 평가에서 기본 모델 대비 저하"],
+  ["v2", "268", "62", "2.247578", "어댑터 재로딩 확인. 전체 행동 평가 미완료"],
+  ["v3", "332", "76", "2.145101", "평가 300건 중 행동 기준 충족 239건. 채택 제외"],
+  ["v4", "372", "84", "2.146981", "독립 평가 60건 중 행동 기준 충족 46건. 채택 제외"],
+  ["v5", "412", "92", "2.103572", "현재 선택 버전. 독립 최종 평가 미완료"],
 ];
 
-const featureItems = [
-  {
-    number: "01",
-    title: "목소리와 글, 둘 다",
-    body: "말하기가 편한 순간에는 마이크로, 조용히 묻고 싶은 순간에는 키보드로 대화합니다.",
-  },
-  {
-    number: "02",
-    title: "두 개의 눈높이",
-    body: "4~6세에게는 더 짧고 익숙하게, 7~10세에게는 쉬운 원인까지 덧붙여 설명합니다.",
-  },
-  {
-    number: "03",
-    title: "대화는 잠시만",
-    body: "최근 여섯 턴만 서버 메모리에 최대 한 시간 보관합니다. 녹음과 대화는 디스크에 저장하지 않습니다.",
-  },
-  {
-    number: "04",
-    title: "상태가 보이는 오브",
-    body: "듣기, 생각하기, 말하기의 리듬을 색과 움직임으로 보여주어 대화의 흐름을 놓치지 않게 합니다.",
-  },
-];
-
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M5 12h13M13 6l6 6-6 6" />
-    </svg>
-  );
-}
-
-function ExternalIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M8 16 16 8M9 8h7v7" />
-      <path d="M16 14v5H5V8h5" />
-    </svg>
-  );
+function ExternalLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return <a href={href} target="_blank" rel="noreferrer">{children}<span aria-hidden="true">↗</span><span className="sr-only"> (새 탭)</span></a>;
 }
 
 export default function LandingPage() {
-  const page = useRef<HTMLElement>(null);
-  const selection = useRef(0);
-  const signal = useRef<AudioSignal>({
-    state: "thinking",
-    read: () => 0.08 + Math.max(0, Math.sin(performance.now() / 720)) * 0.08,
-    readInput: () => 0,
-  });
-
   useEffect(() => {
-    document.title = "IRI | 질문이 자라는 대화";
+    document.title = "IRI | Kanana 기반 한국어 음성 대화 연구";
     document.body.classList.add("landing-body");
-
-    const root = page.current;
-    if (!root) return;
-
-    let frame = 0;
-    const updateScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const available = Math.max(
-          1,
-          document.documentElement.scrollHeight - window.innerHeight,
-        );
-        root.style.setProperty(
-          "--landing-progress",
-          String(Math.min(1, window.scrollY / available)),
-        );
-        root.dataset.scrolled = window.scrollY > 28 ? "true" : "false";
-      });
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) entry.target.classList.add("is-visible");
-        }
-      },
-      { threshold: 0.16 },
-    );
-
-    root.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
-    window.addEventListener("scroll", updateScroll, { passive: true });
-    updateScroll();
-
-    const states: AudioSignal["state"][] = [
-      "thinking",
-      "talking",
-      "idle",
-      "listening",
-    ];
-    let stateIndex = 0;
-    const stateTimer = window.setInterval(() => {
-      stateIndex = (stateIndex + 1) % states.length;
-      signal.current.state = states[stateIndex];
-    }, 2800);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("scroll", updateScroll);
-      window.clearInterval(stateTimer);
-      document.body.classList.remove("landing-body");
-    };
+    return () => document.body.classList.remove("landing-body");
   }, []);
 
   return (
-    <main className="landing-page" ref={page}>
-      <header className="landing-header">
-        <a className="landing-brand" href="#top" aria-label="IRI 처음으로">
-          iri
-          <span aria-hidden="true">✳</span>
-        </a>
-        <nav className="landing-nav" aria-label="주요 메뉴">
-          <a href="#story">프로젝트</a>
-          <a href="#model">모델</a>
-          <a href="#features">기능</a>
-          <a className="nav-demo" href="/chat">
-            대화 시작
-            <ArrowIcon />
-          </a>
+    <div className="research-page">
+      <a className="research-skip" href="#overview">본문으로 이동</a>
+      <header className="research-header">
+        <a className="research-brand" href="/" aria-label="IRI 홈">iri<span>Research project</span></a>
+        <nav aria-label="페이지 메뉴">
+          <a href="#system">시스템</a><a href="#evaluation">실험 결과</a><a href="#implementation">구현</a>
+          <a className="research-nav-demo" href="/chat">데모 <span aria-hidden="true">↗</span></a>
         </nav>
       </header>
 
-      <section className="landing-hero" id="top">
-        <div className="hero-copy">
-          <p className="hero-kicker">Korean voice companion / ages 4 to 10</p>
-          <h1>
-            질문이
-            <br />
-            자라는 대화.
-          </h1>
-          <p className="hero-description">
-            Kanana 3B를 아이의 눈높이에 맞게 직접 학습하고,
-            <br className="desktop-break" /> 말하고 듣는 하나의 경험으로 만들었습니다.
-          </p>
-          <div className="hero-actions">
-            <a className="primary-link" href="/chat">
-              이리와 대화하기
-              <ArrowIcon />
-            </a>
-            <a
-              className="text-link"
-              href="https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Hugging Face
-              <ExternalIcon />
-            </a>
-          </div>
-          <p className="hero-model-note">
-            Kanana 2 3B Instruct <span>+</span> IRI v5 QLoRA
-          </p>
-        </div>
-
-        <div className="hero-orb" aria-hidden="true">
-          <div className="hero-orb-halo" />
-          <Orb signal={signal} selection={selection} />
-          <span className="orb-state orb-state-listen">LISTEN</span>
-          <span className="orb-state orb-state-think">THINK</span>
-          <span className="orb-state orb-state-speak">SPEAK</span>
-        </div>
-
-        <a className="scroll-cue" href="#story">
-          <span>SCROLL</span>
-          <i aria-hidden="true" />
-        </a>
-      </section>
-
-      <section className="story-section" id="story">
-        <div className="section-index reveal">
-          <span>01</span>
-          <span>WHY IRI</span>
-        </div>
-        <div className="story-copy reveal">
-          <p className="section-kicker">Curiosity, spoken.</p>
-          <h2>
-            아이의 질문은 짧아도,
-            <br />
-            그 안의 호기심은 작지 않으니까.
-          </h2>
-          <p>
-            IRI는 한국어를 쓰는 4~10세 아이를 위한 음성 우선 연구 데모입니다.
-            질문을 정확히 듣고, 연령에 맞춰 답하고, 다시 따뜻한 목소리로 들려주는
-            과정 전체를 설계했습니다.
-          </p>
-        </div>
-        <div className="story-word" aria-hidden="true">
-          iri
-        </div>
-      </section>
-
-      <section className="process-section">
-        <div className="process-heading reveal">
-          <div className="section-index light-index">
-            <span>02</span>
-            <span>HOW IT WORKS</span>
-          </div>
-          <p className="section-kicker">One question, fully considered.</p>
-          <h2>하나의 질문이 답이 되기까지.</h2>
-        </div>
-
-        <div className="process-layout">
-          <div className="process-orbit" aria-hidden="true">
-            <div className="process-core">iri</div>
-            <i className="ring ring-one" />
-            <i className="ring ring-two" />
-            <i className="route-dot dot-one" />
-            <i className="route-dot dot-two" />
-          </div>
-          <ol className="process-list">
-            {processSteps.map((step, index) => (
-              <li
-                className="process-item reveal"
-                key={step.number}
-                style={{ "--item-delay": `${index * 55}ms` } as React.CSSProperties}
-              >
-                <span>{step.number}</span>
-                <div>
-                  <h3>{step.title}</h3>
-                  <p>{step.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <p className="fallback-note reveal">
-          <strong>Kanana가 준비되지 않은 순간에도.</strong>
-          GPU가 꺼져 있으면 Luna high가 같은 입력 검사와 생성, 출력 검사 경로를
-          처음부터 다시 실행합니다. GPU를 자동으로 켜지 않습니다.
-        </p>
-      </section>
-
-      <section className="model-section" id="model">
-        <div className="section-index reveal">
-          <span>03</span>
-          <span>THE MODEL</span>
-        </div>
-        <div className="model-intro reveal">
-          <p className="section-kicker">Trained in the open.</p>
-          <h2>
-            Kanana를 다섯 번,
-            <br />더 나은 대화를 향해.
-          </h2>
-          <p>
-            Kakao의 Kanana 2 3B Instruct를 고정한 뒤 QLoRA 어댑터를 v1부터 v5까지
-            학습했습니다. 비교 가능한 후보 중 검증 손실이 가장 낮았던 v5를 선택했고,
-            모든 버전과 메타데이터를 Hugging Face에 공개했습니다.
-          </p>
-        </div>
-
-        <div className="release-rail reveal" aria-label="IRI 어댑터 버전 이력">
-          {['v1', 'v2', 'v3', 'v4', 'v5'].map((version) => (
-            <div key={version} className={version === 'v5' ? 'selected' : ''}>
-              <i />
-              <span>{version}</span>
-              {version === 'v5' && <small>SELECTED</small>}
+      <main>
+        <section className="research-hero" aria-labelledby="research-title">
+          <div className="research-hero-inner">
+            <div className="research-abstract">
+              <p className="research-eyebrow">IRI / Technical overview</p>
+              <h1 id="research-title">Kanana 기반 한국어 음성 대화 연구</h1>
+              <p className="research-summary">아동의 연령에 맞춘 한국어 응답을 목표로, Kanana 모델의 추가 학습과 음성 대화 인터페이스를 구현한 연구 프로젝트입니다.</p>
+              <p className="research-abstract-detail">질문 입력부터 답변 생성, 출력 검사, 음성 재생까지 하나의 대화 흐름으로 연결합니다. 학습 어댑터와 구현 코드를 공개합니다.</p>
+              <div className="research-actions"><a className="research-button" href="/chat">데모 실행 <span aria-hidden="true">↗</span></a><ExternalLink href={HF}>Hugging Face</ExternalLink><ExternalLink href={GITHUB}>GitHub</ExternalLink></div>
+              <p className="research-status">연구용 데모 <span>/</span> 선택 어댑터 v5 <span>/</span> 독립 최종 평가 미완료</p>
             </div>
-          ))}
-        </div>
-
-        <div className="model-facts">
-          <div className="model-number reveal">
-            <strong>v5</strong>
-            <span>selected adapter</span>
           </div>
-          <dl className="model-specs reveal">
-            <div>
-              <dt>Base model</dt>
-              <dd>kakaocorp/kanana-2-3b-instruct</dd>
+        </section>
+
+        <div className="research-content">
+          <section className="research-section" id="overview" aria-labelledby="overview-title">
+            <div className="research-section-label"><span>01</span><h2 id="overview-title">연구 범위</h2><p>Scope & model</p></div>
+            <div className="research-section-content">
+              <h3>모델과 서비스의 통합 구현</h3>
+              <p className="research-lead">어린이는 말이나 글로 질문하고 답변을 듣습니다. 보호자는 연령 설정과 대화 기록을 확인할 수 있습니다. 답변 생성 모델 외에 입력 검사와 출력 검사, 음성 처리를 별도 단계로 구성했습니다.</p>
+              <dl className="research-specs">
+                <div><dt>기본 모델</dt><dd>Kanana 2 3B Instruct<small>kakaocorp/kanana-2-3b-instruct</small></dd></div>
+                <div><dt>학습 방식</dt><dd>QLoRA 어댑터 학습<small>기본 모델에 IRI 추가 학습 결과 적용</small></dd></div>
+                <div><dt>응답 연령 설정</dt><dd>4~6세 / 7~10세<small>답변 길이와 어휘 수준 조정</small></dd></div>
+                <div><dt>공개 산출물</dt><dd>학습 어댑터 및 구현 코드<small>Hugging Face / GitHub</small></dd></div>
+              </dl>
             </div>
-            <div>
-              <dt>Training method</dt>
-              <dd>QLoRA adapter fine-tuning</dd>
+          </section>
+
+          <section className="research-section" id="system" aria-labelledby="system-title">
+            <div className="research-section-label"><span>02</span><h2 id="system-title">시스템 구성</h2><p>Inference pipeline</p></div>
+            <div className="research-section-content">
+              <h3>추론 및 음성 처리 절차</h3>
+              <p className="research-lead">질문과 답변을 각각 검사합니다. 검사 단계는 위험한 응답을 줄이기 위한 장치이며, 모든 오류를 차단한다는 의미는 아닙니다.</p>
+              <ol className="research-pipeline">{steps.map(([title, body, component], i) => <li key={title}><span className="research-step-number">0{i + 1}</span><div><h4>{title}</h4><p>{body}</p></div><code>{component}</code></li>)}</ol>
+              <aside className="research-note"><h4>대체 응답 경로</h4><p>Kanana 경로를 사용할 수 없으면 gpt-5.6-luna(high) 경로에서 입력 검사부터 다시 수행합니다. 실제 응답에 사용된 경로는 대화 화면에 표시합니다.</p></aside>
             </div>
-            <div>
-              <dt>Published history</dt>
-              <dd>versions/v1 through versions/v5</dd>
+          </section>
+
+          <section className="research-section" id="evaluation" aria-labelledby="evaluation-title">
+            <div className="research-section-label"><span>03</span><h2 id="evaluation-title">학습 및 평가</h2><p>Experiments & limitations</p></div>
+            <div className="research-section-content">
+              <h3>학습 버전별 기록</h3>
+              <p className="research-lead">데이터를 보강하며 다섯 차례 어댑터를 학습했습니다. 아래 수치는 학습 기록이며, 제품의 안전성이나 아동 대상 사용 적합성을 인증하는 지표가 아닙니다.</p>
+              <table className="research-table"><caption>TABLE 01. 학습 데이터 및 평가 기록</caption><thead><tr><th scope="col">버전</th><th scope="col">학습 수</th><th scope="col">검증 수</th><th scope="col">검증 손실</th><th scope="col" className="research-result-wide">결과 및 상태</th></tr></thead><tbody>{experiments.map(([version, train, validation, loss, result]) => <Fragment key={version}><tr className={version === "v5" ? "research-selected" : undefined}><th scope="row" id={`experiment-${version}`}>{version}</th><td>{train}</td><td>{validation}</td><td>{loss}</td><td className="research-result-wide">{result}</td></tr><tr className={`research-result-narrow ${version === "v5" ? "research-selected" : ""}`}><td colSpan={4} headers={`experiment-${version}`}>{result}</td></tr></Fragment>)}</tbody></table>
+              <p className="research-table-note">v2~v5는 3 epochs로 학습했습니다. 검증 손실은 별도 검증 데이터에 대한 오차 지표로, 데이터 구성이 달라 이 수치만으로 응답 품질을 비교할 수 없습니다. 행동 평가는 AI가 작성한 기준에 따른 판정이며 사람 대상 실험이 아닙니다. <ExternalLink href={`${GITHUB}/blob/main/runpod/artifacts/kanana-performance-assessment-20260919/README.md`}>평가 기록</ExternalLink></p>
+              <div className="research-findings"><div><h4>v5 선택 근거</h4><p>이전 평가에서 발견한 실패 유형을 보완했습니다. 새 프로세스에서 어댑터를 다시 불러오고 답변 5건의 생성 동작을 확인했습니다.</p></div><div><h4>검증되지 않은 범위</h4><p>v5의 독립 최종 평가와 vLLM 서빙 검증은 완료하지 않았습니다. 현재 데모를 아동 대상 공개 서비스 검증이 끝난 제품으로 볼 수 없습니다.</p></div></div>
+              <div className="research-artifact"><div><h4>공개 어댑터</h4><p>저장소 루트는 v5이며, 이전 버전은 versions/ 경로에 보관합니다. 기본 모델 가중치와 서비스 검사 로직은 어댑터에 포함되지 않습니다.</p></div><ExternalLink href={`${HF}/tree/0880ce0372cedf22aec91b190f8a7b9499ccc176`}>릴리스 확인</ExternalLink></div>
             </div>
-            <div>
-              <dt>Pinned release</dt>
-              <dd>0880ce0372cedf22</dd>
+          </section>
+
+          <section className="research-section" id="implementation" aria-labelledby="implementation-title">
+            <div className="research-section-label"><span>04</span><h2 id="implementation-title">서비스 구현</h2><p>Interface & data handling</p></div>
+            <div className="research-section-content">
+              <h3>사용자가 확인하고 제어할 수 있는 기능</h3>
+              <dl className="research-features">
+                <div><dt>음성 및 텍스트 입력</dt><dd>최대 60초 동안 녹음할 수 있습니다. 인식된 문장을 확인한 뒤 전송하며, 키보드 입력도 지원합니다.</dd></div>
+                <div><dt>연령별 응답 설정</dt><dd>4~6세와 7~10세 중 선택합니다. 연령을 변경하거나 새 대화를 시작하면 기존 대화 맥락을 초기화합니다.</dd></div>
+                <div><dt>대화 기록과 다시 듣기</dt><dd>이전 답변을 기록에서 확인하고 다시 재생할 수 있습니다. 음성 재생은 사용자가 중지할 수 있습니다.</dd></div>
+                <div><dt>대화 데이터 보관</dt><dd>최근 여섯 턴을 서버 메모리에 최대 한 시간 보관합니다. 서비스 서버는 녹음과 대화를 디스크에 저장하지 않습니다.</dd></div>
+              </dl>
+              <p className="research-data-note">음성 인식과 합성, 대체 응답에는 외부 API를 사용합니다. 해당 처리 과정에서 입력 데이터가 외부 제공자에게 전달됩니다. 민감한 개인정보는 입력하지 마세요.</p>
             </div>
-          </dl>
-        </div>
+          </section>
 
-        <div className="model-actions reveal">
-          <a
-            className="primary-link"
-            href="https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA"
-            target="_blank"
-            rel="noreferrer"
-          >
-            모델 저장소 보기
-            <ExternalIcon />
-          </a>
-          <a
-            className="text-link"
-            href="https://github.com/peer-problem/iri"
-            target="_blank"
-            rel="noreferrer"
-          >
-            소스 코드
-            <ExternalIcon />
-          </a>
+          <section className="research-closing" aria-labelledby="resources-title"><div><h2 id="resources-title">데모 및 공개 자료</h2><p>구현된 대화 흐름과 학습 결과를 직접 확인할 수 있습니다.</p></div><div className="research-actions"><a className="research-button" href="/chat">데모 실행 <span aria-hidden="true">↗</span></a><ExternalLink href={HF}>Hugging Face</ExternalLink><ExternalLink href={GITHUB}>GitHub</ExternalLink></div></section>
         </div>
-
-        <p className="research-note reveal">
-          <span>RESEARCH NOTE</span>
-          IRI는 연구 데모입니다. 선택된 v5의 독립 최종 홀드아웃과 vLLM 서빙 검증은
-          아직 완료되지 않았습니다. 아동이 보호자 없이 사용하는 안전 인증 제품으로
-          소개하지 않습니다.
-        </p>
-      </section>
-
-      <section className="features-section" id="features">
-        <div className="features-heading reveal">
-          <div className="section-index">
-            <span>04</span>
-            <span>THE EXPERIENCE</span>
-          </div>
-          <p className="section-kicker">Small details, calmer conversations.</p>
-          <h2>아이도, 보호자도 이해할 수 있게.</h2>
-        </div>
-
-        <div className="feature-lines">
-          {featureItems.map((feature, index) => (
-            <article
-              className="feature-item reveal"
-              key={feature.number}
-              style={{ "--item-delay": `${index * 70}ms` } as React.CSSProperties}
-            >
-              <span>{feature.number}</span>
-              <h3>{feature.title}</h3>
-              <p>{feature.body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="closing-section">
-        <div className="closing-glow" aria-hidden="true" />
-        <div className="closing-copy reveal">
-          <p className="section-kicker">Ready when curiosity is.</p>
-          <h2>무엇이 궁금해?</h2>
-          <p>IRI에게 직접 말해 보세요. 질문은 짧아도 괜찮아요.</p>
-          <a className="closing-link" href="/chat">
-            대화 시작하기
-            <ArrowIcon />
-          </a>
-        </div>
-      </section>
-
-      <footer className="landing-footer">
-        <a className="landing-brand footer-brand" href="#top">
-          iri<span aria-hidden="true">✳</span>
-        </a>
-        <p>Curiosity, spoken.</p>
-        <div>
-          <a
-            href="https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Hugging Face
-          </a>
-          <a
-            href="https://github.com/peer-problem/iri"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
-          <a href="/chat">Demo</a>
-        </div>
-      </footer>
-    </main>
+      </main>
+      <footer className="research-footer"><a href="/" aria-label="IRI 홈">iri</a><p>Kanana-based Korean conversational AI</p><span>Research prototype</span></footer>
+    </div>
   );
 }
