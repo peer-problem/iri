@@ -1,9 +1,9 @@
 """Pure helpers for bounded, semantically complete speech synthesis."""
 
-from dataclasses import dataclass
-from difflib import SequenceMatcher
 import re
 import unicodedata
+from dataclasses import dataclass
+from difflib import SequenceMatcher
 
 SENTENCE_BOUNDARY = re.compile(r"(?<=[.!?。！？])\s+")
 BREAK_CHARACTERS = frozenset(",，;；:：、")

@@ -1,6 +1,6 @@
 import base64
-from contextlib import asynccontextmanager
 import json
+from contextlib import asynccontextmanager
 
 import httpx
 import pytest
