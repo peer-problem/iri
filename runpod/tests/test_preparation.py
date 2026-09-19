@@ -1,5 +1,6 @@
 import json
 import zipfile
+from collections import Counter
 
 import pytest
 
@@ -214,6 +215,19 @@ def test_only_assistant_tokens_contribute_to_loss_and_real_eos_is_kept():
 def test_oversized_training_example_is_not_silently_truncated():
     with pytest.raises(ValueError, match="context limit"):
         encode_row(training_row(), ToyTokenizer(), 4)
+
+
+def test_codex_v2_builder_is_balanced_and_excludes_development_questions():
+    from runpod.operations.build_codex_v2_training import build_rows, validate
+
+    rows = build_rows()
+    validate(rows, [ROOT / "data/dev.jsonl"])
+    counts = Counter(row["expected_action"] for row in rows)
+    assert len(rows) >= 300
+    assert counts["answer"] > counts["support"]
+    assert counts["support"] >= 40
+    assert counts["redirect"] >= 40
+    assert counts["clarify"] >= 30
 
 
 def test_unexpected_template_boundary_rejected():

@@ -1,908 +1,495 @@
-import { useEffect, useRef, useState } from "react";
-import { Button } from "@base-ui/react/button";
-import { Dialog } from "@base-ui/react/dialog";
-import { Input } from "@base-ui/react/input";
-import { Switch } from "@base-ui/react/switch";
-import { Radio } from "@base-ui/react/radio";
-import { RadioGroup } from "@base-ui/react/radio-group";
+import { useEffect, useId, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { InputMeter } from "./InputMeter";
+import { LiquidButtons } from "./LiquidButtons";
+import { Orb } from "./Orb";
 import {
-  ArrowUp,
-  ArrowUpRight,
-  AudioLines,
-  Check,
-  Keyboard,
-  LogOut,
-  Mic,
-  Plus,
-  Settings2,
-  ShieldCheck,
-  Square,
-  Volume2,
-  X,
-} from "lucide-react";
-import { ApiError, jsonRequest, request } from "./api";
-import { PcmStreamPlayer } from "./pcm";
+  phaseLabels,
+  useVoiceConversation,
+} from "./useVoiceConversation";
 
-type Phase =
-  | "idle"
-  | "acquiring"
-  | "recording"
-  | "transcribing"
-  | "thinking"
-  | "synthesizing"
-  | "speaking";
-type Message = { id: string; role: "user" | "assistant"; text: string };
-type AudioClip =
-  | { format: "pcm"; bytes: ArrayBuffer }
-  | { format: "mp3"; bytes: ArrayBuffer; url: string };
-const suggestions = [
-  "하늘은 왜 파란색이야?",
-  "공룡에 대해 알려줘",
-  "친구랑 다퉜을 땐 어떻게 해?",
-];
-const labels: Record<Phase, string> = {
-  idle: "이야기할 준비가 됐어요",
-  acquiring: "마이크 사용 권한을 기다리고 있어요",
-  recording: "듣고 있어요",
-  transcribing: "이야기를 글로 옮기고 있어요",
-  thinking: "답변을 생각하고 있어요",
-  synthesizing: "목소리를 준비하고 있어요",
-  speaking: "이리의 이야기를 들어보세요",
-};
+function SparkIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z" />
+    </svg>
+  );
+}
+
+function MicIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="9" y="3" width="6" height="12" rx="3" />
+      <path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3M8 22h8" />
+    </svg>
+  );
+}
+
+function StopIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="6" y="6" width="12" height="12" rx="2" />
+    </svg>
+  );
+}
+
+function VolumeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 9v6h4l5 4V5L9 9H5Z" />
+      <path d="M17 9.5a4 4 0 0 1 0 5M19.5 7a7.5 7.5 0 0 1 0 10" />
+    </svg>
+  );
+}
+
+function KeyboardIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="6" width="18" height="12" rx="2" />
+      <path d="M7 10h.01M10 10h.01M13 10h.01M16 10h.01M7 14h2M11 14h6" />
+    </svg>
+  );
+}
+
+function SettingsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.82 2.82-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21H9.6v-.1A1.7 1.7 0 0 0 8 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.82-2.82.06-.06A1.7 1.7 0 0 0 3.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H2V9.6h-.1A1.7 1.7 0 0 0 3.6 8a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.82-2.82.06.06A1.7 1.7 0 0 0 8 3.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V2h4v-.1A1.7 1.7 0 0 0 15 3.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.82 2.82-.06.06A1.7 1.7 0 0 0 19.4 8a1.7 1.7 0 0 0 .6 1 1.7 1.7 0 0 0 1.1.4h.1v4h-.1a1.7 1.7 0 0 0-1.7 1.6Z" />
+    </svg>
+  );
+}
+
+function HistoryIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 5h16M4 12h16M4 19h10" />
+    </svg>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m6 6 12 12M18 6 6 18" />
+    </svg>
+  );
+}
+
+function SendIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 19V5M6 11l6-6 6 6" />
+    </svg>
+  );
+}
+
+function Overlay({
+  title,
+  description,
+  onClose,
+  children,
+  persistent = false,
+}: {
+  title: string;
+  description?: string;
+  onClose?: () => void;
+  children: ReactNode;
+  persistent?: boolean;
+}) {
+  const titleId = useId();
+  return (
+    <div className="overlay" role="presentation">
+      <section
+        className="overlay-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
+        <div className="overlay-heading">
+          <h2 id={titleId}>{title}</h2>
+          {!persistent && onClose && (
+            <button className="plain-icon" onClick={onClose} aria-label="닫기">
+              <CloseIcon />
+            </button>
+          )}
+        </div>
+        {description && <p className="overlay-description">{description}</p>}
+        {children}
+      </section>
+    </div>
+  );
+}
 
 export default function App() {
-  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
-  const [code, setCode] = useState("");
-  const [loginBusy, setLoginBusy] = useState(false);
-  const [loginError, setLoginError] = useState("");
-  const [age, setAge] = useState("4-6");
-  const [autoRead, setAutoRead] = useState(true);
-  const [consented, setConsented] = useState(false);
-  const [consentOpen, setConsentOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [phase, setPhase] = useState<Phase>("idle");
-  const [draft, setDraft] = useState("");
-  const [transcript, setTranscript] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [error, setError] = useState("");
-  const [seconds, setSeconds] = useState(0);
-  const [level, setLevel] = useState(0);
-  const recorder = useRef<MediaRecorder | null>(null);
-  const recordingAttempt = useRef(0);
-  const stream = useRef<MediaStream | null>(null);
-  const audio = useRef<HTMLAudioElement | null>(null);
-  const playbackContext = useRef<AudioContext | null>(null);
-  const playbackSource = useRef<AudioBufferSourceNode | null>(null);
-  const pcmPlayer = useRef<PcmStreamPlayer | null>(null);
-  const playbackAbort = useRef<AbortController | null>(null);
-  const playbackAttempt = useRef(0);
-  const audioClips = useRef(new Map<string, AudioClip>());
-  const audioContext = useRef<AudioContext | null>(null);
-  const frame = useRef(0);
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-  const controller = useRef<AbortController | null>(null);
+  const voice = useVoiceConversation();
+  const selection = useRef(0);
   const textarea = useRef<HTMLTextAreaElement>(null);
-  const log = useRef<HTMLDivElement>(null);
-  const busy = phase !== "idle" && phase !== "speaking";
+  const [shapeIndex, setShapeIndex] = useState(0);
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const shapeLabels = [
+    "육면체 꺼내기",
+    "삼각형 꺼내기",
+    "기린 꺼내기",
+    "구로 되돌리기",
+  ];
 
   useEffect(() => {
-    request("/session")
-      .then(async () => {
-        const response = await request("/conversation");
-        const saved = await response.json();
-        setAge(saved.age_band);
-        setMessages(
-          saved.messages.map(
-            (m: {
-              id: string;
-              role: "user" | "assistant";
-              content: string;
-            }) => ({ id: m.id, role: m.role, text: m.content }),
-          ),
-        );
-        setAuthenticated(true);
-      })
-      .catch(() => setAuthenticated(false));
-    return () => {
-      cancelRecording();
-      stopPlayback();
-      controller.current?.abort();
-      clearAudio();
-      void playbackContext.current?.close();
-      playbackContext.current = null;
-    };
-  }, []);
-  useEffect(() => {
-    log.current?.scrollTo({
-      top: log.current.scrollHeight,
-      behavior: "smooth",
-    });
-  }, [messages, phase]);
+    if (voice.transcript) {
+      setComposerOpen(true);
+      window.setTimeout(() => textarea.current?.focus(), 0);
+    }
+  }, [voice.transcript]);
 
-  function clearAudio() {
-    audioClips.current.forEach((clip) => {
-      if (clip.format === "mp3") URL.revokeObjectURL(clip.url);
-    });
-    audioClips.current.clear();
-  }
-  function cacheAudio(id: string, clip: AudioClip) {
-    audioClips.current.set(id, clip);
-    if (audioClips.current.size > 12) {
-      const oldest = audioClips.current.keys().next().value!;
-      const previous = audioClips.current.get(oldest)!;
-      if (previous.format === "mp3") URL.revokeObjectURL(previous.url);
-      audioClips.current.delete(oldest);
+  const toggleMicrophone = () => {
+    if (voice.phase === "acquiring") {
+      voice.cancelMicRequest();
+    } else if (voice.phase === "recording") {
+      voice.finishRecording();
+    } else {
+      void voice.startRecording();
     }
-  }
-  function cancelRecording() {
-    recordingAttempt.current++;
-    const rec = recorder.current;
-    recorder.current = null;
-    if (rec) {
-      rec.onstop = null;
-      rec.onerror = null;
-      rec.ondataavailable = null;
-      if (rec.state !== "inactive") rec.stop();
-    }
-    releaseMic();
-  }
-  function releaseMic() {
-    if (timer.current) clearInterval(timer.current);
-    cancelAnimationFrame(frame.current);
-    stream.current?.getTracks().forEach((t) => t.stop());
-    stream.current = null;
-    if (audioContext.current?.state !== "closed")
-      void audioContext.current?.close();
-    audioContext.current = null;
-  }
-  function stopPlayback() {
-    playbackAttempt.current++;
-    playbackAbort.current?.abort();
-    playbackAbort.current = null;
-    pcmPlayer.current?.stop();
-    pcmPlayer.current = null;
-    if (playbackSource.current) {
-      playbackSource.current.onended = null;
-      playbackSource.current.stop();
-      playbackSource.current.disconnect();
-      playbackSource.current = null;
-    }
-    audio.current?.pause();
-    audio.current = null;
-  }
-  function preparePlayback() {
-    // Safari requires the audio context to start while the send/listen gesture is active.
-    try {
-      const context = playbackContext.current ?? new AudioContext();
-      playbackContext.current = context;
-      if (context.state === "suspended") void context.resume().catch(() => {});
-      const silent = context.createBufferSource();
-      silent.buffer = context.createBuffer(1, 1, context.sampleRate);
-      silent.connect(context.destination);
-      silent.onended = () => silent.disconnect();
-      silent.start();
-    } catch {
-      // A directly clicked replay can still use the media-element path below.
-    }
-  }
-  function fail(e: unknown) {
-    if (e instanceof ApiError && e.status === 401) {
-      setAuthenticated(false);
-      setMessages([]);
-      clearAudio();
-    }
-    setError(
-      e instanceof ApiError
-        ? e.message
-        : "연결을 확인한 뒤 다시 시도해 주세요.",
-    );
-    setPhase("idle");
-  }
-  async function login(e: React.FormEvent) {
-    e.preventDefault();
-    setLoginBusy(true);
-    setLoginError("");
-    try {
-      await jsonRequest("/session", { code });
-      setAuthenticated(true);
-      setCode("");
-      setError("");
-    } catch (e) {
-      setLoginError(
-        e instanceof ApiError && e.status === 401
-          ? "참여 코드가 맞는지 확인해 주세요."
-          : "잠시 후 다시 시도해 주세요.",
-      );
-    } finally {
-      setLoginBusy(false);
-    }
-  }
-  async function newConversation(nextAge?: string) {
-    if (busy) return;
-    stopPlayback();
-    setPhase("idle");
-    try {
-      await request("/conversation", { method: "DELETE" });
-      setMessages([]);
-      setDraft("");
-      setTranscript(false);
-      setError("");
-      clearAudio();
-      if (nextAge) setAge(nextAge);
-    } catch (e) {
-      fail(e);
-    }
-  }
-  async function logout() {
-    try {
-      await request("/session", { method: "DELETE" });
-    } catch (e) {
-      if (!(e instanceof ApiError && e.status === 401)) {
-        fail(e);
-        return;
-      }
-    }
-    stopPlayback();
-    clearAudio();
-    setMessages([]);
-    setDraft("");
-    setAuthenticated(false);
-    setSettingsOpen(false);
-    setPhase("idle");
-  }
-  async function speak(message: Message, userGesture = false) {
-    if (userGesture) preparePlayback();
-    stopPlayback();
-    const attempt = playbackAttempt.current;
-    setError("");
-    setPhase("synthesizing");
-    try {
-      let clip = audioClips.current.get(message.id);
-      const context = playbackContext.current;
-      if (!clip && context?.state === "running") {
-        const abort = new AbortController();
-        playbackAbort.current = abort;
-        const response = await jsonRequest(
-          "/speech-stream",
-          { text: message.text },
-          AbortSignal.any([abort.signal, AbortSignal.timeout(65_000)]),
-        );
-        if (!response.body) throw new Error("Streaming is unavailable");
-        const player = new PcmStreamPlayer(context, () => {
-          if (playbackAttempt.current === attempt) {
-            pcmPlayer.current = null;
-            setPhase("idle");
-          }
-        });
-        pcmPlayer.current = player;
-        const reader = response.body.getReader();
-        while (true) {
-          const { done, value } = await reader.read();
-          if (playbackAttempt.current !== attempt) {
-            await reader.cancel();
-            return;
-          }
-          if (done) break;
-          player.push(value);
-          if (player.hasStarted) setPhase("speaking");
-        }
-        const bytes = player.finish();
-        cacheAudio(message.id, { format: "pcm", bytes });
-        playbackAbort.current = null;
-        return;
-      }
-      if (!clip || (clip.format === "pcm" && context?.state !== "running")) {
-        const response = await jsonRequest("/speech", { text: message.text });
-        if (playbackAttempt.current !== attempt) return;
-        const bytes = await response.arrayBuffer();
-        if (playbackAttempt.current !== attempt) return;
-        clip = {
-          format: "mp3",
-          bytes,
-          url: URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" })),
-        };
-        cacheAudio(message.id, clip);
-      }
-      if (playbackAttempt.current !== attempt) return;
-      if (clip.format === "pcm" && context?.state === "running") {
-        const player = new PcmStreamPlayer(context, () => {
-          if (playbackAttempt.current === attempt) {
-            pcmPlayer.current = null;
-            setPhase("idle");
-          }
-        });
-        pcmPlayer.current = player;
-        player.push(new Uint8Array(clip.bytes));
-        setPhase("speaking");
-        player.finish();
-        return;
-      }
-      if (clip.format !== "mp3") throw new Error("Audio playback is unavailable");
-      if (context?.state === "running") {
-        try {
-          const buffer = await context.decodeAudioData(clip.bytes.slice(0));
-          const source = context.createBufferSource();
-          source.buffer = buffer;
-          source.connect(context.destination);
-          playbackSource.current = source;
-          source.onended = () => {
-            if (playbackSource.current === source) {
-              playbackSource.current = null;
-              source.disconnect();
-              setPhase("idle");
-            }
-          };
-          source.start();
-          setPhase("speaking");
-          return;
-        } catch {
-          // Keep the existing replay path if decoding is unavailable.
-        }
-      }
-      const player = new Audio(clip.url);
-      audio.current = player;
-      player.onended = () => setPhase("idle");
-      player.onerror = () => {
-        setPhase("idle");
-        setError("음성을 재생하지 못했어요. 답변 듣기를 다시 눌러 주세요.");
-      };
-      try {
-        await player.play();
-        setPhase("speaking");
-      } catch {
-        setPhase("idle");
-        setError("답변 듣기를 누르면 목소리를 들을 수 있어요.");
-      }
-    } catch (e) {
-      if (playbackAttempt.current !== attempt) return;
-      pcmPlayer.current?.stop();
-      pcmPlayer.current = null;
-      fail(e);
-      if (!(e instanceof ApiError && e.status === 401)) {
-        setError(
-          "답변은 준비됐지만 음성 연결이 어려워요. 잠시 후 답변 듣기를 눌러 주세요.",
-        );
-      }
-    }
-  }
-  async function send(e?: React.FormEvent) {
-    e?.preventDefault();
-    if (!draft.trim() || busy) return;
-    const question = draft.trim();
-    if (autoRead) preparePlayback();
-    stopPlayback();
-    setPhase("thinking");
-    setError("");
-    controller.current = new AbortController();
-    try {
-      const response = await jsonRequest(
-        "/chat",
-        { message: question, age_band: age },
-        AbortSignal.any([
-          controller.current.signal,
-          AbortSignal.timeout(95_000),
-        ]),
-      );
-      const result = await response.json();
-      const answer: Message = {
-        id: result.request_id,
-        role: "assistant",
-        text: result.answer,
-      };
-      setMessages((m) =>
-        [
-          ...m,
-          { id: crypto.randomUUID(), role: "user" as const, text: question },
-          answer,
-        ].slice(-12),
-      );
-      setDraft("");
-      setTranscript(false);
-      setPhase("idle");
-      if (autoRead) await speak(answer);
-    } catch (e) {
-      fail(e);
-    }
-  }
-  async function startRecording(consentGranted = false) {
-    if (busy) return;
-    if (!consented && !consentGranted) {
-      setConsentOpen(true);
-      return;
-    }
-    if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
-      setError(
-        "이 브라우저에서는 마이크를 사용할 수 없어요. 글로 입력하거나 최신 Chrome 또는 Safari를 사용해 주세요.",
-      );
-      return;
-    }
-    stopPlayback();
-    setError("");
-    setSeconds(0);
-    const attempt = ++recordingAttempt.current;
-    setPhase("acquiring");
-    try {
-      const media = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true },
-      });
-      // A permission prompt can resolve after cancellation or unmount.
-      if (attempt !== recordingAttempt.current) {
-        media.getTracks().forEach((track) => track.stop());
-        return;
-      }
-      stream.current = media;
-      const mime = ["audio/webm;codecs=opus", "audio/mp4", "audio/webm"].find(
-        (t) => MediaRecorder.isTypeSupported(t),
-      );
-      if (!mime) throw new Error("unsupported");
-      const rec = new MediaRecorder(media, {
-        mimeType: mime,
-        audioBitsPerSecond: 64_000,
-      });
-      recorder.current = rec;
-      const chunks: Blob[] = [];
-      rec.ondataavailable = (e) => {
-        if (e.data.size) chunks.push(e.data);
-      };
-      rec.onerror = () => {
-        cancelRecording();
-        setLevel(0);
-        setPhase("idle");
-        setError("녹음하지 못했어요. 마이크 연결을 확인해 주세요.");
-      };
-      rec.onstop = async () => {
-        releaseMic();
-        recorder.current = null;
-        setLevel(0);
-        const blob = new Blob(chunks, { type: mime.split(";")[0] });
-        if (blob.size < 100) {
-          setPhase("idle");
-          setError("목소리가 녹음되지 않았어요. 다시 이야기해 주세요.");
-          return;
-        }
-        setPhase("transcribing");
-        try {
-          const response = await request("/transcribe", {
-            method: "POST",
-            headers: { "Content-Type": blob.type, "X-Audio-Consent": "true" },
-            body: blob,
-          });
-          const result = await response.json();
-          setDraft(result.text);
-          setTranscript(true);
-          setPhase("idle");
-          setTimeout(() => textarea.current?.focus(), 0);
-        } catch (e) {
-          fail(e);
-        }
-      };
-      rec.start(250);
-      setPhase("recording");
-      let elapsed = 0;
-      timer.current = setInterval(() => {
-        elapsed++;
-        setSeconds(elapsed);
-        if (elapsed >= 60 && rec.state === "recording") rec.stop();
-      }, 1000);
-      try {
-        const context = new AudioContext();
-        audioContext.current = context;
-        const analyser = context.createAnalyser();
-        analyser.fftSize = 256;
-        context.createMediaStreamSource(media).connect(analyser);
-        const data = new Uint8Array(analyser.frequencyBinCount);
-        const draw = () => {
-          analyser.getByteFrequencyData(data);
-          setLevel(data.reduce((a, b) => a + b, 0) / data.length / 128);
-          frame.current = requestAnimationFrame(draw);
-        };
-        draw();
-      } catch {
-        /* Recording still works when visual metering is unavailable. */
-      }
-    } catch (e) {
-      if (attempt !== recordingAttempt.current) return;
-      cancelRecording();
-      setPhase("idle");
-      setError(
-        e instanceof DOMException && e.name === "NotAllowedError"
-          ? "마이크 권한이 꺼져 있어요. 주소창에서 허용하거나 글로 입력해 주세요."
-          : "마이크를 연결하지 못했어요. 글로도 이야기할 수 있어요.",
-      );
-    }
-  }
+  };
+
+  const microphoneLabel =
+    voice.phase === "acquiring"
+      ? "마이크 연결 취소"
+      : voice.phase === "recording"
+        ? "말하기 마치기"
+        : "마이크로 이야기하기";
 
   return (
-    <div className="app-shell">
-      <aside className="sidebar" aria-label="대화 메뉴">
-        <a href="/" className="brand" aria-label="이리 홈">
-          iri
-          <span className="brand-mark" aria-hidden="true">
-            ↗
-          </span>
-        </a>
-        <p className="brand-caption">함께 나누는 작은 궁금증</p>
-        <Button
-          className="button new-chat"
-          onClick={() => void newConversation()}
-          disabled={busy || !authenticated}
+    <main className="orb-app" data-phase={voice.phase}>
+      <a className="iri-brand" href="/" aria-label="이리 홈">
+        iri
+        <span className="brand-star" aria-hidden="true">
+          ✳
+        </span>
+      </a>
+
+      <nav className="top-actions" aria-label="대화 메뉴">
+        <span className="age-badge">{voice.age.replace("-", "~")}세</span>
+        <button
+          className="plain-icon"
+          aria-label="대화 기록"
+          onClick={() => setHistoryOpen(true)}
+          disabled={!voice.messages.length}
         >
-          <Plus />새 이야기
-        </Button>
-        <div className="sidebar-body">
-          <span className="section-label">지금 나누는 이야기</span>
-          <div className="current-chat">
-            <AudioLines />
-            <span>
-              {messages.length ? messages[0].text : "이리와 이야기하기"}
-            </span>
-          </div>
-        </div>
-        <div className="sidebar-note">
-          <ShieldCheck />
-          <p>
-            아이와 보호자가
-            <br />
-            함께 사용하는 대화 공간
-          </p>
-        </div>
-        <div className="sidebar-bottom">
-          <span>IRI DEMO</span>
-          <span>01</span>
-        </div>
-      </aside>
-      <main className="workspace">
-        <header className="topbar">
-          <span className="mobile-brand">iri</span>
-          <span>이리와 이야기하기</span>
-          <div className="topbar-actions">
-            <span className="age-label">{age.replace("-", "~")}세</span>
-            <Button
-              className="icon-button mobile-new"
-              aria-label="새 이야기"
-              disabled={busy || !authenticated}
-              onClick={() => void newConversation()}
-            >
-              <Plus />
-            </Button>
-            <Button
-              className="icon-button"
-              aria-label="대화 설정"
-              onClick={() => setSettingsOpen(true)}
-            >
-              <Settings2 />
-            </Button>
-          </div>
-        </header>
-        <div className="conversation" ref={log}>
-          {messages.length === 0 ? (
-            <section className="welcome">
-              <span className="welcome-symbol" aria-hidden="true">
-                <AudioLines />
-              </span>
-              <h1>무엇이 궁금해?</h1>
-              <p>
-                버튼을 누르고 편하게 이야기해 줘.
-                <br />
-                이리가 듣고 함께 생각해 볼게.
-              </p>
-              <div className="suggestions" aria-label="이야기 예시">
-                {suggestions.map((s) => (
-                  <Button
-                    key={s}
-                    className="suggestion"
-                    disabled={busy}
-                    onClick={() => {
-                      setDraft(s);
-                      setTranscript(false);
-                      textarea.current?.focus();
-                    }}
-                  >
-                    {s}
-                    <ArrowUpRight />
-                  </Button>
-                ))}
-              </div>
-            </section>
-          ) : (
-            <div
-              className="message-log"
-              role="log"
-              aria-label="대화 내용"
-              aria-live="polite"
-            >
-              {messages.map((message) => (
-                <article className={`message ${message.role}`} key={message.id}>
-                  <div className="message-author">
-                    {message.role === "user" ? "나" : "이리"}
-                  </div>
-                  <div className="message-content">
-                    <p>{message.text}</p>
-                    {message.role === "assistant" && (
-                      <Button
-                        className="text-button"
-                        disabled={busy}
-                        onClick={() => void speak(message, true)}
-                      >
-                        <Volume2 />
-                        답변 듣기
-                      </Button>
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-          {(phase === "thinking" || phase === "synthesizing") && (
-            <p className="thinking" role="status">
-              {labels[phase]}
-            </p>
-          )}
-        </div>
-        <section className="voice-dock" aria-label="음성 및 텍스트 입력">
-          <div className="voice-status">
-            <div className="waveform" aria-hidden="true">
-              {Array.from({ length: 25 }, (_, i) => (
-                <span
-                  key={i}
-                  style={{
-                    height: `${phase === "recording" ? 4 + (Math.sin(i * 1.7) * 0.5 + 0.5) * level * 44 : 4 + Math.max(0, 1 - Math.abs(i - 12) / 12) * 12}px`,
-                  }}
-                />
-              ))}
-            </div>
-            <p role="status">
-              {labels[phase]}
-              {phase === "recording" && (
-                <span className="record-time">
-                  {" "}
-                  {String(seconds).padStart(2, "0")} / 60초
-                </span>
-              )}
-            </p>
-          </div>
-          <div className="voice-actions">
-            {phase === "speaking" ? (
-              <Button
-                className="button primary record-button"
-                onClick={() => {
-                  stopPlayback();
-                  setPhase("idle");
-                }}
-              >
-                <Square />
-                듣기 멈추기
-              </Button>
-            ) : (
-              <Button
-                className="button primary record-button"
-                disabled={
-                  !authenticated ||
-                  (busy && phase !== "recording" && phase !== "acquiring")
-                }
-                onClick={() => {
-                  if (phase === "acquiring") {
-                    cancelRecording();
-                    setPhase("idle");
-                  } else if (phase === "recording") {
-                    if (recorder.current?.state === "recording")
-                      recorder.current.stop();
-                  } else void startRecording();
-                }}
-              >
-                {phase === "acquiring" ? (
-                  <X />
-                ) : phase === "recording" ? (
-                  <Square />
-                ) : (
-                  <Mic />
-                )}
-                {phase === "acquiring"
-                  ? "마이크 연결 취소"
-                  : phase === "recording"
-                    ? "말하기 마치기"
-                    : "눌러서 이야기하기"}
-              </Button>
+          <HistoryIcon />
+        </button>
+        <button
+          className="plain-icon"
+          aria-label="새 이야기"
+          disabled={voice.busy || !voice.authenticated}
+          onClick={() => void voice.newConversation()}
+        >
+          <PlusIcon />
+        </button>
+        <button
+          className="plain-icon"
+          aria-label="대화 설정"
+          onClick={() => voice.setSettingsOpen(true)}
+        >
+          <SettingsIcon />
+        </button>
+      </nav>
+
+      <Orb signal={voice.signal} selection={selection} />
+
+      <section className="answer-stage" aria-live="polite">
+        {voice.latestAnswer ? (
+          <>
+            {voice.latestUser && (
+              <p className="last-question">{voice.latestUser.text}</p>
             )}
-          </div>
-          {error && (
-            <div className="error" role="alert">
-              <span>{error}</span>
-              <Button
-                className="icon-button"
-                aria-label="안내 닫기"
-                onClick={() => setError("")}
-              >
-                <X />
-              </Button>
-            </div>
+            <p className="last-answer">{voice.latestAnswer.text}</p>
+          </>
+        ) : (
+          <p className="orb-prompt">무엇이 궁금해?</p>
+        )}
+      </section>
+
+      <div className="voice-controls">
+        <p className="voice-status" role="status">
+          {phaseLabels[voice.phase]}
+          {voice.phase === "recording" && (
+            <span> {String(voice.seconds).padStart(2, "0")} / 60초</span>
           )}
-          <form className="composer" onSubmit={send}>
+        </p>
+        {voice.phase === "recording" && <InputMeter signal={voice.signal} />}
+        <LiquidButtons>
+          <button
+            aria-label={shapeLabels[shapeIndex]}
+            onClick={() => {
+              selection.current += 1;
+              setShapeIndex(selection.current % 4);
+            }}
+          >
+            <SparkIcon />
+          </button>
+          <button
+            aria-label={microphoneLabel}
+            aria-pressed={voice.phase === "recording"}
+            onClick={toggleMicrophone}
+            disabled={
+              !voice.authenticated ||
+              (voice.busy && !["recording", "acquiring"].includes(voice.phase))
+            }
+          >
+            {["recording", "acquiring"].includes(voice.phase) ? (
+              <StopIcon />
+            ) : (
+              <MicIcon />
+            )}
+          </button>
+          <button
+            aria-label={voice.phase === "speaking" ? "말하기 멈추기" : "답변 다시 듣기"}
+            aria-pressed={voice.phase === "speaking"}
+            disabled={!voice.latestAnswer || (voice.busy && voice.phase !== "speaking")}
+            onClick={() => {
+              if (voice.phase === "speaking") voice.stopSpeaking();
+              else if (voice.latestAnswer) void voice.speak(voice.latestAnswer, true);
+            }}
+          >
+            {voice.phase === "speaking" ? <StopIcon /> : <VolumeIcon />}
+          </button>
+          <button
+            aria-label="글로 이야기하기"
+            aria-pressed={composerOpen}
+            onClick={() => {
+              setComposerOpen((open) => !open);
+              window.setTimeout(() => textarea.current?.focus(), 0);
+            }}
+            disabled={voice.busy}
+          >
+            <KeyboardIcon />
+          </button>
+        </LiquidButtons>
+      </div>
+
+      {composerOpen && (
+        <form
+          className="composer-sheet"
+          onSubmit={(event) => {
+            void voice.send(event).then(() => setComposerOpen(false));
+          }}
+        >
+          <div className="composer-copy">
             <label htmlFor="message">
-              <Keyboard />
-              {transcript
+              {voice.transcript
                 ? "이렇게 들었어요. 맞는지 확인해 주세요."
-                : "글로도 이야기할 수 있어요"}
+                : "글로 이야기하기"}
             </label>
-            <div className="input-row">
-              <textarea
-                ref={textarea}
-                id="message"
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                placeholder="궁금한 것을 적어 주세요"
-                maxLength={1000}
-                rows={2}
-                disabled={busy}
-                onKeyDown={(e) => {
-                  if (
-                    e.key === "Enter" &&
-                    !e.shiftKey &&
-                    !e.nativeEvent.isComposing
-                  ) {
-                    e.preventDefault();
-                    void send();
-                  }
-                }}
-              />
-              <Button
-                className="button primary send-button"
-                type="submit"
-                disabled={busy || !draft.trim() || !authenticated}
-                aria-label={transcript ? "확인하고 보내기" : "보내기"}
-              >
-                {transcript ? <Check /> : <ArrowUp />}
-              </Button>
-            </div>
-            <div className="composer-footer">
-              <span>
-                {transcript
-                  ? "다르게 들렸다면 글을 고쳐서 보내 주세요."
-                  : "Enter로 보내기 / Shift + Enter로 줄바꿈"}
-              </span>
-              <span>{draft.length}/1000</span>
-            </div>
-          </form>
-          <p className="disclosure">
-            이리의 목소리는 AI가 만들어요. 중요한 내용은 보호자와 함께 확인해
-            주세요. Powered by Kanana.
-          </p>
-        </section>
-      </main>
-      <Dialog.Root open={authenticated === false} onOpenChange={() => {}}>
-        <Dialog.Portal>
-          <Dialog.Backdrop className="backdrop" />
-          <Dialog.Popup className="popup">
-            <Dialog.Title className="dialog-title">
-              이리와 이야기 시작하기
-            </Dialog.Title>
-            <Dialog.Description className="dialog-description">
-              보호자와 함께 참여 코드를 입력해 주세요.
-            </Dialog.Description>
-            <form onSubmit={login}>
-              <label className="field-label" htmlFor="access-code">
-                참여 코드
-              </label>
-              <Input
-                id="access-code"
-                className="input"
-                type="password"
-                autoComplete="current-password"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                required
-                aria-invalid={!!loginError}
-                aria-describedby={loginError ? "login-error" : undefined}
-              />
-              {loginError && (
-                <p id="login-error" className="error-text" role="alert">
-                  {loginError}
-                </p>
-              )}
-              <p className="dialog-description privacy-note">
-                대화는 최대 1시간 동안 서버 메모리에만 머물며, 새 이야기를
-                시작하거나 나가면 지워져요. 음성과 질문은 답변을 위해 외부 AI
-                서비스에서 처리돼요.
-              </p>
-              <Button
-                className="button primary full-width"
-                type="submit"
-                disabled={loginBusy || !code}
-              >
-                {loginBusy ? "확인하고 있어요" : "시작하기"}
-              </Button>
-            </form>
-          </Dialog.Popup>
-        </Dialog.Portal>
-      </Dialog.Root>
-      <Dialog.Root open={consentOpen} onOpenChange={setConsentOpen}>
-        <Dialog.Portal>
-          <Dialog.Backdrop className="backdrop" />
-          <Dialog.Popup className="popup">
-            <Dialog.Title className="dialog-title">
-              목소리로 이야기해 볼까요?
-            </Dialog.Title>
-            <Dialog.Description className="dialog-description">
-              녹음한 음성은 글로 바꾸기 위해 OpenAI에 전송돼요. 이리 서버에는
-              녹음 파일을 저장하지 않아요. 보호자와 함께 확인해 주세요.
-            </Dialog.Description>
-            <div className="dialog-actions">
-              <Dialog.Close className="button">글로 이야기하기</Dialog.Close>
-              <Button
-                className="button primary"
-                onClick={() => {
-                  setConsented(true);
-                  setConsentOpen(false);
-                  void startRecording(true);
-                }}
-              >
-                동의하기
-              </Button>
-            </div>
-          </Dialog.Popup>
-        </Dialog.Portal>
-      </Dialog.Root>
-      <Dialog.Root open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <Dialog.Portal>
-          <Dialog.Backdrop className="backdrop" />
-          <Dialog.Popup className="popup">
-            <div className="dialog-heading">
-              <Dialog.Title className="dialog-title">대화 설정</Dialog.Title>
-              <Dialog.Close className="icon-button" aria-label="설정 닫기">
-                <X />
-              </Dialog.Close>
-            </div>
-            <Dialog.Description className="dialog-description">
-              아이의 나이에 맞춰 쉽게 설명해요.
-            </Dialog.Description>
-            <RadioGroup
-              value={age}
-              onValueChange={(value) => void newConversation(String(value))}
-              disabled={busy || !authenticated}
-              aria-labelledby="age-title"
-              className="radio-group"
+            <button
+              type="button"
+              className="plain-icon sheet-close"
+              aria-label="입력 닫기"
+              onClick={() => {
+                setComposerOpen(false);
+                voice.setTranscript(false);
+              }}
             >
-              <span id="age-title" className="field-label">
-                아이 나이
-              </span>
-              {["4-6", "7-10"].map((a) => (
-                <label className="radio-label" key={a}>
-                  <Radio.Root value={a} className="radio">
-                    <Radio.Indicator className="radio-indicator" />
-                  </Radio.Root>
-                  {a.replace("-", "~")}세
-                </label>
+              <CloseIcon />
+            </button>
+          </div>
+          <div className="composer-row">
+            <textarea
+              ref={textarea}
+              id="message"
+              value={voice.draft}
+              onChange={(event) => voice.setDraft(event.target.value)}
+              placeholder="궁금한 것을 말하거나 적어 주세요"
+              maxLength={1000}
+              rows={2}
+              disabled={voice.busy}
+              onKeyDown={(event) => {
+                if (
+                  event.key === "Enter" &&
+                  !event.shiftKey &&
+                  !event.nativeEvent.isComposing
+                ) {
+                  event.preventDefault();
+                  void voice.send().then(() => setComposerOpen(false));
+                }
+              }}
+            />
+            <button
+              className="send-button"
+              type="submit"
+              disabled={voice.busy || !voice.draft.trim() || !voice.authenticated}
+              aria-label="확인하고 보내기"
+            >
+              <SendIcon />
+            </button>
+          </div>
+          {voice.transcript && (
+            <p>다르게 들렸다면 문장을 고친 뒤 보내 주세요.</p>
+          )}
+        </form>
+      )}
+
+      {voice.error && (
+        <div className="error-toast" role="alert">
+          <span>{voice.error}</span>
+          <button
+            className="plain-icon"
+            aria-label="안내 닫기"
+            onClick={() => voice.setError("")}
+          >
+            <CloseIcon />
+          </button>
+        </div>
+      )}
+
+      <p className="powered">Powered by Kanana</p>
+
+      {voice.authenticated === false && (
+        <Overlay
+          title="이리와 이야기 시작하기"
+          description="보호자와 함께 참여 코드를 입력해 주세요."
+          persistent
+        >
+          <form className="overlay-form" onSubmit={voice.login}>
+            <input
+              type="text"
+              name="username"
+              autoComplete="username"
+              value="iri-participant"
+              readOnly
+              hidden
+            />
+            <label htmlFor="access-code">참여 코드</label>
+            <input
+              id="access-code"
+              name="access-code"
+              type="password"
+              autoComplete="current-password"
+              value={voice.code}
+              onChange={(event) => voice.setCode(event.target.value)}
+              required
+              aria-invalid={Boolean(voice.loginError)}
+              aria-describedby={voice.loginError ? "login-error" : undefined}
+            />
+            {voice.loginError && (
+              <p id="login-error" className="form-error" role="alert">
+                {voice.loginError}
+              </p>
+            )}
+            <p className="privacy-note">
+              대화는 최대 1시간 동안 서버 메모리에만 머물러요. 음성과 질문은
+              답변을 위해 외부 AI 서비스에서 처리돼요.
+            </p>
+            <button
+              className="solid-button"
+              type="submit"
+              disabled={voice.loginBusy || !voice.code}
+            >
+              {voice.loginBusy ? "확인하고 있어요" : "시작하기"}
+            </button>
+          </form>
+        </Overlay>
+      )}
+
+      {voice.consentOpen && (
+        <Overlay
+          title="목소리로 이야기해 볼까요?"
+          description="녹음한 음성은 글로 바꾸기 위해 OpenAI에 전송돼요. 이리 서버에는 녹음 파일을 저장하지 않아요."
+          onClose={() => voice.setConsentOpen(false)}
+        >
+          <div className="overlay-actions">
+            <button
+              className="quiet-button"
+              onClick={() => {
+                voice.setConsentOpen(false);
+                setComposerOpen(true);
+              }}
+            >
+              글로 이야기하기
+            </button>
+            <button className="solid-button" onClick={voice.acceptConsent}>
+              동의하고 말하기
+            </button>
+          </div>
+        </Overlay>
+      )}
+
+      {voice.settingsOpen && (
+        <Overlay
+          title="대화 설정"
+          description="아이의 나이에 맞춰 쉽게 설명해요."
+          onClose={() => voice.setSettingsOpen(false)}
+        >
+          <fieldset className="setting-group">
+            <legend>아이 나이</legend>
+            <div className="segmented-control">
+              {["4-6", "7-10"].map((value) => (
+                <button
+                  type="button"
+                  key={value}
+                  aria-pressed={voice.age === value}
+                  disabled={voice.busy}
+                  onClick={() => void voice.newConversation(value)}
+                >
+                  {value.replace("-", "~")}세
+                </button>
               ))}
-            </RadioGroup>
-            <p className="dialog-description">
-              나이를 바꾸면 새로운 이야기가 시작돼요.
-            </p>
-            <label className="switch-label">
-              <span>답변을 목소리로 들려주기</span>
-              <Switch.Root
-                className="switch"
-                checked={autoRead}
-                onCheckedChange={setAutoRead}
-              >
-                <Switch.Thumb className="thumb" />
-              </Switch.Root>
-            </label>
-            <p className="dialog-description">
-              꺼 두어도 모든 답변을 글로 볼 수 있어요.
-            </p>
-            <div className="settings-footer">
-              <Button
-                className="text-button"
-                onClick={() => void logout()}
-                disabled={busy || !authenticated}
-              >
-                <LogOut />
-                대화 지우고 나가기
-              </Button>
             </div>
-          </Dialog.Popup>
-        </Dialog.Portal>
-      </Dialog.Root>
-    </div>
+          </fieldset>
+          <label className="toggle-row">
+            <span>
+              답변을 목소리로 듣기
+              <small>꺼 두어도 모든 답변을 글로 볼 수 있어요.</small>
+            </span>
+            <input
+              type="checkbox"
+              checked={voice.autoRead}
+              onChange={(event) => voice.setAutoRead(event.target.checked)}
+            />
+          </label>
+          <button
+            className="logout-button"
+            onClick={() => void voice.logout()}
+            disabled={voice.busy}
+          >
+            대화 지우고 나가기
+          </button>
+        </Overlay>
+      )}
+
+      {historyOpen && (
+        <div className="history-overlay" role="dialog" aria-modal="true">
+          <div className="history-heading">
+            <div>
+              <span>지금까지 나눈 이야기</span>
+              <small>{Math.floor(voice.messages.length / 2)}개의 대화</small>
+            </div>
+            <button
+              className="plain-icon"
+              aria-label="대화 기록 닫기"
+              onClick={() => setHistoryOpen(false)}
+            >
+              <CloseIcon />
+            </button>
+          </div>
+          <div className="history-list" role="log">
+            {voice.messages.map((message) => (
+              <article key={message.id} data-role={message.role}>
+                <span>{message.role === "user" ? "나" : "이리"}</span>
+                <p>{message.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+    </main>
   );
 }

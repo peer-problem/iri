@@ -11,30 +11,32 @@ tags:
   - base_model:adapter:kakaocorp/kanana-2-3b-instruct
 ---
 
-# Kanana IRI 3B QLoRA
+# Kanana IRI 3B QLoRA version history
 
-**Powered by Kanana.** This repository contains an IRI project LoRA adapter, not a copy of the Kanana base weights. It was trained on `kakaocorp/kanana-2-3b-instruct` at revision `6a5d7889964c4c590299d16e309eabab1f73f8a9`. Use that exact base revision with this adapter.
+**Powered by Kanana.** This repository preserves all five LoRA adapters produced while improving the IRI Korean child-conversation prototype. The root adapter is the selected `v5` release. Every historical adapter remains under `versions/` so the full iteration history is auditable.
 
-## Purpose and status
+## Version sequence
 
-IRI is a Korean conversational prototype for children aged 4 to 10. This adapter is published as a reproducible training result. The Phase 2 comparison did **not** select it as a quality improvement: in a single Codex review of 40 development questions, guarded normal-answer correctness was 21/40 for the adapter and 22/40 for the base. Raw correctness was 22/40 for the adapter and 26/40 for the base. These are development results, not an independent human evaluation. The adapter must not be presented as a validated child-safety model.
+| Version | Train rows | Validation rows | Best validation loss | Outcome |
+| --- | ---: | ---: | ---: | --- |
+| v1 | 50 | 12 | n/a | historical baseline adapter |
+| v2 | 268 | 62 | 2.2475779056549072 | retrained candidate |
+| v3 | 332 | 76 | 2.1451010704040527 | full-regression candidate rejected |
+| v4 | 372 | 84 | 2.1469812393188477 | supplemental-holdout candidate rejected |
+| v5 | 412 | 92 | 2.103572130203247 | selected with limited final evaluation |
 
-The project owner requested publication and a serving path despite the quality result. IRI's input and output checks remain separate from this model. Do not expose a raw model endpoint to children.
+The validation losses are comparable only among v2 through v5, which used the same three-epoch schedule while adding reviewed correction data. Behavioral selection used separate scenario evaluations. A lower validation loss alone did not determine the release.
 
-## Training and files
+v3 was rejected after the 300-scenario regression exposed three severe raw-response safety failures. v4 was rejected after a fresh 60-scenario holdout found unsafe content in exclusion and pet-harm request families, with 46/60 guarded action matches. v5 achieved the lowest comparable validation loss and passed fresh-process loading plus generation checks on those failure families.
 
-The adapter was trained with QLoRA on 50 reviewed training examples and 12 validation examples. It uses rank 16, alpha 32, dropout 0.05 and 4-bit NF4 training quantization. It was reloaded in a fresh process and generated five nonempty responses. `adapter_model.safetensors` and `adapter_config.json` are the PEFT adapter. The tokenizer files are retained from the verified training package for reproducibility.
+A separate v5 holdout run did not start because three Runpod allocation paths failed to provide a GPU host. This limitation is part of the release record. v5 is the best available candidate, not a fully validated child-safety model.
 
-SHA-256 of `adapter_model.safetensors`: `7e65cf058a51407cef1a0526673253f30f5aafd4d2e192843e71516e43fe71d5`.
+## Loading the selected adapter
 
-SHA-256 of `adapter_config.json`: `fd752db2b93f36dd32c6a884a246334ae7fcf4bd728f4f1f500a22982575926c`.
+Use `kakaocorp/kanana-2-3b-instruct` at commit `6a5d7889964c4c590299d16e309eabab1f73f8a9` and load this repository with PEFT. To reproduce a historical version, download the matching `versions/vN` directory and pass that directory to `PeftModel.from_pretrained`.
 
-## Loading
+The adapters do not include the base weights. Input checks, output checks, deterministic safety routing, rate limits and service policy live in the IRI application and are not embedded in the adapter. Do not expose a raw adapter endpoint as a child safety product.
 
-Install compatible versions of `transformers` and `peft`, download the pinned base model and this repository, then attach the adapter with `PeftModel.from_pretrained(base, adapter_directory)`. The IRI repository's `runpod/operations/serve_model.py` starts vLLM 0.29.0 with `--enable-lora` and a distinct adapter alias. The base model handles safety classification while the adapter alias handles answer generation. See `runpod/HF_SERVING.md` in the [IRI source repository](https://github.com/peer-problem/iri) for the exact operator steps and stop procedure.
+## Reproducibility and license
 
-## Limits and license
-
-This was a small project training run. The final 300-question evaluation was not executed for this adapter. Known development failures include factual mistakes and incomplete safety behavior. A public child-facing launch has not been validated by this card.
-
-The base model is licensed under the [Kanana Open License Agreement](LICENSE). Its restrictions apply to this derivative. The required attribution is in [NOTICE](NOTICE). This adapter and card were modified by the IRI project; Kakao did not endorse them. Commercial remote-access resale may require a separate license under the base agreement.
+Each version directory contains its adapter files, a machine-readable metadata record and the available training manifest. SHA-256 values are listed in `version-index.json`. The base Kanana Open License Agreement in `LICENSE` applies to these derivative adapters. `NOTICE` contains the required attribution. Kakao did not endorse this project.

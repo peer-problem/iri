@@ -19,6 +19,9 @@ POD_NAME = "kids-sandbox-baseline"
 KNOWN_PODS = {
     "agp8j1pz448x2k": "iri-phase2-evaluation-20260917",
     "alj5yk19zuhnvp": "iri-phase3-codex-quality-20260918",
+    "hclryy4t144uwg": "iri-kanana-v2-final-20260919",
+    "srmzsnz2ukpjee": "iri-kanana-v2-eval-20260919",
+    "5h41hdsnogjaib": "iri-kanana-v2-eval2-20260919",
     "egw5ndth2lsus8": POD_NAME,
     "9l7neo7d5wu3ec": "iri-phase3-v3-preferred-20260917",
     "ttb34ziuu2ovrd": "iri-v10-full-new-20260917-01",

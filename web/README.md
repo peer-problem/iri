@@ -1,28 +1,20 @@
-# IRI voice workspace
+# IRI Orb voice interface
 
-React and Vite application using Peer Design and `@base-ui/react` 1.7.0.
+React와 Vite로 만든 IRI의 공식 음성 대화 화면이다. 별도 `iri-orb` 저장소에 있던 시각 시제품을 이 디렉터리로 옮기고, IRI의 인증과 STT, 답변 생성, 출력 검사, TTS API에 연결했다. 이 앱은 실행 시 다른 저장소를 참조하지 않는다.
 
 ```sh
 npm ci
-npm run dev
+npm test
 npm run build
+npm run dev
 ```
 
-The development server runs on `127.0.0.1:5173` and proxies `/api` to the local FastAPI server on port 8000. Production rewrites use the Contabo HTTPS virtual host in `vercel.json`. No client environment variables or API credentials are required.
+개발 서버는 `127.0.0.1:5173`에서 실행되며 `/api` 요청을 로컬 FastAPI 서버의 8000번 포트로 전달한다. 프로덕션에서는 `vercel.json`의 HTTPS API 경로를 사용한다. 브라우저에 API 키를 전달하지 않는다.
 
-Voice input uses MediaRecorder with WebM/Opus on Chrome and MP4 where supported. The user approves external processing before recording, then confirms or edits the transcript before sending. Recording stops at 60 seconds. The UI releases microphone tracks after recording. Sending or replaying a message activates a Web Audio context within the user's gesture, so Safari can play the later generated answer. Silent input, missing microphone permission, API failure and blocked autoplay have separate recovery paths. Text input remains available and speech can be disabled in settings.
+사용자는 참여 코드로 로그인한 뒤 마이크 또는 글로 질문한다. 음성 입력은 녹음 동의 후 최대 60초 동안 받는다. STT가 만든 문장을 사용자가 화면에서 확인한 뒤 답변을 요청한다. 검사된 답변만 TTS로 전달한다. 최근 6턴은 서버의 세션 메모리에 남고 새 이야기, 연령 변경, 로그아웃으로 삭제된다.
 
-Peer Design sources used from the local reference repository:
+중앙 Orb는 현재 상태를 표시한다. 듣는 동안에는 실제 마이크 RMS, 말하는 동안에는 실제 재생 오디오 파형에 반응한다. 답변을 생각하거나 합성할 때에는 잔잔한 대기 움직임을 사용한다. WebGL 또는 WebGPU를 쓸 수 없는 환경에는 정적 Orb와 CSS 버튼 표면을 제공한다. 운영체제의 움직임 줄이기 설정도 따른다.
 
-- `DESIGN.md` and `styles/tokens.css` for square corners, colors, type and spacing.
-- `examples/base-ui/components/button/demos/hero/css-modules/` for actions.
-- `examples/base-ui/components/dialog/demos/hero/css-modules/` for portal, backdrop, title and focus behavior.
-- `examples/base-ui/components/input/demos/hero/css-modules/` for the access code field.
-- `examples/base-ui/components/radio/demos/hero/css-modules/` for age selection.
-- `examples/base-ui/components/switch/demos/hero/css-modules/` for automatic speech.
+`npm test`는 음성 신호 보정과 애니메이션 완화 수식을 확인한다. `npm run build`는 TypeScript와 프로덕션 번들을 검증한다. 전체 STT에서 TTS 흐름은 저장소 루트의 Python API 테스트가 검증한다.
 
-The Base UI version matches the reference snapshot. Voice and mobile controls use larger touch targets. Font assets come from the same Peer Design reference. Layout was inspected at widths 320, 390, 820 and 1440 pixels, including a dark-mode settings dialog.
-
-The browser flow was verified with synthetic speech routed through a real MediaRecorder and actual OpenAI services. Delayed chat and speech responses automatically played in mobile WebKit, and replay and stop worked there. Physical microphones, mobile Safari hardware and speaker quality still need device testing.
-
-Headless Chrome fault-injection checks also cover permission denial, cancellation while permission is pending, release of a late microphone stream, recording errors without an upload, TTS service failure, blocked autoplay with replay, and an expired speech session returning to login. Permission acquisition has a separate cancellable state; failed recordings are discarded. The pending-permission UI was visually checked at 320px and 1440px.
+시각 구현의 출처와 라이선스는 [ATTRIBUTIONS.md](ATTRIBUTIONS.md)와 `licenses/`에 보관한다.

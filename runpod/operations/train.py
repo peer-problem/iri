@@ -19,7 +19,12 @@ from runpod.operations.training_data import data_fingerprint, encode_row, load_t
 from runpod.settings import ENV_FILE, ROOT, Settings
 
 
-def training_config(smoke: bool) -> dict:
+def training_config(
+    smoke: bool,
+    learning_rate: float = 5e-5,
+    epochs: float = 3.0,
+    save_steps: int = 25,
+) -> dict:
     return {
         "lora": {
             "r": 16,
@@ -46,17 +51,22 @@ def training_config(smoke: bool) -> dict:
             "per_device_train_batch_size": 1,
             "per_device_eval_batch_size": 1,
             "gradient_accumulation_steps": 8,
-            "learning_rate": 1e-4,
-            "num_train_epochs": 1,
+            "learning_rate": learning_rate,
+            "num_train_epochs": epochs,
             "max_steps": 20 if smoke else -1,
             "gradient_checkpointing": True,
             "logging_steps": 1,
             "logging_nan_inf_filter": False,
-            "eval_strategy": "no",
+            "eval_strategy": "steps",
+            "eval_steps": save_steps,
             "save_strategy": "steps",
-            "save_steps": 10,
-            "save_total_limit": 2,
+            "save_steps": save_steps,
+            "save_total_limit": 3,
             "save_only_model": False,
+            "load_best_model_at_end": True,
+            "metric_for_best_model": "eval_loss",
+            "greater_is_better": False,
+            "warmup_ratio": 0.05,
             "report_to": [],
             "seed": 42,
             "label_names": ["labels"],
@@ -79,10 +89,19 @@ def main():
         help="Use at most 50 examples and train for 20 optimizer steps",
     )
     parser.add_argument("--max-length", type=int, default=1024)
+    parser.add_argument("--learning-rate", type=float, default=5e-5)
+    parser.add_argument("--epochs", type=float, default=3.0)
+    parser.add_argument("--save-steps", type=int, default=25)
     parser.add_argument("--resume-from-checkpoint", type=Path)
     args = parser.parse_args()
     if not 128 <= args.max_length <= 4096:
         parser.error("Context limit must be between 128 and 4096")
+    if not 0 < args.learning_rate <= 1e-3:
+        parser.error("Learning rate must be greater than zero and at most 1e-3")
+    if not 0 < args.epochs <= 10:
+        parser.error("Epochs must be greater than zero and at most 10")
+    if not 1 <= args.save_steps <= 10000:
+        parser.error("Save steps must be between 1 and 10000")
     load_dotenv(ENV_FILE)
     settings = Settings()
     if not settings.model_revision:
@@ -99,7 +118,7 @@ def main():
         for row in [*train, *validation]
     ):
         parser.error("Training data overlaps development or final evaluation")
-    config = training_config(args.smoke)
+    config = training_config(args.smoke, args.learning_rate, args.epochs, args.save_steps)
     identity = {
         "model_id": settings.profile["model_id"],
         "revision": settings.model_revision,
@@ -222,7 +241,7 @@ def main():
         "state": "running",
         **identity,
         "resumed_from": str(args.resume_from_checkpoint) if args.resume_from_checkpoint else None,
-        "save_steps": 10,
+        "save_steps": args.save_steps,
         "train_count": len(train),
         "validation_count": len(validation),
         "lora_targets": targets,

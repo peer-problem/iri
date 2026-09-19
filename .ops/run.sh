@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export BEHAVIOR_PROFILE="${BEHAVIOR_PROFILE:-kanana_v5}"
 cd "$ROOT"
 
 runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000 &

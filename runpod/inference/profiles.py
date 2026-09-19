@@ -41,6 +41,17 @@ _SUPPORT_V2 = replace(_INPUT_V2, generate_support=True)
 _INPUT_V3 = replace(_BASELINE, input_guidance=INPUT_V3)
 _SUPPORT_V3 = replace(_INPUT_V3, generate_support=True, support_guidance=SUPPORT_V3)
 _SAFETY_V3 = replace(_SUPPORT_V3, output_guidance=OUTPUT_V3)
+_KANANA_V3 = replace(
+    _BASELINE,
+    input_guidance=INPUT_V2,
+    input_policy=False,
+    output_guidance=OUTPUT_V3,
+    general_guidance=GENERATION_V2,
+    support_guidance=GENERATION_V2 + "\n" + SUPPORT_V3,
+    generate_support=True,
+)
+_KANANA_V4 = replace(_KANANA_V3)
+_KANANA_V5 = replace(_KANANA_V4)
 
 PROFILES: dict[BehaviorProfile, ProfileSpec] = {
     "baseline": _BASELINE,
@@ -68,4 +79,7 @@ PROFILES: dict[BehaviorProfile, ProfileSpec] = {
         general_guidance=QUALITY_GENERAL_GUIDANCE,
         support_guidance=QUALITY_SUPPORT_GUIDANCE,
     ),
+    "kanana_v3": _KANANA_V3,
+    "kanana_v4": _KANANA_V4,
+    "kanana_v5": _KANANA_V5,
 }

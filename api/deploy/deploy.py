@@ -33,7 +33,9 @@ def ssh(command, data=None, timeout=180):
         f"{CONFIG['CONTABO_VPS_DEFAULT_USER']}@{CONFIG['CONTABO_VPS_IP_ADDRESS']}",
         command,
     ]
-    result = subprocess.run(args, input=data, capture_output=True, env=env, timeout=timeout)
+    result = subprocess.run(
+        args, input=data, capture_output=True, env=env, timeout=timeout, check=False
+    )
     print(result.stdout.decode(), end="", flush=True)
     if result.returncode:
         print(result.stderr.decode(), flush=True)
@@ -79,6 +81,7 @@ def vps(origin):
         TTS_MODEL="gpt-4o-mini-tts-2025-12-15",
         FALLBACK_MODEL="gpt-5.6-luna",
         FALLBACK_REASONING_EFFORT="high",
+        BEHAVIOR_PROFILE="kanana_v5",
         REQUEST_TIMEOUT_SECONDS="90",
     )
     env_content = "".join(f"{k}={json.dumps(v)}\n" for k, v in runtime.items())
@@ -134,10 +137,11 @@ def vercel():
         for path in web.rglob("*"):
             relative = path.relative_to(web)
             if not path.is_file() or any(
-                p in ("node_modules", "dist", ".vercel", "test-results") for p in relative.parts
+                p in ("node_modules", "dist", ".vercel", "test-results")
+                for p in relative.parts
             ):
                 continue
-            if relative.parts[0] not in ("src", "public") and str(relative) not in (
+            if relative.parts[0] not in ("src", "public", "scripts") and str(relative) not in (
                 "package.json",
                 "package-lock.json",
                 "tsconfig.json",
@@ -170,7 +174,9 @@ def vercel():
         )
         if result.is_error:
             print(
-                "Vercel error:", result.status_code, result.json().get("error", {}).get("message")
+                "Vercel error:",
+                result.status_code,
+                result.json().get("error", {}).get("message"),
             )
             result.raise_for_status()
         deployment = result.json()
@@ -179,13 +185,15 @@ def vercel():
         record.parent.mkdir(parents=True, exist_ok=True)
         record.write_text(
             json.dumps(
-                {k: deployment.get(k) for k in ("id", "url", "readyState", "alias")}, indent=2
+                {k: deployment.get(k) for k in ("id", "url", "readyState", "alias")},
+                indent=2,
             )
         )
 
 
 def status():
-    record = json.loads((ROOT / ".logs/deploy/vercel-deployment.json").read_text())
+    record_path = ROOT / ".logs/deploy/vercel-deployment.json"
+    record = json.loads(record_path.read_text())
     response = httpx.get(
         "https://api.vercel.com/v13/deployments/" + record["id"],
         headers={"Authorization": "Bearer " + CONFIG["VERCEL_DEPLOY_KEY"]},
@@ -193,11 +201,12 @@ def status():
     )
     response.raise_for_status()
     data = response.json()
-    print(
-        json.dumps(
-            {k: data.get(k) for k in ("id", "url", "readyState", "alias", "errorMessage")}, indent=2
-        )
-    )
+    snapshot = {
+        k: data.get(k)
+        for k in ("id", "url", "readyState", "alias", "errorMessage")
+    }
+    record_path.write_text(json.dumps(snapshot, indent=2))
+    print(json.dumps(snapshot, indent=2))
 
 
 if __name__ == "__main__":

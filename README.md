@@ -1,12 +1,12 @@
 # IRI
 
-한국어 4~10세 대상 모델의 Runpod 학습과 서빙 및 평가 도구와 음성 대화 서비스를 관리한다. 팀원의 [PR #1](https://github.com/peer-problem/iri/pull/1) API를 바탕으로 Peer Design 화면과 마이크 녹음 및 재생을 `web/`에 구현했다. 모델 작업은 `runpod/`에서 진행한다.
+한국어 4~10세 대상 모델의 Runpod 학습과 서빙 및 평가 도구와 음성 대화 서비스를 관리한다. 팀원의 [PR #1](https://github.com/peer-problem/iri/pull/1) API를 바탕으로 목소리에 반응하는 Orb 화면과 마이크 녹음 및 재생을 `web/`에 구현했다. 별도 시제품 저장소의 시각 코드는 이 저장소로 완전히 옮겼으며 실행과 배포는 `iri`만 사용한다. 모델 작업은 `runpod/`에서 진행한다.
 
 ## 음성 대화 데모
 
 [배포된 화면](https://iri-voice.vercel.app)을 사용한다. Vercel의 화면에서 Contabo HTTPS API로 연결한다. 참여 코드는 Git에서 제외한 `.keys/.env`의 `DEMO_ACCESS_CODE`에 보관한다. 실제 계정 키는 브라우저에 전달하지 않는다.
 
-기본 흐름은 마이크 녹음 → STT → 인식 문장 확인 또는 수정 → 답변 생성 → TTS 재생이다. 텍스트로도 입력할 수 있고 모든 답변은 화면에 남는다. 재생 중지와 다시 듣기 및 음성 출력 끄기를 지원한다. 녹음은 최대 60초다.
+기본 흐름은 마이크 녹음 → STT → 인식 문장 확인 또는 수정 → 답변 생성 → TTS 재생이다. 텍스트로도 입력할 수 있고 모든 답변은 대화 기록에서 확인할 수 있다. 중앙 Orb는 듣기와 생각하기 및 말하기 상태에 반응한다. 재생 중지와 다시 듣기 및 음성 출력 끄기를 지원한다. 녹음은 최대 60초다.
 
 답변은 고정된 Kanana 3B 원본과 이 프로젝트의 LoRA 어댑터를 우선 사용한다. GPU가 중지됐거나 모델 요청이 실패하면 Luna high가 동일한 입력 검사, 생성, 출력 검사 전체를 다시 실행한다. Qwen 등 다른 개발 후보는 제품 답변에 사용하지 않는다. STT는 `gpt-4o-mini-transcribe`, TTS는 `gpt-4o-mini-tts-2025-12-15`를 사용한다. GPU를 자동으로 시작하지 않는다.
 
@@ -29,9 +29,11 @@ npm run dev --prefix web
 
 ## 현재 상태
 
-Phase 3의 최신 범위인 Kanana 3B 어댑터 공개 게시, 실제 GPU 서빙 검증, Kanana 우선 API와 웹 배포 및 운영 인수인계를 마쳤다. [공개 어댑터](https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA)는 `peerproblem` 조직이 관리하며 고정된 `kakaocorp/kanana-2-3b-instruct` 리비전 `6a5d7889964c4c590299d16e309eabab1f73f8a9`에서 사용한다. 새 A40 Pod에서 공개 파일을 다시 내려받아 vLLM 로딩과 생성 응답을 확인하고 Pod를 중지 후 삭제했다.
+Kanana 3B QLoRA를 v1부터 v5까지 순차 개선했다. [공개 어댑터 저장소](https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA)는 `peerproblem` 조직이 관리하며 고정된 `kakaocorp/kanana-2-3b-instruct` 리비전 `6a5d7889964c4c590299d16e309eabab1f73f8a9`를 사용한다. 공개 저장소의 루트는 채택한 v5이고, `versions/v1`부터 `versions/v5`까지 각 어댑터와 메타데이터 및 사용 가능한 학습 매니페스트를 보존한다.
 
-현재 상시 GPU는 꺼져 있어 `/ready`는 503을 반환하고 채팅은 Luna high 경로를 사용한다. 데모 시간에 GPU 한 대와 인증된 Contabo 터널을 열면 Kanana 경로가 우선 사용되는지 `/ready` 및 `/chat`으로 확인한다. 기존 개발 비교에서 어댑터의 품질 개선은 입증되지 않았고 최종 300문항 답변 평가는 미실행이다. 아동 대상 공개 출시는 승인하지 않았다. 이전 품질 실험과 Qwen 후보는 기록으로만 보존한다.
+v3는 최종 300개 시나리오에서 원시 응답의 중대 안전 실패 3건이 확인돼 탈락했다. v4는 새 홀드아웃 60건을 오류 없이 실행했지만 guarded 행동 일치가 46/60이었고 배제 및 반려동물 위해 요청에서 부적절한 내용이 남아 탈락했다. v5는 같은 3 epoch 설정을 쓴 v2부터 v5 중 검증 손실이 가장 낮은 `2.103572`였고, 새 프로세스 재로딩과 v4 실패 유형 확인을 통과해 채택했다. 별도 v5 홀드아웃은 세 가지 Runpod GPU 할당 경로에서 실행 호스트를 받지 못해 완료하지 못했다. 따라서 v5는 현재 최선 후보이지만 독립적인 최종 안전성 검증을 마친 모델로 간주하지 않는다.
+
+현재 상시 GPU는 꺼져 있어 `/ready`는 503을 반환하고 채팅은 Luna high 경로를 사용한다. 데모 시간에 GPU 한 대와 인증된 Contabo 터널을 열면 Kanana 경로가 우선 사용되는지 `/ready` 및 `/chat`으로 확인한다. 아동 대상 공개 출시는 승인하지 않았다. 이전 품질 실험과 Qwen 후보는 기록으로만 보존한다.
 
 - [Phase 3 첫 구현과 GPU 비교 결과](runpod/artifacts/phase3-quality-20260917/README.md)
 - [Phase 3 두 번째 비교와 미해결 문제](runpod/artifacts/phase3-quality-v3-20260917/README.md)
@@ -41,6 +43,7 @@ Phase 3의 최신 범위인 Kanana 3B 어댑터 공개 게시, 실제 GPU 서빙
 - [Phase 3 인수인계](runpod/artifacts/phase2-evaluation-20260917/phase3-handoff.md)
 - [Kanana 3B 어댑터 게시와 서빙 안내](runpod/HF_SERVING.md)
 - [Phase 3 종료 보고서](runpod/artifacts/phase3-closeout-20260919/README.md)
+- [v1부터 v5 재학습 및 선정 결과](runpod/artifacts/kanana-performance-assessment-20260919/README.md)
 - [팀 검수 자료](runpod/artifacts/README.md)
 
 ## 로컬 개발
@@ -58,7 +61,7 @@ runpod/.venv/bin/ruff check --config runpod/pyproject.toml api runpod
 
 ### 팀원 음성 API 실행
 
-기존 `.keys/.env`를 사용한다면 `SANDBOX_API_KEY`가 32자 이상인지 확인한다. 음성 전사와 TTS에는 `OPENAI_API_KEY`가 필요하며 텍스트 모델은 Runpod의 vLLM을 사용한다. 기본 행동 설정은 `baseline`이다. Runpod의 v3 후보는 미채택 실험이며 팀원 API에 자동 적용하지 않았다.
+기존 `.keys/.env`를 사용한다면 `SANDBOX_API_KEY`가 32자 이상인지 확인한다. 음성 전사와 TTS에는 `OPENAI_API_KEY`가 필요하며 텍스트 모델은 Runpod의 vLLM을 사용한다. 로컬 실행과 배포 스크립트는 채택한 v5용 `kanana_v5` 행동 설정을 사용한다. 라이브러리 기본값 `baseline`은 이전 실행 재현을 위해 유지한다.
 
 ```sh
 runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000
@@ -78,7 +81,7 @@ runpod/.venv/bin/uvicorn api.app.app:app --host 127.0.0.1 --port 8000
 
 아이에게 보여 주는 답변의 정체성과 말투 및 상황별 대응은 `api/app/answer_profile.py`의 단일 `ANSWER_PROFILE`에서 관리한다. 현재 버전은 `v1`이며 Kanana와 Luna의 답변 생성 단계에 똑같이 적용된다. Luna가 별도의 정체성이나 말투 지침을 덧붙이지 않는다.
 
-처리 순서는 입력 안전 검사 → 공통 AnswerProfile을 적용한 답변 생성 → 출력 안전 검사다. AnswerProfile은 생성 단계에만 적용하며 `api/configs/policy.json`, 입력 판정과 출력 차단 규칙 및 기본 `behavior_profile=baseline`은 그대로 유지한다. 프로필의 대표 예시는 행동 유도용이며 개발 또는 최종 평가의 정답으로 재사용하지 않는다.
+처리 순서는 입력 안전 검사 → 공통 AnswerProfile을 적용한 답변 생성 → 출력 안전 검사다. `kanana_v5`는 `kanana_v3`의 검사에 반려동물 위해 요청과 장애 아동 배제 요청의 결정적 라우팅을 추가한다. 라이브러리의 `behavior_profile=baseline` 기본값은 이전 실행 재현용으로 유지한다. 프로필의 대표 예시는 행동 유도용이며 개발 또는 최종 평가의 정답으로 재사용하지 않는다.
 
 ## GPU 실행과 평가
 
@@ -97,13 +100,16 @@ python -m runpod.operations.evaluate --data runpod/artifacts/phase2-evaluation-2
 
 | 설정 | 기준선에서 바뀌는 내용 |
 | --- | --- |
-| `baseline` | 기존 입력·출력 안전 검사 설정. AnswerProfile v1은 모든 설정에 공통 적용 |
+| `baseline` | 기존 입력 및 출력 안전 검사 설정. AnswerProfile v1은 모든 설정에 공통 적용 |
 | `input_v2` | 피해 고백 우선 분류와 불필요한 재질문 축소 |
 | `support_v2` | `input_v2`에 상황별 지원 답변 생성과 출력 검사 추가 |
 | `full_v2` | `support_v2`에 사실 정확도와 간결한 설명 지침 추가 |
 | `input_v3` | 기존 정책을 유지하며 피해 주체와 실행 의도 및 현실 위험을 분류 |
 | `support_v3` | `input_v3`에 상황별 지원 생성과 비밀 보장 약속 금지 지침 추가 |
 | `safety_v3` | `support_v3`에 현실 위험 행동과 지원 답변의 출력 검사 보완 |
+| `kanana_v3` | 채택한 LoRA용 정확성 지침, V2 입력 판정, 상황별 고정 지원 문구, V3 출력 검사 |
+| `kanana_v4` | v4 어댑터 평가용 설정과 반려동물 위해 요청 차단 |
+| `kanana_v5` | 채택한 v5용 설정과 반려동물 위해 및 장애 아동 배제 요청의 결정적 안전 라우팅 |
 
 지원 답변이 출력 검사에서 차단되면 안전한 지원 문구로 돌아간다. 피해 고백을 위험 요청으로 바꾸어 표시하지 않는다.
 

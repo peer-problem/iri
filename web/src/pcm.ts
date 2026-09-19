@@ -15,6 +15,7 @@ export class PcmStreamPlayer {
   constructor(
     private context: AudioContext,
     private onEnded: () => void,
+    private destination: AudioNode = context.destination,
   ) {}
 
   push(chunk: Uint8Array) {
@@ -41,7 +42,7 @@ export class PcmStreamPlayer {
     }
     const source = this.context.createBufferSource();
     source.buffer = buffer;
-    source.connect(this.context.destination);
+    source.connect(this.destination);
     source.onended = () => {
       source.disconnect();
       this.sources.delete(source);
