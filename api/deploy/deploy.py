@@ -19,6 +19,17 @@ PROJECT = "iri-voice"
 PUBLIC_DOMAIN = "iri.today"
 API_DOMAIN = f"api.{PUBLIC_DOMAIN}"
 PRODUCTION_ORIGIN = f"https://{PUBLIC_DOMAIN}"
+REQUIRED_RUNTIME = (
+    "SANDBOX_API_KEY",
+    "MODEL_API_KEY",
+    "MODEL_REVISION",
+    "MODEL_PROFILE",
+    "ADAPTER_NAME",
+    "ADAPTER_REVISION",
+    "ADAPTER_SHA256",
+    "MODEL_BASE_URL",
+    "OPENAI_API_KEY",
+)
 
 
 def ssh(command, data=None, timeout=180):
@@ -61,7 +72,16 @@ def require_api_dns():
         raise RuntimeError(f"{API_DOMAIN} does not resolve to the configured Contabo VPS")
 
 
+def require_runtime_config():
+    missing = [key for key in REQUIRED_RUNTIME if not CONFIG.get(key)]
+    if missing:
+        raise RuntimeError(
+            "Missing required deployment settings: " + ", ".join(missing)
+        )
+
+
 def vps(origin):
+    require_runtime_config()
     require_api_dns()
     release = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     folder = f"/opt/iri/releases/{release}"
@@ -82,18 +102,7 @@ def vps(origin):
         for name in ("runpod/pyproject.toml", "runpod/uv.lock"):
             tar.add(ROOT / name, arcname=name)
     ssh(f"tar -xzf - -C {folder}", data.getvalue())
-    allowed = [
-        "SANDBOX_API_KEY",
-        "MODEL_API_KEY",
-        "MODEL_REVISION",
-        "MODEL_PROFILE",
-        "ADAPTER_NAME",
-        "ADAPTER_REVISION",
-        "ADAPTER_SHA256",
-        "MODEL_BASE_URL",
-        "OPENAI_API_KEY",
-    ]
-    runtime = {k: CONFIG[k] for k in allowed if CONFIG.get(k)}
+    runtime = {key: CONFIG[key] for key in REQUIRED_RUNTIME}
     runtime.update(
         SECURE_COOKIES="true",
         ALLOWED_ORIGINS=origin,
