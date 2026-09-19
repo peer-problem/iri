@@ -117,7 +117,13 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
         return {
             "age_band": (session.age or "4-6") if session else "4-6",
             "messages": [
-                {"id": str(uuid4()), **item} for item in (session.history if session else [])
+                {
+                    "id": str(uuid4()),
+                    "role": item["role"],
+                    "content": item["content"],
+                    **({"provider": item["provider"]} if item.get("provider") else {}),
+                }
+                for item in (session.history if session else [])
             ],
         }
 
@@ -205,8 +211,20 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
                         if session
                         else []
                     )
+                    previous_action = next(
+                        (
+                            item.get("action")
+                            for item in reversed(stored_history)
+                            if item["role"] == "assistant"
+                        ),
+                        None,
+                    )
                     history.append({"role": "user", "content": body.message})
-                    answer, action, provider = await app.state.service.respond(body.age_band, history)
+                    answer, action, provider = await app.state.service.respond(
+                        body.age_band,
+                        history,
+                        previous_action=previous_action,
+                    )
                     if session:
                         session.history = [
                             *stored_history,
@@ -215,6 +233,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
                                 "role": "assistant",
                                 "content": answer,
                                 "provider": provider,
+                                "action": action,
                             },
                         ][-12:]
             return ChatResponse(answer=answer, action=action, request_id=request_id, provider=provider)

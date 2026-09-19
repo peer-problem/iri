@@ -81,6 +81,50 @@ async def test_fallback_never_releases_unchecked_answer(verdict):
     assert 'PRIVATE_UNCHECKED' not in response.text
 
 
+async def test_luna_support_followup_uses_session_action_without_repeating_check_in():
+    settings = configuration(
+        openai_api_key="test-cloud",
+        behavior_profile="kanana_v5",
+    )
+    answers = iter(
+        [
+            '{"decision":"support"}',
+            '{"decision":"support"}',
+            "지금은 집에 있고 다친 곳이 없다니 다행이야. 다시 위험해지면 가까운 어른에게 알려 줘.",
+            '{"decision":"allow"}',
+        ]
+    )
+    calls = []
+
+    def handler(request):
+        if request.url.path == "/v1/models":
+            return httpx.Response(503)
+        body = json.loads(request.content)
+        calls.append(body)
+        return cloud(next(answers))
+
+    async with api(handler, settings) as client:
+        first = await client.post(
+            "/chat",
+            json={"message": "친구가 나를 때렸는데 말하지 말래.", "age_band": "4-6"},
+        )
+        second = await client.post(
+            "/chat",
+            json={"message": "다친 곳은 없고 지금은 집이야.", "age_band": "4-6"},
+        )
+        saved = (await client.get("/conversation")).json()["messages"]
+
+    assert first.json()["answer"] == ANSWER_PROFILE.fallbacks["support"]
+    assert first.json()["provider"] == "luna"
+    assert second.json()["provider"] == "luna"
+    assert second.json()["action"] == "support"
+    assert second.json()["answer"] != first.json()["answer"]
+    assert len(calls) == 4
+    assert all("action" not in message for call in calls for message in call["input"])
+    assert all("provider" not in message for call in calls for message in call["input"])
+    assert all("action" not in message for message in saved)
+
+
 async def test_anonymous_session_history_isolation_clear_and_csrf():
     settings = configuration(allowed_origins="http://test")
     inspected = []

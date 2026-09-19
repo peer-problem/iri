@@ -83,17 +83,30 @@ class ChatService:
         self.profile = provider.settings.behavior_profile
 
     async def respond(
-        self, age: AgeBand, history: list[dict[str, str]]
+        self,
+        age: AgeBand,
+        history: list[dict[str, str]],
+        *,
+        previous_action: str | None = None,
     ) -> tuple[str, str]:
         # The service receives server-constructed history, never arbitrary API roles.
+        continuing_support = previous_action == "support" or any(
+            message["role"] == "assistant"
+            and message["content"] == FALLBACKS["support"]
+            for message in history[:-1]
+        )
+        deterministic_support = False
         if self.profile in {"kanana_v4", "kanana_v5"}:
             deterministic = deterministic_input_decision(history)
             if deterministic == "allow":
                 deterministic = None
             if deterministic == "support":
-                return support_response(history), "support"
+                if not continuing_support:
+                    return support_response(history), "support"
+                deterministic_support = True
             if deterministic is not None:
-                return FALLBACKS[deterministic], deterministic
+                if deterministic != "support":
+                    return FALLBACKS[deterministic], deterministic
         input_messages = input_guard_messages(
             age,
             history,
@@ -102,25 +115,28 @@ class ChatService:
         )
         stage = "input_guard"
         try:
-            verdict = InputVerdict.model_validate_json(
-                await self.provider.complete(
-                    input_messages,
-                    max_tokens=80,
-                    guard=True,
-                    response_schema=InputVerdict.model_json_schema(),
+            verdict = (
+                InputVerdict(decision="support")
+                if deterministic_support
+                else InputVerdict.model_validate_json(
+                    await self.provider.complete(
+                        input_messages,
+                        max_tokens=80,
+                        guard=True,
+                        response_schema=InputVerdict.model_json_schema(),
+                    )
                 )
-            )
-            continuing_support = verdict.decision == "support" and any(
-                message["role"] == "assistant"
-                and message["content"] == FALLBACKS["support"]
-                for message in history[:-1]
             )
             support = verdict.decision == "support" and (
                 self.profile
                 in {"support_v2", "full_v2", "kanana_v3", "kanana_v4", "kanana_v5"}
                 or continuing_support
             )
-            if support and self.profile in {"kanana_v3", "kanana_v4", "kanana_v5"}:
+            if (
+                support
+                and not continuing_support
+                and self.profile in {"kanana_v3", "kanana_v4", "kanana_v5"}
+            ):
                 return support_response(history), "support"
             if verdict.decision != "allow" and not support:
                 return FALLBACKS[verdict.decision], verdict.decision

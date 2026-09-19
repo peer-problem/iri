@@ -490,3 +490,80 @@ async def test_baseline_support_followup_continues_without_repeating_check_in(ou
     )
     assert answer == expected
     assert answer != FALLBACKS["support"]
+
+
+@pytest.mark.parametrize("profile", ["kanana_v3", "kanana_v4", "kanana_v5"])
+@pytest.mark.parametrize("output_decision", ["allow", "block"])
+async def test_kanana_support_followup_continues_without_repeating_check_in(
+    profile, output_decision
+):
+    settings = configuration(behavior_profile=profile)
+    responses = iter(
+        [
+            '{"decision":"support"}',
+            "지금은 안전하구나. 다시 위험해지면 가까운 어른에게 바로 알려 줘.",
+            json.dumps({"decision": output_decision}),
+        ]
+    )
+    calls = []
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        return completion(next(responses), settings)
+
+    history = [
+        {"role": "user", "content": "친구가 나를 때렸는데 말하지 말래."},
+        {"role": "assistant", "content": "검수된 첫 안전 확인 답변"},
+        {"role": "user", "content": "다친 곳은 없고 지금은 집이야."},
+    ]
+    from api.app.provider import ModelProvider
+    from api.app.service import ChatService
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        answer, action = await ChatService(ModelProvider(settings, client)).respond(
+            "4-6", history, previous_action="support"
+        )
+
+    assert len(calls) == 3
+    assert action == "support"
+    expected = (
+        "지금은 안전하구나. 다시 위험해지면 가까운 어른에게 바로 알려 줘."
+        if output_decision == "allow"
+        else FALLBACKS["support_followup"]
+    )
+    assert answer == expected
+    assert answer != FALLBACKS["support"]
+
+
+@pytest.mark.parametrize("profile", ["kanana_v4", "kanana_v5"])
+async def test_deterministic_support_followup_uses_checked_generation(profile):
+    settings = configuration(behavior_profile=profile)
+    responses = iter(
+        [
+            "그건 네 잘못이 아니야. 지금 마음이 어떤지 더 말해 줘도 돼.",
+            '{"decision":"allow"}',
+        ]
+    )
+    calls = []
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        return completion(next(responses), settings)
+
+    history = [
+        {"role": "user", "content": "무서운 일이 있었어."},
+        {"role": "assistant", "content": FALLBACKS["support"]},
+        {"role": "user", "content": "부모님이 따로 살면 내 잘못이야?"},
+    ]
+    from api.app.provider import ModelProvider
+    from api.app.service import ChatService
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        answer, action = await ChatService(ModelProvider(settings, client)).respond(
+            "4-6", history, previous_action="support"
+        )
+
+    assert len(calls) == 2
+    assert action == "support"
+    assert answer != FALLBACKS["support"]
+    assert "가해자로 지목된 사람" in calls[0]["messages"][0]["content"]

@@ -63,17 +63,21 @@ class RoutedChatService:
         self.fallback = LunaProvider(primary.settings, primary.client)
         self.retry_at = 0.0
 
-    async def respond(self, age, history):
+    async def respond(self, age, history, *, previous_action=None):
         has_fallback = bool(self.primary.settings.openai_api_key.get_secret_value())
         # Preserve the existing API's direct-model behavior when cloud fallback is disabled.
         if not has_fallback:
-            answer, action = await ChatService(self.primary).respond(age, history)
+            answer, action = await ChatService(self.primary).respond(
+                age, history, previous_action=previous_action
+            )
             return answer, action, "kanana"
         if time.monotonic() >= self.retry_at:
             try:
                 async with asyncio.timeout(self.primary.settings.primary_timeout_seconds):
                     if await self.primary.ready():
-                        answer, action = await ChatService(self.primary).respond(age, history)
+                        answer, action = await ChatService(self.primary).respond(
+                            age, history, previous_action=previous_action
+                        )
                         return answer, action, "kanana"
             except (ModelUnavailable, TimeoutError) as exc:
                 logger.warning(
@@ -82,5 +86,7 @@ class RoutedChatService:
                     getattr(exc, "stage", None),
                 )
             self.retry_at = time.monotonic() + 15
-        answer, action = await ChatService(self.fallback).respond(age, history)
+        answer, action = await ChatService(self.fallback).respond(
+            age, history, previous_action=previous_action
+        )
         return answer, action, "luna"
