@@ -6,6 +6,7 @@ import { ApiError, jsonRequest, request } from "./api";
 import { PcmStreamPlayer } from "./pcm";
 import { parseProvider } from "./provider";
 import type { Provider } from "./provider";
+import { consumeVerifiedSpeech, sha256Hex } from "./speech-stream";
 
 export type Phase =
   | "idle"
@@ -25,7 +26,7 @@ export type Message = {
 
 type AudioClip =
   | { format: "pcm"; bytes: ArrayBuffer }
-  | { format: "mp3"; bytes: ArrayBuffer; url: string };
+  | { format: "wav"; bytes: ArrayBuffer; url: string };
 
 export const phaseLabels: Record<Phase, string> = {
   idle: "이야기할 준비가 됐어요",
@@ -160,7 +161,7 @@ export function useVoiceConversation() {
 
   function clearAudio() {
     audioClips.current.forEach((clip) => {
-      if (clip.format === "mp3") URL.revokeObjectURL(clip.url);
+      if (clip.format === "wav") URL.revokeObjectURL(clip.url);
     });
     audioClips.current.clear();
   }
@@ -171,7 +172,7 @@ export function useVoiceConversation() {
     const oldest = audioClips.current.keys().next().value;
     if (!oldest) return;
     const previous = audioClips.current.get(oldest);
-    if (previous?.format === "mp3") URL.revokeObjectURL(previous.url);
+    if (previous?.format === "wav") URL.revokeObjectURL(previous.url);
     audioClips.current.delete(oldest);
   }
 
@@ -240,12 +241,12 @@ export function useVoiceConversation() {
     setPlaybackMessageId(null);
   }
 
-  function preparePlayback() {
+  async function preparePlayback() {
     try {
       const context = playbackContext.current ?? new AudioContext();
       playbackContext.current = context;
       ensurePlaybackAnalyser(context);
-      if (context.state === "suspended") void context.resume().catch(() => {});
+      if (context.state === "suspended") await context.resume();
       const silent = context.createBufferSource();
       silent.buffer = context.createBuffer(1, 1, context.sampleRate);
       silent.connect(context.destination);
@@ -283,7 +284,7 @@ export function useVoiceConversation() {
   }
 
   async function speak(message: Message, userGesture = false) {
-    if (userGesture) preparePlayback();
+    if (userGesture) await preparePlayback();
     stopPlayback();
     const attempt = playbackAttempt.current;
     setPlaybackMessageId(message.id);
@@ -302,7 +303,6 @@ export function useVoiceConversation() {
           { text: message.text },
           AbortSignal.any([abort.signal, AbortSignal.timeout(65_000)]),
         );
-        if (!response.body) throw new Error("Streaming is unavailable");
         const player = new PcmStreamPlayer(
           context,
           () => {
@@ -315,21 +315,24 @@ export function useVoiceConversation() {
           destination,
         );
         pcmPlayer.current = player;
-        const reader = response.body.getReader();
-        while (true) {
-          const { done, value } = await reader.read();
+        const completion = await consumeVerifiedSpeech(response, (value) => {
           if (playbackAttempt.current !== attempt) {
-            await reader.cancel();
-            return;
+            throw new DOMException("Playback stopped", "AbortError");
           }
-          if (done) break;
           player.push(value);
           if (player.hasStarted) {
             syntheticSpeechStarted.current = performance.now();
             setPhase("speaking");
           }
-        }
+        });
+        if (playbackAttempt.current !== attempt) return;
         const bytes = player.finish();
+        if (
+          bytes.byteLength !== completion.bytes ||
+          (await sha256Hex(bytes)) !== completion.sha256
+        ) {
+          throw new Error("Incomplete audio");
+        }
         cacheAudio(message.id, { format: "pcm", bytes });
         playbackAbort.current = null;
         return;
@@ -341,9 +344,9 @@ export function useVoiceConversation() {
         const bytes = await response.arrayBuffer();
         if (playbackAttempt.current !== attempt) return;
         clip = {
-          format: "mp3",
+          format: "wav",
           bytes,
-          url: URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" })),
+          url: URL.createObjectURL(new Blob([bytes], { type: "audio/wav" })),
         };
         cacheAudio(message.id, clip);
       }
@@ -369,7 +372,7 @@ export function useVoiceConversation() {
         return;
       }
 
-      if (clip.format !== "mp3") throw new Error("Audio playback is unavailable");
+      if (clip.format !== "wav") throw new Error("Audio playback is unavailable");
       if (context?.state === "running" && destination) {
         try {
           const buffer = await context.decodeAudioData(clip.bytes.slice(0));
@@ -438,7 +441,7 @@ export function useVoiceConversation() {
     event?.preventDefault();
     if (!draft.trim() || busy) return;
     const question = draft.trim();
-    if (autoRead) preparePlayback();
+    if (autoRead) await preparePlayback();
     stopPlayback();
     setPhase("thinking");
     setError("");

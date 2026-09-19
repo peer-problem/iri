@@ -3,7 +3,7 @@ import json
 import httpx
 
 from api.tests.test_api import KEY, api, completion, configuration
-from api.tests.test_speech import MP3
+from api.tests.test_speech import PCM, speech_events
 
 
 async def test_transcript_to_guarded_answer_to_speech():
@@ -16,7 +16,8 @@ async def test_transcript_to_guarded_answer_to_speech():
     def handler(request):
         called.append(request.url.path)
         if request.url.path == "/v1/audio/transcriptions":
-            return httpx.Response(200, json={"text": transcript})
+            generated = "/v1/audio/speech" in called[:-1]
+            return httpx.Response(200, json={"text": answer if generated else transcript})
         if request.url.path == "/v1/models":
             return httpx.Response(200, json={"data": [{"id": settings.served_model}]})
         body = json.loads(request.content)
@@ -27,7 +28,7 @@ async def test_transcript_to_guarded_answer_to_speech():
         assert body["input"] == answer
         assert body["voice"] == "coral"
         assert body["speed"] == 0.95
-        return httpx.Response(200, content=MP3)
+        return httpx.Response(200, content=speech_events())
 
     async with api(handler, settings) as client:
         headers = {"Authorization": f"Bearer {KEY}"}
@@ -48,6 +49,13 @@ async def test_transcript_to_guarded_answer_to_speech():
         assert chat.json()["action"] == "answer"
         spoken = await client.post("/speech", headers=headers, json={"text": chat.json()["answer"]})
         assert spoken.status_code == 200
-        assert spoken.content == MP3
-        assert spoken.headers["content-type"] == "audio/mpeg"
-    assert called == ["/v1/audio/transcriptions", "/v1/models", *["/v1/chat/completions"] * 3, "/v1/audio/speech"]
+        assert spoken.content.startswith(b"RIFF")
+        assert spoken.content.endswith(PCM)
+        assert spoken.headers["content-type"] == "audio/wav"
+    assert called == [
+        "/v1/audio/transcriptions",
+        "/v1/models",
+        *["/v1/chat/completions"] * 3,
+        "/v1/audio/speech",
+        "/v1/audio/transcriptions",
+    ]

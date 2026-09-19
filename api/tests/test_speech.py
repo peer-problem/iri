@@ -1,4 +1,6 @@
+import base64
 import json
+import logging
 from contextlib import asynccontextmanager
 
 import httpx
@@ -10,8 +12,29 @@ from api.app.settings import Settings
 
 KEY = "test-only-api-key-" + "x" * 32
 OPENAI_KEY = "test-only-openai-key"
-MP3 = b"ID3" + b"\x00" * 64
 PCM = b"\x00\x00\x01\x00\xff\x7f\x00\x80"
+
+
+def speech_events(pcm=PCM, *, done=True):
+    events = [
+        {
+            "type": "speech.audio.delta",
+            "audio": base64.b64encode(pcm).decode(),
+        }
+    ]
+    if done:
+        events.append({"type": "speech.audio.done"})
+    return "".join(f"data: {json.dumps(event)}\n\n" for event in events).encode()
+
+
+def parse_sse(content: bytes):
+    parsed = []
+    for block in content.decode().strip().split("\n\n"):
+        lines = block.splitlines()
+        name = next(line[7:] for line in lines if line.startswith("event: "))
+        data = json.loads(next(line[6:] for line in lines if line.startswith("data: ")))
+        parsed.append((name, data))
+    return parsed
 
 
 def configuration(**updates):
@@ -67,48 +90,29 @@ async def test_invalid_speech_request_does_not_echo(payload):
     assert response.json() == {"detail": "Invalid request"}
 
 
-async def test_speech_returns_mp3_with_configured_voice():
+async def test_speech_returns_verified_wav_with_configured_voice():
     seen = {}
 
     def handler(request):
-        seen["url"] = str(request.url)
-        seen["auth"] = request.headers["authorization"]
-        seen["body"] = json.loads(request.content)
-        return httpx.Response(200, content=MP3, headers={"content-type": "audio/mpeg"})
+        if request.url.path == "/v1/audio/speech":
+            seen["url"] = str(request.url)
+            seen["auth"] = request.headers["authorization"]
+            seen["body"] = json.loads(request.content)
+            return httpx.Response(200, content=speech_events())
+        seen["transcribed"] = True
+        return httpx.Response(200, json={"text": "안녕!"})
 
     async with api(handler) as client:
         response = await speak(client, "안녕!")
     assert response.status_code == 200
-    assert response.headers["content-type"] == "audio/mpeg"
+    assert response.headers["content-type"] == "audio/wav"
     assert response.headers["cache-control"] == "no-store"
-    assert response.content == MP3
+    assert response.content.startswith(b"RIFF")
+    assert response.content[8:12] == b"WAVE"
+    assert response.content.endswith(PCM)
     assert seen["url"] == "https://api.openai.com/v1/audio/speech"
     assert seen["auth"] == f"Bearer {OPENAI_KEY}"
-    assert seen["body"] == {
-        "model": "gpt-4o-mini-tts-2025-12-15",
-        "voice": "coral",
-        "input": "안녕!",
-        "instructions": configuration().tts_instructions,
-        "speed": 0.95,
-        "response_format": "mp3",
-    }
-
-
-async def test_speech_stream_returns_pcm_with_same_voice_profile():
-    seen = {}
-
-    def handler(request):
-        seen["body"] = json.loads(request.content)
-        return httpx.Response(200, content=PCM, headers={"content-type": "application/octet-stream"})
-
-    async with api(handler) as client:
-        response = await client.post(
-            "/speech-stream", headers={"Authorization": f"Bearer {KEY}"}, json={"text": "안녕!"}
-        )
-    assert response.status_code == 200
-    assert response.headers["content-type"] == "application/octet-stream"
-    assert response.headers["x-audio-format"] == "pcm_s16le;rate=24000;channels=1"
-    assert response.content == PCM
+    assert seen["transcribed"] is True
     assert seen["body"] == {
         "model": "gpt-4o-mini-tts-2025-12-15",
         "voice": "coral",
@@ -116,7 +120,119 @@ async def test_speech_stream_returns_pcm_with_same_voice_profile():
         "instructions": configuration().tts_instructions,
         "speed": 0.95,
         "response_format": "pcm",
+        "stream_format": "sse",
     }
+
+
+async def test_speech_metrics_exclude_text_and_credentials(caplog):
+    sensitive_text = "로그에 남으면 안 되는 마지막 문장이야."
+
+    def handler(request):
+        if request.url.path == "/v1/audio/speech":
+            return httpx.Response(200, content=speech_events())
+        return httpx.Response(200, json={"text": sensitive_text})
+
+    with caplog.at_level(logging.INFO, logger="api.app.app"):
+        async with api(handler) as client:
+            response = await speak(client, sensitive_text)
+
+    assert response.status_code == 200
+    records = [
+        record.getMessage()
+        for record in caplog.records
+        if "speech_request" in record.getMessage()
+    ]
+    assert len(records) == 1
+    assert "mode=wav" in records[0]
+    assert f"chars={len(sensitive_text)}" in records[0]
+    assert "segments=1" in records[0]
+    assert f"bytes={len(PCM)}" in records[0]
+    assert "retries=0" in records[0]
+    assert "completed=true code=ok" in records[0]
+    assert sensitive_text not in records[0]
+    assert OPENAI_KEY not in records[0]
+
+
+async def test_speech_stream_returns_verified_pcm_events_with_same_voice_profile():
+    seen = {}
+
+    def handler(request):
+        if request.url.path == "/v1/audio/speech":
+            seen["body"] = json.loads(request.content)
+            return httpx.Response(200, content=speech_events())
+        return httpx.Response(200, json={"text": "안녕!"})
+
+    async with api(handler) as client:
+        response = await client.post(
+            "/speech-stream", headers={"Authorization": f"Bearer {KEY}"}, json={"text": "안녕!"}
+    )
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/event-stream")
+    assert response.headers["x-audio-format"] == "pcm_s16le;rate=24000;channels=1"
+    assert response.headers["x-accel-buffering"] == "no"
+    events = parse_sse(response.content)
+    assert [name for name, _ in events] == [
+        "audio.started",
+        "audio.delta",
+        "audio.segment_done",
+        "audio.done",
+    ]
+    assert base64.b64decode(events[1][1]["audio"]) == PCM
+    assert events[-1][1]["bytes"] == len(PCM)
+    assert events[-1][1]["segments"] == 1
+    assert seen["body"] == {
+        "model": "gpt-4o-mini-tts-2025-12-15",
+        "voice": "coral",
+        "input": "안녕!",
+        "instructions": configuration().tts_instructions,
+        "speed": 0.95,
+        "response_format": "pcm",
+        "stream_format": "sse",
+    }
+
+
+async def test_speech_stream_reports_later_semantic_failure_without_done(caplog):
+    transcripts = iter(
+        [
+            "첫 번째 문장은 끝까지 정확하게 읽어 줘.",
+            "마지막 절 앞에서",
+            "마지막 절 앞에서",
+        ]
+    )
+
+    def handler(request):
+        if request.url.path == "/v1/audio/speech":
+            return httpx.Response(200, content=speech_events())
+        return httpx.Response(200, json={"text": next(transcripts)})
+
+    with caplog.at_level(logging.WARNING, logger="api.app.app"):
+        async with api(handler, configuration(tts_segment_max_chars=30)) as client:
+            response = await client.post(
+                "/speech-stream",
+                headers={"Authorization": f"Bearer {KEY}"},
+                json={
+                    "text": "첫 번째 문장은 끝까지 정확하게 읽어 줘. 마지막 절까지 말해도 돼."
+                },
+            )
+
+    events = parse_sse(response.content)
+    assert response.status_code == 200
+    assert events[-1] == (
+        "audio.error",
+        {"requestId": response.headers["x-request-id"], "code": "incomplete"},
+    )
+    assert "audio.done" not in [name for name, _ in events]
+    records = [
+        record.getMessage()
+        for record in caplog.records
+        if "speech_request" in record.getMessage()
+    ]
+    assert len(records) == 1
+    assert "mode=stream" in records[0]
+    assert "segments=1" in records[0]
+    assert f"bytes={len(PCM)}" in records[0]
+    assert "completed=false code=incomplete" in records[0]
+    assert "첫 번째 문장은" not in records[0]
 
 
 async def test_missing_openai_key_is_unavailable_without_call():
