@@ -17,7 +17,6 @@ def main():
         "ADAPTER_REVISION=0880ce0372cedf22aec91b190f8a7b9499ccc176\n"
         "ADAPTER_SHA256=0ecacdb7d7f743652a24ff7b7e7c59d0e2ae238e63476e64b2d6d95e8fbe2e02\n"
         "BEHAVIOR_PROFILE=kanana_v5\n"
-        "ALLOW_DEV_ACCESS_CODE=true\n"
         "HF_TOKEN=\n"
         "RUNPOD_API_KEY=\n"
         "OPENAI_API_KEY=\n"

@@ -13,12 +13,17 @@ from starlette.requests import ClientDisconnect
 
 from api.app.provider import ModelProvider, ModelUnavailable
 from api.app.routing import RoutedChatService
-from api.app.schemas import ChatRequest, ChatResponse, LoginRequest, SpeechRequest
+from api.app.schemas import ChatRequest, ChatResponse, SpeechRequest
 from api.app.service import FALLBACKS, QueueFull, RequestGate
 from api.app.sessions import COOKIE, TTL, Sessions
 from api.app.settings import Settings
 from api.app.speech import SpeechUnavailable, Synthesizer
-from api.app.transcription import FORMATS, NoSpeechDetected, Transcriber, TranscriptionUnavailable
+from api.app.transcription import (
+    FORMATS,
+    NoSpeechDetected,
+    Transcriber,
+    TranscriptionUnavailable,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -54,58 +59,59 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
     app = FastAPI(title="Kids Sandbox: internal Phase 1 API", lifespan=lifespan)
     bearer = HTTPBearer(auto_error=False)
 
-    async def authenticate(
+    async def access(
         request: Request,
         credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
     ):
         expected = settings.sandbox_api_key.get_secret_value()
         request.state.demo_session = None
-        if expected and credentials and secrets.compare_digest(
-            credentials.credentials.encode(), expected.encode()
-        ):
-            return
+        request.state.session_token = None
+        if credentials:
+            if expected and secrets.compare_digest(
+                credentials.credentials.encode(), expected.encode()
+            ):
+                return
+            raise HTTPException(
+                401,
+                "Invalid API credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
         session = sessions.lookup(request)
-        if session:
-            if request.method not in {"GET", "HEAD"}:
-                sessions.origin(request)
-                sessions.limit(session, request)
+        if request.method in {"GET", "HEAD"}:
             request.state.demo_session = session
             return
-        raise HTTPException(401, "Authentication required", headers={"WWW-Authenticate": "Bearer"})
+        sessions.origin(request)
+        if session is None:
+            session, token = sessions.create(request)
+            request.state.session_token = token
+        sessions.limit(session, request)
+        request.state.demo_session = session
 
     @app.middleware("http")
     async def private_responses(request: Request, call_next):
         response = await call_next(request)
         response.headers["Cache-Control"] = "no-store"
         response.headers["X-Content-Type-Options"] = "nosniff"
+        token = getattr(request.state, "session_token", None)
+        if token:
+            response.set_cookie(
+                COOKIE,
+                token,
+                max_age=TTL,
+                httponly=True,
+                secure=settings.secure_cookies,
+                samesite="lax",
+                path="/",
+            )
         return response
 
-    @app.post("/session")
-    async def login(body: LoginRequest, request: Request):
-        token = sessions.login(request, body.code)
-        response = JSONResponse({"authenticated": True})
-        response.set_cookie(COOKIE, token, max_age=TTL, httponly=True,
-                            secure=settings.secure_cookies, samesite="lax", path="/")
-        return response
-
-    @app.get("/session", dependencies=[Depends(authenticate)])
-    async def session_status():
-        return {"authenticated": True, "voice_available": bool(settings.openai_api_key.get_secret_value())}
-
-    @app.delete("/session", dependencies=[Depends(authenticate)])
-    async def logout(request: Request):
-        sessions.logout(request)
-        response = JSONResponse({"authenticated": False})
-        response.delete_cookie(COOKIE, path="/", secure=settings.secure_cookies, httponly=True, samesite="lax")
-        return response
-
-    @app.delete("/conversation", dependencies=[Depends(authenticate)])
+    @app.delete("/conversation", dependencies=[Depends(access)])
     async def clear_conversation(request: Request):
         if request.state.demo_session:
             request.state.demo_session.history.clear()
         return {"cleared": True}
 
-    @app.get("/conversation", dependencies=[Depends(authenticate)])
+    @app.get("/conversation", dependencies=[Depends(access)])
     async def conversation(request: Request):
         session = request.state.demo_session
         return {
@@ -134,7 +140,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             ),
         }
 
-    @app.get("/ready", dependencies=[Depends(authenticate)])
+    @app.get("/ready", dependencies=[Depends(access)])
     async def ready():
         if not await app.state.provider.ready():
             return JSONResponse(status_code=503, content={"status": "not_ready"})
@@ -145,7 +151,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             "adapter_sha256": settings.adapter_sha256 or None,
         }
 
-    @app.post("/transcribe", dependencies=[Depends(authenticate)])
+    @app.post("/transcribe", dependencies=[Depends(access)])
     async def transcribe(request: Request):
         """Upload raw audio bytes; explicitly confirm the transcript before POST /chat."""
         if request.headers.get("x-audio-consent") != "true":
@@ -180,7 +186,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
         except (ValueError, ClientDisconnect):
             raise HTTPException(400, "Invalid audio") from None
 
-    @app.post("/chat", response_model=ChatResponse, dependencies=[Depends(authenticate)])
+    @app.post("/chat", response_model=ChatResponse, dependencies=[Depends(access)])
     async def chat(body: ChatRequest, request: Request):
         request_id = uuid4()
         try:
@@ -237,7 +243,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
             ).model_dump(mode="json"),
         )
 
-    @app.post("/speech", dependencies=[Depends(authenticate)])
+    @app.post("/speech", dependencies=[Depends(access)])
     async def speech(body: SpeechRequest, request: Request):
         """Read an answer from POST /chat aloud. Returns MP3 bytes."""
         session = request.state.demo_session
@@ -267,7 +273,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
         except ValueError:
             raise HTTPException(413, "Text is too long") from None
 
-    @app.post("/speech-stream", dependencies=[Depends(authenticate)])
+    @app.post("/speech-stream", dependencies=[Depends(access)])
     async def speech_stream(body: SpeechRequest, request: Request):
         """Stream 24 kHz, mono, signed 16-bit little-endian PCM speech."""
         session = request.state.demo_session

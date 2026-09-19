@@ -20,11 +20,6 @@ class ChatResponse(BaseModel):
     provider: Literal["kanana", "luna", "unavailable"] = "kanana"
 
 
-class LoginRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    code: str = Field(min_length=1, max_length=200)
-
-
 class SpeechRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     text: str = Field(min_length=1, max_length=1000)

@@ -50,13 +50,26 @@ async def post(client, message="비는 왜 내려?", **kwargs):
     )
 
 
-async def test_authentication_is_required_before_model_call():
-    def unexpected(_request):
-        pytest.fail("Must not call model without authentication")
+async def test_anonymous_browser_can_chat_without_preflight_token():
+    settings = configuration()
+    answers = iter(
+        ['{"decision":"allow"}', "안녕! 무엇이 궁금해?", '{"decision":"allow"}']
+    )
 
-    async with api(unexpected) as client:
-        response = await client.post("/chat", json={"age_band": "4-6", "message": "안녕"})
-    assert response.status_code == 401
+    async with api(lambda _: completion(next(answers), settings), settings) as client:
+        landing = await client.get("/conversation")
+        assert landing.status_code == 200
+        assert landing.json()["messages"] == []
+        assert "set-cookie" not in landing.headers
+        assert client.cookies.get("iri_session") is None
+
+        response = await client.post(
+            "/chat", json={"age_band": "4-6", "message": "안녕"}
+        )
+
+    assert response.status_code == 200
+    assert response.json()["answer"] == "안녕! 무엇이 궁금해?"
+    assert "HttpOnly" in response.headers["set-cookie"]
 
 
 @pytest.mark.parametrize(
@@ -282,7 +295,7 @@ async def test_ready_checks_actual_model_alias():
 
 
 async def test_session_provider_metadata_is_not_sent_back_to_the_model():
-    settings = configuration(demo_access_code="test-code")
+    settings = configuration()
     calls = []
     answers = iter(
         [
@@ -300,7 +313,6 @@ async def test_session_provider_metadata_is_not_sent_back_to_the_model():
         return completion(next(answers), settings)
 
     async with api(handler, settings) as client:
-        await client.post("/session", json={"code": "test-code"})
         await client.post("/chat", json={"message": "첫 질문", "age_band": "4-6"})
         await client.post("/chat", json={"message": "둘째 질문", "age_band": "4-6"})
         saved = (await client.get("/conversation")).json()["messages"]

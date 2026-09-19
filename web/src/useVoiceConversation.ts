@@ -38,10 +38,6 @@ export const phaseLabels: Record<Phase, string> = {
 };
 
 export function useVoiceConversation() {
-  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
-  const [code, setCode] = useState("");
-  const [loginBusy, setLoginBusy] = useState(false);
-  const [loginError, setLoginError] = useState("");
   const [age, setAge] = useState("4-6");
   const [autoRead, setAutoRead] = useState(true);
   const [consented, setConsented] = useState(false);
@@ -127,9 +123,8 @@ export function useVoiceConversation() {
   }, [phase]);
 
   useEffect(() => {
-    request("/session")
-      .then(async () => {
-        const response = await request("/conversation");
+    request("/conversation")
+      .then(async (response) => {
         const saved = await response.json();
         setAge(saved.age_band);
         setMessages(
@@ -147,9 +142,8 @@ export function useVoiceConversation() {
             }),
           ),
         );
-        setAuthenticated(true);
       })
-      .catch(() => setAuthenticated(false));
+      .catch(fail);
 
     return () => {
       cancelRecording();
@@ -257,37 +251,12 @@ export function useVoiceConversation() {
   }
 
   function fail(reason: unknown) {
-    if (reason instanceof ApiError && reason.status === 401) {
-      setAuthenticated(false);
-      setMessages([]);
-      clearAudio();
-    }
     setError(
       reason instanceof ApiError
         ? reason.message
         : "연결을 확인한 뒤 다시 시도해 주세요.",
     );
     setPhase("idle");
-  }
-
-  async function login(event: FormEvent) {
-    event.preventDefault();
-    setLoginBusy(true);
-    setLoginError("");
-    try {
-      await jsonRequest("/session", { code });
-      setAuthenticated(true);
-      setCode("");
-      setError("");
-    } catch (reason) {
-      setLoginError(
-        reason instanceof ApiError && reason.status === 401
-          ? "참여 코드가 맞는지 확인해 주세요."
-          : "잠시 후 다시 시도해 주세요.",
-      );
-    } finally {
-      setLoginBusy(false);
-    }
   }
 
   async function newConversation(nextAge?: string) {
@@ -305,25 +274,6 @@ export function useVoiceConversation() {
     } catch (reason) {
       fail(reason);
     }
-  }
-
-  async function logout() {
-    try {
-      await request("/session", { method: "DELETE" });
-    } catch (reason) {
-      if (!(reason instanceof ApiError && reason.status === 401)) {
-        fail(reason);
-        return;
-      }
-    }
-    cancelRecording();
-    stopPlayback();
-    clearAudio();
-    setMessages([]);
-    setDraft("");
-    setAuthenticated(false);
-    setSettingsOpen(false);
-    setPhase("idle");
   }
 
   async function speak(message: Message, userGesture = false) {
@@ -631,12 +581,6 @@ export function useVoiceConversation() {
   }
 
   return {
-    authenticated,
-    code,
-    setCode,
-    loginBusy,
-    loginError,
-    login,
     age,
     autoRead,
     setAutoRead,
@@ -663,7 +607,6 @@ export function useVoiceConversation() {
     signal,
     busy,
     newConversation,
-    logout,
     speak,
     send,
     startRecording,

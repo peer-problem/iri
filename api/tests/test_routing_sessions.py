@@ -81,8 +81,8 @@ async def test_fallback_never_releases_unchecked_answer(verdict):
     assert 'PRIVATE_UNCHECKED' not in response.text
 
 
-async def test_demo_session_history_isolation_clear_logout_and_csrf():
-    settings = configuration(demo_access_code="test-code", allowed_origins="http://test")
+async def test_anonymous_session_history_isolation_clear_and_csrf():
+    settings = configuration(allowed_origins="http://test")
     inspected = []
 
     def handler(request):
@@ -93,11 +93,14 @@ async def test_demo_session_history_isolation_clear_logout_and_csrf():
         return completion('안녕! 함께 이야기하자.', settings)
 
     async with api(handler, settings) as client:
-        assert (await client.post('/session', json={"code": "wrong"})).status_code == 401
-        login = await client.post('/session', json={"code": "test-code"})
-        assert login.status_code == 200 and 'HttpOnly' in login.headers['set-cookie']
+        landing = await client.get('/conversation')
+        assert landing.status_code == 200
+        assert landing.json()['messages'] == []
+        assert 'set-cookie' not in landing.headers
+        assert client.cookies.get('iri_session') is None
+        first = await client.post('/chat', json={"message": "첫 질문", "age_band": "4-6"})
+        assert first.status_code == 200 and 'HttpOnly' in first.headers['set-cookie']
         first_cookie = client.cookies.get('iri_session')
-        assert (await client.post('/chat', json={"message": "첫 질문", "age_band": "4-6"})).status_code == 200
         assert (await client.post('/chat', json={"message": "다음 질문", "age_band": "4-6"})).status_code == 200
         assert '첫 질문' in inspected[-2] and '다음 질문' in inspected[-2]
         saved = await client.get('/conversation')
@@ -110,37 +113,43 @@ async def test_demo_session_history_isolation_clear_logout_and_csrf():
         assert (await client.delete('/conversation')).status_code == 200
         await client.post('/chat', json={"message": "새 질문", "age_band": "4-6"})
         assert '첫 질문' not in inspected[-2]
-        await client.post('/session', json={"code": "test-code"})
+        client.cookies.clear()
+        fresh = await client.get('/conversation')
+        assert fresh.json()['messages'] == []
+        assert 'set-cookie' not in fresh.headers
         await client.post('/chat', json={"message": "다른 사용자", "age_band": "4-6"})
         assert '새 질문' not in inspected[-2]
-        await client.delete('/session')
-        assert (await client.get('/session')).status_code == 401
+        assert (await client.get('/session')).status_code == 404
+        client.cookies.clear()
         client.cookies.set('iri_session', first_cookie)
-        assert (await client.get('/session')).status_code == 200
+        restored = await client.get('/conversation')
+        assert restored.status_code == 200
+        assert restored.json()['messages'][0]['content'] == '새 질문'
 
 
-async def test_dev_access_code_is_disabled_by_default_and_opt_in_for_local_development():
-    settings = configuration(demo_access_code="another-code")
-    async with api(lambda _: pytest.fail("No upstream call"), settings) as client:
-        login = await client.post('/session', json={"code": "dev"})
-        assert login.status_code == 401
-
-    settings = configuration(demo_access_code="", allow_dev_access_code=True)
-    async with api(lambda _: pytest.fail("No upstream call"), settings) as client:
-        login = await client.post('/session', json={"code": "dev"})
-        assert login.status_code == 200
-        assert 'HttpOnly' in login.headers['set-cookie']
-        assert (await client.get('/session')).status_code == 200
+async def test_anonymous_mutation_rejects_cross_origin_requests_without_creating_session():
+    async with api(lambda _: pytest.fail("No upstream call"), configuration()) as client:
+        response = await client.post(
+            '/chat',
+            json={"message": "질문", "age_band": "4-6"},
+            headers={"Origin": "https://evil.test"},
+        )
+    assert response.status_code == 403
+    assert 'set-cookie' not in response.headers
 
 
-async def test_login_rate_limit_and_cross_origin_protection():
-    async with api(lambda _: pytest.fail("No upstream call"), configuration(demo_access_code="test")) as client:
-        assert (await client.post('/session', json={"code": "test"}, headers={"Origin": "https://evil.test"})).status_code == 403
-        assert (await client.post('/session', json={"code": "dev"}, headers={"Origin": "https://evil.test"})).status_code == 403
-        for _ in range(10):
-            assert (await client.post('/session', json={"code": "wrong"})).status_code == 401
-        assert (await client.post('/session', json={"code": "test"})).status_code == 429
-        assert (await client.post('/session', json={"code": "dev"})).status_code == 429
+def test_anonymous_session_creation_is_rate_limited_per_ip():
+    from starlette.requests import Request
+
+    from api.app.sessions import SESSION_CREATE_LIMIT, Sessions
+
+    sessions = Sessions(configuration())
+    request = Request({"type": "http", "client": ("203.0.113.9", 9000), "headers": []})
+    for _ in range(SESSION_CREATE_LIMIT):
+        sessions.create(request)
+    with pytest.raises(Exception) as caught:
+        sessions.create(request)
+    assert getattr(caught.value, "status_code", None) == 429
 
 
 def test_ip_rate_limit_cannot_be_bypassed_with_fresh_sessions():

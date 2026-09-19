@@ -98,13 +98,11 @@ function Overlay({
   description,
   onClose,
   children,
-  persistent = false,
 }: {
   title: string;
   description?: string;
   onClose?: () => void;
   children: ReactNode;
-  persistent?: boolean;
 }) {
   const titleId = useId();
   return (
@@ -117,7 +115,7 @@ function Overlay({
       >
         <div className="overlay-heading">
           <h2 id={titleId}>{title}</h2>
-          {!persistent && onClose && (
+          {onClose && (
             <button className="plain-icon" onClick={onClose} aria-label="닫기">
               <CloseIcon />
             </button>
@@ -190,7 +188,7 @@ export default function App() {
         <button
           className="plain-icon"
           aria-label="새 이야기"
-          disabled={voice.busy || !voice.authenticated}
+          disabled={voice.busy}
           onClick={() => void voice.newConversation()}
         >
           <PlusIcon />
@@ -242,8 +240,7 @@ export default function App() {
             aria-pressed={voice.phase === "recording"}
             onClick={toggleMicrophone}
             disabled={
-              !voice.authenticated ||
-              (voice.busy && !["recording", "acquiring"].includes(voice.phase))
+              voice.busy && !["recording", "acquiring"].includes(voice.phase)
             }
           >
             {["recording", "acquiring"].includes(voice.phase) ? (
@@ -326,7 +323,7 @@ export default function App() {
             <button
               className="send-button"
               type="submit"
-              disabled={voice.busy || !voice.draft.trim() || !voice.authenticated}
+              disabled={voice.busy || !voice.draft.trim()}
               aria-label="확인하고 보내기"
             >
               <SendIcon />
@@ -354,53 +351,6 @@ export default function App() {
       <p className="powered">
         {providerLabel(voice.latestAnswer?.provider)}
       </p>
-
-      {voice.authenticated === false && (
-        <Overlay
-          title="이리와 이야기 시작하기"
-          description="보호자와 함께 참여 코드를 입력해 주세요."
-          persistent
-        >
-          <form className="overlay-form" onSubmit={voice.login}>
-            <input
-              type="text"
-              name="username"
-              autoComplete="username"
-              value="iri-participant"
-              readOnly
-              hidden
-            />
-            <label htmlFor="access-code">참여 코드</label>
-            <input
-              id="access-code"
-              name="access-code"
-              type="password"
-              autoComplete="current-password"
-              value={voice.code}
-              onChange={(event) => voice.setCode(event.target.value)}
-              required
-              aria-invalid={Boolean(voice.loginError)}
-              aria-describedby={voice.loginError ? "login-error" : undefined}
-            />
-            {voice.loginError && (
-              <p id="login-error" className="form-error" role="alert">
-                {voice.loginError}
-              </p>
-            )}
-            <p className="privacy-note">
-              대화는 최대 1시간 동안 서버 메모리에만 머물러요. 음성과 질문은
-              답변을 위해 외부 AI 서비스에서 처리돼요.
-            </p>
-            <button
-              className="solid-button"
-              type="submit"
-              disabled={voice.loginBusy || !voice.code}
-            >
-              {voice.loginBusy ? "확인하고 있어요" : "시작하기"}
-            </button>
-          </form>
-        </Overlay>
-      )}
 
       {voice.consentOpen && (
         <Overlay
@@ -458,13 +408,6 @@ export default function App() {
               onChange={(event) => voice.setAutoRead(event.target.checked)}
             />
           </label>
-          <button
-            className="logout-button"
-            onClick={() => void voice.logout()}
-            disabled={voice.busy}
-          >
-            대화 지우고 나가기
-          </button>
         </Overlay>
       )}
 

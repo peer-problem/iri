@@ -49,8 +49,6 @@ class Settings(BaseSettings):
     fallback_guard_reasoning_tokens: int = Field(default=768, ge=0, le=4096)
     fallback_generation_reasoning_tokens: int = Field(default=1152, ge=0, le=4096)
     primary_timeout_seconds: float = Field(default=15, gt=0, le=60)
-    demo_access_code: SecretStr = SecretStr("")
-    allow_dev_access_code: bool = False
     secure_cookies: bool = False
     allowed_origins: str = "http://127.0.0.1:5173,http://localhost:5173"
 

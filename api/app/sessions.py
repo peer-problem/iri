@@ -10,9 +10,8 @@ from fastapi import HTTPException, Request
 
 COOKIE = "iri_session"
 TTL = 3600
-DEV_ACCESS_CODE = "dev"
-LOGIN_WINDOW_SECONDS = 300
-LOGIN_LIMIT = 10
+SESSION_CREATE_WINDOW_SECONDS = 300
+SESSION_CREATE_LIMIT = 30
 CALL_WINDOW_SECONDS = 600
 SESSION_CALL_LIMIT = 90
 IP_CALL_LIMIT = 120
@@ -30,7 +29,7 @@ class Sessions:
     def __init__(self, settings):
         self.settings = settings
         self.items: dict[str, Session] = {}
-        self.attempts: dict[str, deque] = {}
+        self.creations_by_ip: dict[str, deque] = {}
         self.calls_by_ip: dict[str, deque] = {}
 
     @staticmethod
@@ -62,10 +61,10 @@ class Sessions:
     def prune(self):
         now = time.time()
         self.items = {key: session for key, session in self.items.items() if session.expires > now}
-        self.attempts = {
+        self.creations_by_ip = {
             key: events
-            for key, events in self.attempts.items()
-            if events and events[-1] > now - LOGIN_WINDOW_SECONDS
+            for key, events in self.creations_by_ip.items()
+            if events and events[-1] > now - SESSION_CREATE_WINDOW_SECONDS
         }
         self.calls_by_ip = {
             key: events
@@ -73,36 +72,29 @@ class Sessions:
             if events and events[-1] > now - CALL_WINDOW_SECONDS
         }
 
-    def login(self, request: Request, code: str):
-        self.origin(request)
+    def create(self, request: Request) -> tuple[Session, str]:
+        """Create a bounded anonymous session on the first state-changing request."""
         now = time.time()
-        is_dev_code = self.settings.allow_dev_access_code and secrets.compare_digest(
-            code.encode(), DEV_ACCESS_CODE.encode()
-        )
         ip = self.client_ip(request)
-        self.attempts = {
+        self.creations_by_ip = {
             key: value
-            for key, value in self.attempts.items()
-            if value and value[-1] > now - LOGIN_WINDOW_SECONDS
+            for key, value in self.creations_by_ip.items()
+            if value and value[-1] > now - SESSION_CREATE_WINDOW_SECONDS
         }
-        if ip not in self.attempts and len(self.attempts) >= 2000:
+        if ip not in self.creations_by_ip and len(self.creations_by_ip) >= 2000:
             raise HTTPException(429, "Try again later")
-        attempts = self.attempts.setdefault(ip, deque())
-        self.trim(attempts, now - LOGIN_WINDOW_SECONDS)
-        if len(attempts) >= LOGIN_LIMIT:
+        creations = self.creations_by_ip.setdefault(ip, deque())
+        self.trim(creations, now - SESSION_CREATE_WINDOW_SECONDS)
+        if len(creations) >= SESSION_CREATE_LIMIT:
             raise HTTPException(429, "Try again later", headers={"Retry-After": "300"})
-        attempts.append(now)
-        expected = self.settings.demo_access_code.get_secret_value()
-        if not is_dev_code and (
-            not expected or not secrets.compare_digest(code.encode(), expected.encode())
-        ):
-            raise HTTPException(401, "Invalid access code")
+        creations.append(now)
         self.items = {k: v for k, v in self.items.items() if v.expires > now}
         if len(self.items) >= 1000:
             raise HTTPException(429, "Demo is busy")
         token = secrets.token_urlsafe(32)
-        self.items[hashlib.sha256(token.encode()).hexdigest()] = Session(now + TTL)
-        return token
+        session = Session(now + TTL)
+        self.items[hashlib.sha256(token.encode()).hexdigest()] = session
+        return session, token
 
     def limit(self, session: Session, request: Request):
         now = time.time()
@@ -118,7 +110,3 @@ class Sessions:
             raise HTTPException(429, "Try again later", headers={"Retry-After": "60"})
         session.calls.append(now)
         calls.append(now)
-
-    def logout(self, request):
-        key = hashlib.sha256(request.cookies.get(COOKIE, "").encode()).hexdigest()
-        self.items.pop(key, None)

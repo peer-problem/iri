@@ -30,7 +30,7 @@ IRI is a research demo, not a safety-certified child product. The current model 
 
 ## Try the Demo
 
-Open **[iri-voice.vercel.app](https://iri-voice.vercel.app)** and use a participant code issued by the demo operator with a guardian. The fixed local development code is disabled in production.
+Open **[iri-voice.vercel.app](https://iri-voice.vercel.app)** with a guardian and start talking or typing. No account, participant code, or login step is required.
 
 The hosted GPU is normally stopped. When Kanana is unavailable, the API reruns the complete input, generation, and output-checking path with the configured Luna fallback. The demo never starts a GPU automatically.
 
@@ -170,7 +170,7 @@ Open [http://127.0.0.1:5173](http://127.0.0.1:5173). The API listens on `127.0.0
 
 ## Conversation API
 
-Internal clients authenticate with `Authorization: Bearer <SANDBOX_API_KEY>`. The browser uses an HttpOnly session cookie issued from a participant code. `.ops/run.sh` enables `dev` only for local development. Production requires `DEMO_ACCESS_CODE` and explicitly disables the local code.
+Internal clients authenticate with `Authorization: Bearer <SANDBOX_API_KEY>`. Browser access is anonymous. Opening the page only reads any existing conversation and does not issue a token. The first state-changing request creates a short-lived HttpOnly cookie automatically for conversation isolation, rate limits, and checked-answer speech playback.
 
 | Endpoint | Purpose |
 | --- | --- |
@@ -214,7 +214,7 @@ The v5 adapter had the lowest validation loss among the comparable three-epoch c
 | Boundary | Behavior |
 | --- | --- |
 | Conversation memory | Keeps the latest six turns in server memory for up to one hour. |
-| Deletion | New story, age change, and logout clear the active conversation context. |
+| Deletion | New story and age change clear the active conversation context. |
 | Audio | Recording is limited to 60 seconds. Audio is not stored by this application. |
 | Disk storage | The application does not persist recordings or conversations to disk. |
 | External processing | Audio and questions may be processed by configured external AI providers. |

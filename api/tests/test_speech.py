@@ -47,10 +47,11 @@ async def speak(client, text="비는 구름 속 물방울이 무거워져서 떨
     )
 
 
-async def test_authentication_is_required_before_tts_call():
-    async with api(lambda _: pytest.fail("Must not call TTS without authentication")) as client:
+async def test_anonymous_unchecked_text_is_rejected_before_tts_call():
+    async with api(lambda _: pytest.fail("Must not call TTS for unchecked text")) as client:
         response = await client.post("/speech", json={"text": "안녕"})
-    assert response.status_code == 401
+    assert response.status_code == 403
+    assert "HttpOnly" in response.headers["set-cookie"]
 
 
 @pytest.mark.parametrize(

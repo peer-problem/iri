@@ -22,7 +22,7 @@ export async function request(path: string, init: RequestInit = {}) {
     }
     const message =
       response.status === 401
-        ? "참여 코드를 다시 입력해 주세요."
+        ? "연결 정보를 확인한 뒤 페이지를 새로고침해 주세요."
         : response.status === 429
           ? "잠시 쉬었다가 다시 시도해 주세요."
           : response.status === 413
