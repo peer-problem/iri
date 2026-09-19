@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 from contextlib import asynccontextmanager
 
 import httpx
@@ -123,6 +124,35 @@ async def test_speech_returns_verified_wav_with_configured_voice():
     }
 
 
+async def test_speech_metrics_exclude_text_and_credentials(caplog):
+    sensitive_text = "로그에 남으면 안 되는 마지막 문장이야."
+
+    def handler(request):
+        if request.url.path == "/v1/audio/speech":
+            return httpx.Response(200, content=speech_events())
+        return httpx.Response(200, json={"text": sensitive_text})
+
+    with caplog.at_level(logging.INFO, logger="api.app.app"):
+        async with api(handler) as client:
+            response = await speak(client, sensitive_text)
+
+    assert response.status_code == 200
+    records = [
+        record.getMessage()
+        for record in caplog.records
+        if "speech_request" in record.getMessage()
+    ]
+    assert len(records) == 1
+    assert "mode=wav" in records[0]
+    assert f"chars={len(sensitive_text)}" in records[0]
+    assert "segments=1" in records[0]
+    assert f"bytes={len(PCM)}" in records[0]
+    assert "retries=0" in records[0]
+    assert "completed=true code=ok" in records[0]
+    assert sensitive_text not in records[0]
+    assert OPENAI_KEY not in records[0]
+
+
 async def test_speech_stream_returns_verified_pcm_events_with_same_voice_profile():
     seen = {}
 
@@ -161,7 +191,7 @@ async def test_speech_stream_returns_verified_pcm_events_with_same_voice_profile
     }
 
 
-async def test_speech_stream_reports_later_semantic_failure_without_done():
+async def test_speech_stream_reports_later_semantic_failure_without_done(caplog):
     transcripts = iter(
         [
             "첫 번째 문장이야.",
@@ -175,12 +205,13 @@ async def test_speech_stream_reports_later_semantic_failure_without_done():
             return httpx.Response(200, content=speech_events())
         return httpx.Response(200, json={"text": next(transcripts)})
 
-    async with api(handler) as client:
-        response = await client.post(
-            "/speech-stream",
-            headers={"Authorization": f"Bearer {KEY}"},
-            json={"text": "첫 번째 문장이야. 마지막 절까지 말해도 돼."},
-        )
+    with caplog.at_level(logging.WARNING, logger="api.app.app"):
+        async with api(handler) as client:
+            response = await client.post(
+                "/speech-stream",
+                headers={"Authorization": f"Bearer {KEY}"},
+                json={"text": "첫 번째 문장이야. 마지막 절까지 말해도 돼."},
+            )
 
     events = parse_sse(response.content)
     assert response.status_code == 200
@@ -189,6 +220,17 @@ async def test_speech_stream_reports_later_semantic_failure_without_done():
         {"requestId": response.headers["x-request-id"], "code": "incomplete"},
     )
     assert "audio.done" not in [name for name, _ in events]
+    records = [
+        record.getMessage()
+        for record in caplog.records
+        if "speech_request" in record.getMessage()
+    ]
+    assert len(records) == 1
+    assert "mode=stream" in records[0]
+    assert "segments=1" in records[0]
+    assert f"bytes={len(PCM)}" in records[0]
+    assert "completed=false code=incomplete" in records[0]
+    assert "첫 번째 문장이야" not in records[0]
 
 
 async def test_missing_openai_key_is_unavailable_without_call():
