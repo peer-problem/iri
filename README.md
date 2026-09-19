@@ -178,9 +178,15 @@ Internal clients authenticate with `Authorization: Bearer <SANDBOX_API_KEY>`. Br
 | `GET /ready` | Confirm that the required base and adapter aliases are reachable. |
 | `POST /transcribe` | Accept consented audio and return a transcript for confirmation. |
 | `POST /chat` | Generate a guarded answer for an age band. |
-| `POST /speech` | Return an MP3 for an answer approved by `/chat`. |
-| `POST /speech-stream` | Stream speech audio for an approved answer. |
+| `POST /speech` | Return verified WAV audio for an answer approved by `/chat`. |
+| `POST /speech-stream` | Stream verified PCM as completion-aware SSE events. |
 | `GET /conversation` | Restore the current in-memory demo conversation. |
+
+Speech synthesis is split into bounded segments. Each segment must finish the
+upstream SSE protocol and pass a transcription-based ending check before it is
+released. The streaming endpoint finishes with an `audio.done` event containing
+the total byte count, segment count, and SHA-256 digest; incomplete streams end
+with `audio.error` and must not be cached by clients.
 
 The core request shape is intentionally small:
 
