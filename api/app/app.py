@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import secrets
 from contextlib import asynccontextmanager, suppress
 from uuid import uuid4
@@ -18,6 +19,8 @@ from api.app.sessions import COOKIE, TTL, Sessions
 from api.app.settings import Settings
 from api.app.speech import SpeechUnavailable, Synthesizer
 from api.app.transcription import FORMATS, NoSpeechDetected, Transcriber, TranscriptionUnavailable
+
+logger = logging.getLogger(__name__)
 
 
 def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
@@ -65,7 +68,7 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
         if session:
             if request.method not in {"GET", "HEAD"}:
                 sessions.origin(request)
-                sessions.limit(session)
+                sessions.limit(session, request)
             request.state.demo_session = session
             return
         raise HTTPException(401, "Authentication required", headers={"WWW-Authenticate": "Bearer"})
@@ -105,9 +108,12 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
     @app.get("/conversation", dependencies=[Depends(authenticate)])
     async def conversation(request: Request):
         session = request.state.demo_session
-        return {"age_band": session.age or "4-6" if session else "4-6", "messages": [
-            {"id": str(uuid4()), **item} for item in (session.history if session else [])
-        ]}
+        return {
+            "age_band": (session.age or "4-6") if session else "4-6",
+            "messages": [
+                {"id": str(uuid4()), **item} for item in (session.history if session else [])
+            ],
+        }
 
     @app.exception_handler(RequestValidationError)
     async def invalid_request(_request, _exc):
@@ -119,13 +125,25 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
         return {
             "status": "ok",
             "model_status": "configured" if settings.configured else "unconfigured",
+            "generation_model": settings.generation_model if settings.configured else None,
+            "adapter_sha256": settings.adapter_sha256 or None,
+            "fallback_status": (
+                "configured"
+                if settings.openai_api_key.get_secret_value()
+                else "unconfigured"
+            ),
         }
 
     @app.get("/ready", dependencies=[Depends(authenticate)])
     async def ready():
         if not await app.state.provider.ready():
             return JSONResponse(status_code=503, content={"status": "not_ready"})
-        return {"status": "ready", "model": settings.served_model}
+        return {
+            "status": "ready",
+            "guard_model": settings.served_model,
+            "generation_model": settings.generation_model,
+            "adapter_sha256": settings.adapter_sha256 or None,
+        }
 
     @app.post("/transcribe", dependencies=[Depends(authenticate)])
     async def transcribe(request: Request):
@@ -172,18 +190,44 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
                     if session and session.age != body.age_band:
                         session.history.clear()
                         session.age = body.age_band
-                    history = list(session.history) if session else []
+                    stored_history = list(session.history) if session else []
+                    history = (
+                        [
+                            {"role": item["role"], "content": item["content"]}
+                            for item in stored_history
+                        ]
+                        if session
+                        else []
+                    )
                     history.append({"role": "user", "content": body.message})
                     answer, action, provider = await app.state.service.respond(body.age_band, history)
                     if session:
-                        session.history = [*history, {"role": "assistant", "content": answer}][-12:]
+                        session.history = [
+                            *stored_history,
+                            {"role": "user", "content": body.message},
+                            {
+                                "role": "assistant",
+                                "content": answer,
+                                "provider": provider,
+                            },
+                        ][-12:]
             return ChatResponse(answer=answer, action=action, request_id=request_id, provider=provider)
-        except QueueFull:
+        except QueueFull as exc:
             status, headers = 429, {"Retry-After": "3"}
-        except TimeoutError:
+            failure = exc
+        except TimeoutError as exc:
             status, headers = 504, {}
-        except ModelUnavailable:
+            failure = exc
+        except ModelUnavailable as exc:
             status, headers = 503, {}
+            failure = exc
+        logger.warning(
+            "chat_request_failed request_id=%s status=%s code=%s stage=%s",
+            request_id,
+            status,
+            getattr(failure, "code", "queue_full" if status == 429 else "timeout"),
+            getattr(failure, "stage", None),
+        )
         return JSONResponse(
             status_code=status,
             headers=headers,
@@ -236,11 +280,55 @@ def create_app(settings: Settings | None = None, transport=None) -> FastAPI:
         if len(body.text) > settings.tts_max_chars:
             raise HTTPException(413, "Text is too long")
 
+        stream = app.state.synthesizer.stream_pcm(body.text).__aiter__()
+        gate_context = speech_gate.enter()
+        entered = False
+        deadline = asyncio.get_running_loop().time() + settings.tts_timeout_seconds
+        try:
+            await gate_context.__aenter__()
+            entered = True
+            first = await asyncio.wait_for(
+                anext(stream), timeout=settings.tts_timeout_seconds
+            )
+        except QueueFull:
+            raise HTTPException(
+                429, "Speech is busy", headers={"Retry-After": "3"}
+            ) from None
+        except (TimeoutError, asyncio.TimeoutError):
+            if entered:
+                await gate_context.__aexit__(None, None, None)
+            with suppress(Exception):
+                await stream.aclose()
+            raise HTTPException(504, "Speech timed out") from None
+        except (SpeechUnavailable, StopAsyncIteration):
+            if entered:
+                await gate_context.__aexit__(None, None, None)
+            with suppress(Exception):
+                await stream.aclose()
+            raise HTTPException(503, "Speech is unavailable") from None
+        except ValueError:
+            if entered:
+                await gate_context.__aexit__(None, None, None)
+            with suppress(Exception):
+                await stream.aclose()
+            raise HTTPException(413, "Text is too long") from None
+        except BaseException:
+            if entered:
+                await gate_context.__aexit__(None, None, None)
+            with suppress(Exception):
+                await stream.aclose()
+            raise
+
         async def chunks():
-            async with asyncio.timeout(settings.tts_timeout_seconds):
-                async with speech_gate.enter():
-                    async for chunk in app.state.synthesizer.stream_pcm(body.text):
+            try:
+                yield first
+                async with asyncio.timeout_at(deadline):
+                    async for chunk in stream:
                         yield chunk
+            finally:
+                with suppress(Exception):
+                    await stream.aclose()
+                await gate_context.__aexit__(None, None, None)
 
         return StreamingResponse(
             chunks(),

@@ -25,6 +25,6 @@ Phase 2는 2026-09-17 사용자 결정으로 종료했다. 다음 작업은 Phas
 
 ## 인계 자료
 
-[종료 보고서](README.md), [모델 선택 기록](decision.json), [실행 비교](comparison.md), [새 400건 검수 패킷](review-packet/reviewer_a/review.html)을 사용한다. 원본과 학습본의 실제 응답은 `base-run/`과 `adapter-run/`에 있다.
+[종료 보고서](README.md), [모델 선택 기록](decision.json), [실행 비교](comparison.md)를 사용한다. 중간 실행 원문과 미작성 검수 패킷은 작업 트리에서 제거했으며 필요한 경우 Git 이력에서 복구한다.
 
 GPU는 마지막 공식 조회에서 모두 `EXITED`였으며, 이번 문서 정리에서는 시작하지 않았다. 학습 및 평가 백업 위치는 종료 보고서에 기록돼 있다.

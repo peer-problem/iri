@@ -1,12 +1,15 @@
 """Use the pinned GPU model when ready, with an independently guarded cloud fallback."""
 
 import asyncio
+import logging
 import time
 
 import httpx
 
 from api.app.provider import ModelProvider, ModelUnavailable
 from api.app.service import ChatService
+
+logger = logging.getLogger(__name__)
 
 
 class LunaProvider(ModelProvider):
@@ -18,7 +21,12 @@ class LunaProvider(ModelProvider):
             "model": self.settings.fallback_model,
             "input": messages,
             "reasoning": {"effort": self.settings.fallback_reasoning_effort},
-            "max_output_tokens": 4096,
+            "max_output_tokens": max_tokens
+            + (
+                self.settings.fallback_guard_reasoning_tokens
+                if guard
+                else self.settings.fallback_generation_reasoning_tokens
+            ),
             "store": False,
         }
         if response_schema is not None:
@@ -67,8 +75,12 @@ class RoutedChatService:
                     if await self.primary.ready():
                         answer, action = await ChatService(self.primary).respond(age, history)
                         return answer, action, "kanana"
-            except (ModelUnavailable, TimeoutError):
-                pass
+            except (ModelUnavailable, TimeoutError) as exc:
+                logger.warning(
+                    "primary_route_failed code=%s stage=%s",
+                    getattr(exc, "code", "timeout"),
+                    getattr(exc, "stage", None),
+                )
             self.retry_at = time.monotonic() + 15
         answer, action = await ChatService(self.fallback).respond(age, history)
         return answer, action, "luna"

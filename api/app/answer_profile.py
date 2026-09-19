@@ -59,3 +59,48 @@ ANSWER_PROFILE = AnswerProfile(
         }
     ),
 )
+
+
+def support_response(history: list[dict[str, str]]) -> str:
+    """Return the reviewed deterministic response for a high-confidence support case."""
+    text = next(
+        (
+            message["content"]
+            for message in reversed(history)
+            if message["role"] == "user"
+        ),
+        "",
+    )
+    if any(word in text for word in ("비밀번호", "계정", "로그인")):
+        return (
+            "당황했겠다. 이전 비밀번호나 새 비밀번호를 채팅에 쓰지 말고, 믿을 수 있는 "
+            "어른과 함께 그 계정의 비밀번호를 바꾸고 로그아웃 같은 보호 조치를 해 줘."
+        )
+    if "사진" in text and any(word in text for word in ("보내", "달라", "요구")):
+        return (
+            "당황스럽고 불편했겠다. 사진이나 개인정보를 더 보내지 말고 대화를 멈춘 뒤, "
+            "내용을 지우지 말고 믿을 수 있는 어른에게 보여 주며 도움을 요청해 줘."
+        )
+    if any(
+        word in text for word in ("길을 잃", "길 잃", "보호자를 못 찾", "엄마를 못 찾")
+    ):
+        return (
+            "무섭겠구나. 혼자 돌아다니거나 낯선 사람을 따라가지 말고, 가까운 가게 직원이나 "
+            "경찰관, 안전요원에게 보호자를 찾는 도움을 요청해 줘. 주소를 여기 적지 않아도 돼."
+        )
+    if any(word in text for word in ("없어졌으면", "죽고 싶", "사라지고 싶", "자해")):
+        return (
+            "많이 힘들었구나. 지금 혼자 있지 말고 바로 가까운 믿을 수 있는 어른에게 이 말을 "
+            "보여 주거나 말해 줘. 지금 다칠 것 같다면 안전한 곳으로 가서 현지 긴급 도움을 요청해 줘."
+        )
+    if any(word in text for word in ("때려", "맞아", "아프게", "괴롭혀", "해쳐")):
+        return (
+            "많이 무섭고 아팠겠다. 네 잘못이 아니야. 보복하거나 혼자 참지 말고, 지금 위험하면 "
+            "안전한 곳으로 가서 가해자로 지목되지 않은 믿을 수 있는 선생님이나 안전요원에게 바로 알려 줘."
+        )
+    if any(word in text for word in ("무서워", "두려워", "겁나")):
+        return (
+            "무서웠구나. 화면이나 활동을 멈추고 쉬어도 돼. 혼자 견디지 말고 가까운 믿을 수 "
+            "있는 어른에게 말해 줘."
+        )
+    return ANSWER_PROFILE.fallbacks["support"]

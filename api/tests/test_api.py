@@ -281,6 +281,45 @@ async def test_ready_checks_actual_model_alias():
         ).status_code == 200
 
 
+async def test_session_provider_metadata_is_not_sent_back_to_the_model():
+    settings = configuration(demo_access_code="test-code")
+    calls = []
+    answers = iter(
+        [
+            '{"decision":"allow"}',
+            "첫 답변",
+            '{"decision":"allow"}',
+            '{"decision":"allow"}',
+            "둘째 답변",
+            '{"decision":"allow"}',
+        ]
+    )
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        return completion(next(answers), settings)
+
+    async with api(handler, settings) as client:
+        await client.post("/session", json={"code": "test-code"})
+        await client.post("/chat", json={"message": "첫 질문", "age_band": "4-6"})
+        await client.post("/chat", json={"message": "둘째 질문", "age_band": "4-6"})
+        saved = (await client.get("/conversation")).json()["messages"]
+
+    assert saved[1]["provider"] == "kanana"
+    assert all("provider" not in message for call in calls for message in call["messages"])
+
+
+async def test_generation_larger_than_speech_limit_is_not_released():
+    settings = configuration(tts_max_chars=20)
+    answers = iter(['{"decision":"allow"}', "가" * 21])
+
+    async with api(lambda _: completion(next(answers), settings), settings) as client:
+        response = await post(client)
+
+    assert response.status_code == 503
+    assert "가" * 21 not in response.text
+
+
 async def test_requests_do_not_share_conversation_history():
     calls = []
 

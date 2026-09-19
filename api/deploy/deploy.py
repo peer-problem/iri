@@ -69,6 +69,8 @@ def vps(origin):
         "MODEL_REVISION",
         "MODEL_PROFILE",
         "ADAPTER_NAME",
+        "ADAPTER_REVISION",
+        "ADAPTER_SHA256",
         "MODEL_BASE_URL",
         "OPENAI_API_KEY",
         "DEMO_ACCESS_CODE",
@@ -83,6 +85,7 @@ def vps(origin):
         FALLBACK_REASONING_EFFORT="high",
         BEHAVIOR_PROFILE="kanana_v5",
         REQUEST_TIMEOUT_SECONDS="90",
+        ALLOW_DEV_ACCESS_CODE="false",
     )
     env_content = "".join(f"{k}={json.dumps(v)}\n" for k, v in runtime.items())
     ssh("umask 077; cat > /opt/iri/shared/api.env", env_content.encode())

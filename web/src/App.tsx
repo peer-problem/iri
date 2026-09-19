@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { InputMeter } from "./InputMeter";
 import { LiquidButtons } from "./LiquidButtons";
 import { Orb } from "./Orb";
+import { providerLabel } from "./provider";
 import {
   phaseLabels,
   useVoiceConversation,
@@ -350,7 +351,9 @@ export default function App() {
         </div>
       )}
 
-      <p className="powered">Powered by Kanana</p>
+      <p className="powered">
+        {providerLabel(voice.latestAnswer?.provider)}
+      </p>
 
       {voice.authenticated === false && (
         <Overlay

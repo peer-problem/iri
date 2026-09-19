@@ -47,6 +47,8 @@ def test_dataset_rejects_corruption_and_leaks(tmp_path, mutation):
 
 async def test_real_evaluation_requires_explicit_draft_opt_in(tmp_path, monkeypatch):
     monkeypatch.setenv("ADAPTER_NAME", "")
+    monkeypatch.setenv("ADAPTER_REVISION", "")
+    monkeypatch.setenv("ADAPTER_SHA256", "")
     dataset = tmp_path / "draft.jsonl"
     item = load_scenarios([(ROOT / "data/dev.jsonl")])[0]
     dataset.write_text(item.model_copy(update={"review_status": "draft"}).model_dump_json() + "\n")

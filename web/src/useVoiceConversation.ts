@@ -4,6 +4,8 @@ import type { AudioSignal } from "./audio-level";
 import { amplitude, microphoneMotion, rmsLevel } from "./audio-level";
 import { ApiError, jsonRequest, request } from "./api";
 import { PcmStreamPlayer } from "./pcm";
+import { parseProvider } from "./provider";
+import type { Provider } from "./provider";
 
 export type Phase =
   | "idle"
@@ -18,6 +20,7 @@ export type Message = {
   id: string;
   role: "user" | "assistant";
   text: string;
+  provider?: Provider;
 };
 
 type AudioClip =
@@ -135,7 +138,13 @@ export function useVoiceConversation() {
               id: string;
               role: "user" | "assistant";
               content: string;
-            }) => ({ id: item.id, role: item.role, text: item.content }),
+              provider?: unknown;
+            }) => ({
+              id: item.id,
+              role: item.role,
+              text: item.content,
+              provider: parseProvider(item.provider),
+            }),
           ),
         );
         setAuthenticated(true);
@@ -476,6 +485,7 @@ export function useVoiceConversation() {
         id: result.request_id,
         role: "assistant",
         text: result.answer,
+        provider: parseProvider(result.provider),
       };
       setMessages((current) =>
         [

@@ -1,2 +1,0 @@
-# Preserve original Runpod and Codex review bytes for SHA-256 verification.
-* -text whitespace=-blank-at-eol,cr-at-eol

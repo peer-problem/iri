@@ -1,2 +1,0 @@
-# Preserve exact review bytes for the recorded SHA-256 digest.
-* -text whitespace=-blank-at-eol,cr-at-eol

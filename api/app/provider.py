@@ -87,7 +87,8 @@ class ModelProvider:
                 raise ModelUnavailable("Incomplete model response", code="incomplete_response")
             if not isinstance(text, str) or not text.strip():
                 raise ModelUnavailable("Empty model response", code="empty_response")
-            if len(text) > 8000:
+            limit = 8000 if guard else self.settings.tts_max_chars
+            if len(text) > limit:
                 raise ModelUnavailable("Oversized model response", code="oversized_response")
             return text.strip()
         except httpx.TimeoutException as exc:

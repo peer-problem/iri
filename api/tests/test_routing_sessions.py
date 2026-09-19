@@ -34,6 +34,8 @@ async def test_fallback_restarts_entire_guarded_pipeline(primary_failure):
         assert body["model"] == "gpt-5.6-luna"
         assert body["reasoning"] == {"effort": "high"}
         assert body["store"] is False
+        expected_budget = 848 if "text" in body else 1536
+        assert body["max_output_tokens"] == expected_budget
         return cloud(next(answers))
 
     async with api(handler, settings) as client:
@@ -101,6 +103,7 @@ async def test_demo_session_history_isolation_clear_logout_and_csrf():
         saved = await client.get('/conversation')
         assert saved.status_code == 200
         assert saved.json()['messages'][0]['content'] == '첫 질문'
+        assert saved.json()['messages'][1]['provider'] == 'kanana'
         assert (await client.post('/speech', json={"text": "unchecked"})).status_code == 403
         assert (await client.post('/speech-stream', json={"text": "unchecked"})).status_code == 403
         assert (await client.delete('/conversation', headers={"Origin": "https://evil.test"})).status_code == 403
@@ -116,9 +119,13 @@ async def test_demo_session_history_isolation_clear_logout_and_csrf():
         assert (await client.get('/session')).status_code == 200
 
 
-@pytest.mark.parametrize("configured_code", ["", "another-code"])
-async def test_dev_access_code_always_creates_session(configured_code):
-    settings = configuration(demo_access_code=configured_code)
+async def test_dev_access_code_is_disabled_by_default_and_opt_in_for_local_development():
+    settings = configuration(demo_access_code="another-code")
+    async with api(lambda _: pytest.fail("No upstream call"), settings) as client:
+        login = await client.post('/session', json={"code": "dev"})
+        assert login.status_code == 401
+
+    settings = configuration(demo_access_code="", allow_dev_access_code=True)
     async with api(lambda _: pytest.fail("No upstream call"), settings) as client:
         login = await client.post('/session', json={"code": "dev"})
         assert login.status_code == 200
@@ -133,4 +140,36 @@ async def test_login_rate_limit_and_cross_origin_protection():
         for _ in range(10):
             assert (await client.post('/session', json={"code": "wrong"})).status_code == 401
         assert (await client.post('/session', json={"code": "test"})).status_code == 429
-        assert (await client.post('/session', json={"code": "dev"})).status_code == 200
+        assert (await client.post('/session', json={"code": "dev"})).status_code == 429
+
+
+def test_ip_rate_limit_cannot_be_bypassed_with_fresh_sessions():
+    from starlette.requests import Request
+
+    from api.app.sessions import IP_CALL_LIMIT, Session, Sessions
+
+    sessions = Sessions(configuration())
+    request = Request({"type": "http", "client": ("203.0.113.8", 9000), "headers": []})
+    first = Session(expires=10**12)
+    second = Session(expires=10**12)
+    for index in range(IP_CALL_LIMIT):
+        sessions.limit(first if index % 2 else second, request)
+    with pytest.raises(Exception) as caught:
+        sessions.limit(Session(expires=10**12), request)
+    assert getattr(caught.value, "status_code", None) == 429
+
+
+@pytest.mark.parametrize(
+    "profile",
+    ["kanana_v3", "kanana_v4", "kanana_v5"],
+)
+def test_product_and_harness_use_the_same_generation_contract(profile):
+    from runpod.inference.messages import generation_messages as harness_messages
+
+    history = [{"role": "user", "content": "비는 왜 내려?"}]
+    assert generation_messages("4-6", history, profile) == harness_messages(
+        "4-6", history, profile
+    )
+    assert generation_messages("4-6", history, profile, support=True) == harness_messages(
+        "4-6", history, profile, support=True
+    )

@@ -18,7 +18,10 @@ def digest(path: Path) -> str:
 def adapter_identity(run: Path, settings) -> dict:
     manifest_path = run / "training-manifest.json"
     manifest = json.loads(manifest_path.read_text())
-    if manifest.get("state") != "reload_verified_behavior_pending":
+    if manifest.get("state") not in {
+        "reload_verified_behavior_pending",
+        "fresh_process_reload_verified",
+    }:
         raise ValueError("Adapter must pass fresh-process reload verification first")
     if (
         manifest.get("revision") != settings.model_revision
@@ -33,6 +36,8 @@ def adapter_identity(run: Path, settings) -> dict:
     config = digest(run / "adapter/adapter_config.json")
     if manifest.get("adapter_sha256") != weight or manifest.get("adapter_config_sha256") != config:
         raise ValueError("Adapter files changed since reload verification")
+    if settings.adapter_sha256 and weight != settings.adapter_sha256:
+        raise ValueError("Adapter weights differ from the configured release SHA-256")
     return {
         "variant": "adapter",
         "base_revision": settings.model_revision,
@@ -42,6 +47,7 @@ def adapter_identity(run: Path, settings) -> dict:
         "training_policy_sha256": training_policy_sha256,
         "runtime_policy_sha256": runtime_policy_sha256,
         "training_policy_matches_runtime": training_policy_sha256 == runtime_policy_sha256,
+        "adapter_revision": settings.adapter_revision,
     }
 
 

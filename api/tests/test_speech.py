@@ -149,6 +149,18 @@ async def test_upstream_timeout_is_gateway_timeout():
     assert response.status_code == 504
 
 
+async def test_stream_upstream_failure_is_mapped_before_headers_start():
+    upstream = httpx.Response(500, json={"error": {"message": "private-upstream-detail"}})
+    async with api(lambda _: upstream) as client:
+        response = await client.post(
+            "/speech-stream",
+            headers={"Authorization": f"Bearer {KEY}"},
+            json={"text": "안녕!"},
+        )
+    assert response.status_code == 503
+    assert "private-upstream-detail" not in response.text
+
+
 async def test_text_longer_than_setting_is_rejected_without_call():
     settings = configuration(tts_max_chars=5)
     async with api(lambda _: pytest.fail("No TTS call expected"), settings) as client:

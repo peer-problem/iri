@@ -35,12 +35,7 @@ NVIDIA L4 한 대에서 원본을 먼저, 학습본을 다음에 실행했다. v
 
 - [기계 판독 결정](decision.json): 채택 판단과 검토 한계, 비용 및 백업 정보
 - [전체 실행 비교](comparison.md): 경로와 연령별 오류 및 지연 시간
-- [원본 실행](base-run/metadata.json), [학습본 실행](adapter-run/metadata.json): 메타데이터와 같은 폴더의 `results.jsonl`, 데이터 및 정책 스냅샷
-- [정답 검토 원본](normal-correctness-assessment.json), [응답별 정답 판정 160행](normal-correctness-ratings.csv): 40문항 × 2모델 × 2경로, 판정 이유와 응답 해시
-- [서빙 증거](evidence/serving-verification.json), [GPU 환경](evidence/gpu-environment.json), [학습 기록](evidence/training-manifest.json)
-- [추가 검수 패킷](review-packet/reviewer_a/review.html): 새 400건의 블라인드 화면과 빈 평가표. `reviewer_b/`에도 같은 400건을 다른 순서로 제공한다. 빈 평가표는 완료된 독립 판정이 아니다.
-
-검수 패킷의 매핑은 패킷 폴더 기준 상대 경로를 사용한다. 다른 컴퓨터에서도 함께 보관한 원본 응답의 해시와 각 답변의 일치를 검증할 수 있다. 익명 ID와 응답 데이터는 바꾸지 않는다.
+- 원본 응답과 환경 기록 및 미작성 검수 패킷은 현재 실행에 필요하지 않아 작업 트리에서 제거했다. 필요한 경우 Git 이력에서 복구한다.
 
 ## 백업과 GPU 종료
 
