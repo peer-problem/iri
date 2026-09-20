@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { DiagramSelect } from "./DiagramSelect";
 import { diagramContent } from "./diagram-content";
 import type { IllustrationKind } from "./diagram-content";
 
@@ -57,7 +58,7 @@ export function ResearchIllustration({ kind, caption, paused = false }: { kind: 
     };
   }, [kind]);
   return <figure className={`paper-figure illustration-${kind}`}>
-    <div className="diagram-controls"><label><span className="sr-only">보기</span><select aria-label={`${content.title} 보기 선택`} value={mode} onChange={event => setMode(Number(event.target.value))}>{content.modes.map((label, i) => <option key={label} value={i}>{label}</option>)}</select></label><button className="diagram-zoom" aria-pressed={zoomed} onClick={() => setZoomed(!zoomed)}>{zoomed ? "전체 그림 보기" : "그림 확대"}</button></div>
+    <div className="diagram-controls"><DiagramSelect label={`${content.title} 보기 선택`} options={content.modes} value={mode} onChange={setMode} /><button className="diagram-zoom" aria-pressed={zoomed} onClick={() => setZoomed(!zoomed)}>{zoomed ? "전체 그림 보기" : "그림 확대"}</button></div>
     <div className="diagram-viewport" data-zoomed={zoomed} tabIndex={zoomed ? 0 : undefined} aria-label={zoomed ? "확대한 그림. 좌우로 스크롤할 수 있습니다." : undefined}>
     <div className={`research-illustration ${ready ? "is-rendered" : ""}`} aria-label={content.title} role="img">
       <div className="diagram-fallback" aria-hidden="true"><span>{content.title}</span><p>{content.notes[mode]}</p></div>

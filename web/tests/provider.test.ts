@@ -13,5 +13,5 @@ test("provider metadata is accepted only from the API contract", () => {
 test("the attribution reflects the provider that produced the answer", () => {
   assert.equal(providerLabel("kanana"), "답변 모델: Kanana");
   assert.equal(providerLabel("luna"), "답변 모델: Luna 대체 경로");
-  assert.equal(providerLabel(), "답변 모델: 연결 확인 중");
+  assert.equal(providerLabel(), "");
 });

@@ -41,8 +41,6 @@ export const phaseLabels: Record<Phase, string> = {
 export function useVoiceConversation() {
   const [age, setAge] = useState("4-6");
   const [autoRead, setAutoRead] = useState(true);
-  const [consented, setConsented] = useState(false);
-  const [consentOpen, setConsentOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
   const [playbackMessageId, setPlaybackMessageId] = useState<string | null>(null);
@@ -478,12 +476,8 @@ export function useVoiceConversation() {
     }
   }
 
-  async function startRecording(consentGranted = false) {
+  async function startRecording() {
     if (busy) return;
-    if (!consented && !consentGranted) {
-      setConsentOpen(true);
-      return;
-    }
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
       setError(
         "이 브라우저에서는 마이크를 사용할 수 없어요. 글로 입력하거나 최신 Chrome 또는 Safari를 사용해 주세요.",
@@ -609,13 +603,6 @@ export function useVoiceConversation() {
     age,
     autoRead,
     setAutoRead,
-    consentOpen,
-    setConsentOpen,
-    acceptConsent: () => {
-      setConsented(true);
-      setConsentOpen(false);
-      void startRecording(true);
-    },
     settingsOpen,
     setSettingsOpen,
     phase,

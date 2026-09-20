@@ -81,9 +81,19 @@ const fragmentShader = `
 export function Orb({
   signal,
   selection,
+  onActivate,
+  label,
+  hint,
+  recording,
+  disabled,
 }: {
   signal: AudioSignalRef;
   selection: RefObject<number>;
+  onActivate: () => void;
+  label: string;
+  hint: string;
+  recording: boolean;
+  disabled: boolean;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
@@ -133,6 +143,7 @@ export function Orb({
 
     const resize = () => {
       const { width, height } = container.getBoundingClientRect();
+      container.style.setProperty("--orb-diameter", `${Math.min(height * 0.8, width / 2.65)}px`);
       renderer.setSize(width, height);
       camera.aspect = width / height;
       camera.position.z = Math.max(
@@ -242,8 +253,16 @@ export function Orb({
     <div
       ref={host}
       className={`orb${failed ? " orb-fallback" : ""}`}
-      role="img"
-      aria-label="목소리에 반응하는 빛과 색의 투명한 구체"
-    />
+    >
+      <p className="orb-invitation">{hint}</p>
+      <button
+        type="button"
+        className="orb-trigger"
+        onClick={onActivate}
+        aria-label={label}
+        aria-pressed={recording}
+        disabled={disabled}
+      />
+    </div>
   );
 }

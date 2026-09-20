@@ -17,15 +17,6 @@ function SparkIcon() {
   );
 }
 
-function MicIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="9" y="3" width="6" height="12" rx="3" />
-      <path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3M8 22h8" />
-    </svg>
-  );
-}
-
 function StopIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -168,7 +159,7 @@ export default function App() {
       ? "마이크 연결 취소"
       : voice.phase === "recording"
         ? "말하기 마치기"
-        : "마이크로 이야기하기";
+        : "구를 누르고 이야기를 시작해보세요";
 
   const closeHistory = () => {
     if (voice.playbackMessageId) voice.stopSpeaking();
@@ -211,7 +202,19 @@ export default function App() {
         </button>
       </nav>
 
-      <Orb signal={voice.signal} selection={selection} />
+      <Orb
+        signal={voice.signal}
+        selection={selection}
+        onActivate={toggleMicrophone}
+        label={microphoneLabel}
+        hint={voice.phase === "recording"
+          ? "다 이야기했다면 구를 다시 눌러주세요"
+          : voice.phase === "acquiring"
+            ? "구를 누르면 마이크 연결을 취소해요"
+            : voice.busy ? phaseLabels[voice.phase] : "구를 누르고 이야기를 시작해보세요"}
+        recording={voice.phase === "recording"}
+        disabled={voice.busy && !["recording", "acquiring"].includes(voice.phase)}
+      />
 
       <section className="answer-stage" aria-live="polite">
         {voice.latestAnswer ? (
@@ -243,20 +246,6 @@ export default function App() {
             }}
           >
             <SparkIcon />
-          </button>
-          <button
-            aria-label={microphoneLabel}
-            aria-pressed={voice.phase === "recording"}
-            onClick={toggleMicrophone}
-            disabled={
-              voice.busy && !["recording", "acquiring"].includes(voice.phase)
-            }
-          >
-            {["recording", "acquiring"].includes(voice.phase) ? (
-              <StopIcon />
-            ) : (
-              <MicIcon />
-            )}
           </button>
           <button
             aria-label={voice.phase === "speaking" ? "말하기 멈추기" : "답변 다시 듣기"}
@@ -357,31 +346,8 @@ export default function App() {
         </div>
       )}
 
-      <p className="powered">
-        {providerLabel(voice.latestAnswer?.provider)}
-      </p>
-
-      {voice.consentOpen && (
-        <Overlay
-          title="목소리로 이야기해 볼까요?"
-          description="녹음한 음성은 글로 바꾸기 위해 OpenAI에 전송돼요. 이리 서버에는 녹음 파일을 저장하지 않아요."
-          onClose={() => voice.setConsentOpen(false)}
-        >
-          <div className="overlay-actions">
-            <button
-              className="quiet-button"
-              onClick={() => {
-                voice.setConsentOpen(false);
-                setComposerOpen(true);
-              }}
-            >
-              글로 이야기하기
-            </button>
-            <button className="solid-button" onClick={voice.acceptConsent}>
-              동의하고 말하기
-            </button>
-          </div>
-        </Overlay>
+      {voice.latestAnswer?.provider && (
+        <p className="powered">{providerLabel(voice.latestAnswer.provider)}</p>
       )}
 
       {voice.settingsOpen && (
@@ -390,8 +356,7 @@ export default function App() {
           description="아이의 나이에 맞춰 쉽게 설명해요."
           onClose={() => voice.setSettingsOpen(false)}
         >
-          <fieldset className="setting-group">
-            <legend>아이 나이</legend>
+          <fieldset className="setting-group" aria-label="대화 연령">
             <div className="segmented-control">
               {["4-6", "7-10"].map((value) => (
                 <button
@@ -409,7 +374,6 @@ export default function App() {
           <label className="toggle-row">
             <span>
               답변을 목소리로 듣기
-              <small>꺼 두어도 모든 답변을 글로 볼 수 있어요.</small>
             </span>
             <input
               type="checkbox"
