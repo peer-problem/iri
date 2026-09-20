@@ -10,6 +10,11 @@ from api.app.behavior import BehaviorProfile
 ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parent
 ENV_FILE = REPO_ROOT / ".keys/.env"
+DEFAULT_TTS_INSTRUCTIONS = (
+    "편안한 한국어 일상 대화체로 자연스럽게 말한다. 설명문을 낭독하거나 캐릭터를 연기하지 말고, "
+    "바로 옆 사람에게 이야기하듯 담백하게 말한다. 문장 끝을 과하게 올리거나 늘이지 않는다. "
+    "보통 높낮이와 일정한 음량을 유지하고, 문장부호에서만 자연스럽게 짧게 쉰다."
+)
 
 
 class Settings(BaseSettings):
@@ -32,19 +37,12 @@ class Settings(BaseSettings):
     stt_timeout_seconds: float = Field(default=60, gt=0, le=120)
     stt_max_bytes: int = Field(default=10 * 1024 * 1024, ge=1, le=25_000_000)
     tts_model: Literal["gpt-4o-mini-tts-2025-12-15"] = "gpt-4o-mini-tts-2025-12-15"
-    tts_voice: str = Field(default="coral", pattern=r"^[a-z]+$")
-    tts_instructions: str = Field(
-        default=(
-            "항상 같은 한 명의 화자로 말한다. 답변마다 목소리의 높이, 음색, 말투를 일정하게 유지한다. "
-            "어린아이에게 말하듯 차분하고 따뜻하게, 자연스럽고 또렷한 한국어로 말한다. "
-            "과장된 연기, 캐릭터 목소리, 큰 감정 변화는 피한다."
-        ),
-        max_length=500,
-    )
-    tts_speed: float = Field(default=0.95, ge=0.25, le=4.0)
+    tts_voice: Literal["marin"] = "marin"
+    tts_instructions: str = Field(default=DEFAULT_TTS_INSTRUCTIONS, max_length=500)
+    tts_speed: float = Field(default=1.0, ge=0.25, le=4.0)
     tts_timeout_seconds: float = Field(default=60, gt=0, le=120)
     tts_max_chars: int = Field(default=1000, ge=1, le=4000)
-    tts_segment_max_chars: int = Field(default=120, ge=30, le=300)
+    tts_segment_max_chars: int = Field(default=240, ge=30, le=300)
     tts_max_segments: int = Field(default=12, ge=1, le=32)
     tts_verification_retries: int = Field(default=1, ge=0, le=1)
     tts_verification_min_similarity: float = Field(default=0.78, ge=0.5, le=1)

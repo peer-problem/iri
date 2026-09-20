@@ -77,7 +77,7 @@ flowchart LR
 | Input and output guards | The frozen Kanana base model plus the `kanana_v5` behavior profile |
 | Fallback | Configured provider, running the full guarded path again |
 | Speech to text | `gpt-4o-mini-transcribe` |
-| Text to speech | `gpt-4o-mini-tts-2025-12-15`, `coral`, speed `0.95` |
+| Text to speech | `gpt-4o-mini-tts-2025-12-15`, `marin`, speed `1.0` |
 | Product UI | React 19, TypeScript, Three.js, and Vite |
 | API | FastAPI on Python 3.12 |
 
@@ -193,6 +193,10 @@ upstream SSE protocol and pass a transcription-based ending check before it is
 released. The streaming endpoint finishes with an `audio.done` event containing
 the total byte count, segment count, and SHA-256 digest; incomplete streams end
 with `audio.error` and must not be cached by clients.
+
+The fixed `marin` profile uses a restrained Korean conversational style. Segments
+are packed up to 240 characters to reduce independent voice resets; a failed
+segment is retried in smaller verified pieces.
 
 The browser checks the final byte count and digest before caching audio for replay.
 Premature EOF, timeouts, and integrity failures discard the partial recording.

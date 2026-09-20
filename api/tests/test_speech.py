@@ -43,7 +43,7 @@ def configuration(**updates):
     return Settings(_env_file=None, **values)
 
 
-@pytest.mark.parametrize("speed", [0.25, 0.95, 4.0])
+@pytest.mark.parametrize("speed", [0.25, 1.0, 4.0])
 def test_tts_speed_accepts_supported_values(speed):
     assert configuration(tts_speed=speed).tts_speed == speed
 
@@ -52,6 +52,16 @@ def test_tts_speed_accepts_supported_values(speed):
 def test_tts_speed_rejects_unsupported_values(speed):
     with pytest.raises(ValidationError):
         configuration(tts_speed=speed)
+
+
+def test_tts_voice_accepts_selected_voice():
+    assert configuration(tts_voice="marin").tts_voice == "marin"
+
+
+@pytest.mark.parametrize("voice", ["coral", "cedar", "untrusted"])
+def test_tts_voice_rejects_non_selected_voices(voice):
+    with pytest.raises(ValidationError):
+        configuration(tts_voice=voice)
 
 
 @asynccontextmanager
@@ -115,10 +125,10 @@ async def test_speech_returns_verified_wav_with_configured_voice():
     assert seen["transcribed"] is True
     assert seen["body"] == {
         "model": "gpt-4o-mini-tts-2025-12-15",
-        "voice": "coral",
+        "voice": "marin",
         "input": "안녕!",
         "instructions": configuration().tts_instructions,
-        "speed": 0.95,
+        "speed": 1.0,
         "response_format": "pcm",
         "stream_format": "sse",
     }
@@ -182,10 +192,10 @@ async def test_speech_stream_returns_verified_pcm_events_with_same_voice_profile
     assert events[-1][1]["segments"] == 1
     assert seen["body"] == {
         "model": "gpt-4o-mini-tts-2025-12-15",
-        "voice": "coral",
+        "voice": "marin",
         "input": "안녕!",
         "instructions": configuration().tts_instructions,
-        "speed": 0.95,
+        "speed": 1.0,
         "response_format": "pcm",
         "stream_format": "sse",
     }
