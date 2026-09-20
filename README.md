@@ -194,9 +194,10 @@ released. The streaming endpoint finishes with an `audio.done` event containing
 the total byte count, segment count, and SHA-256 digest; incomplete streams end
 with `audio.error` and must not be cached by clients.
 
-The fixed `marin` profile uses a restrained Korean conversational style. Segments
-are packed up to 240 characters to reduce independent voice resets; a failed
-segment is retried in smaller verified pieces.
+The fixed `marin` profile uses a soft, restrained Korean conversational style
+without character acting or exaggerated sentence endings. Segments are packed up
+to 240 characters to reduce independent voice resets; a failed segment is retried
+in smaller verified pieces.
 
 The browser checks the final byte count and digest before caching audio for replay.
 Premature EOF, timeouts, and integrity failures discard the partial recording.
