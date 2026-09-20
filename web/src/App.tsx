@@ -166,6 +166,10 @@ export default function App() {
     setHistoryOpen(false);
   };
 
+  const submitComposer = async () => {
+    if (await voice.send()) setComposerOpen(false);
+  };
+
   return (
     <main className="orb-app" data-phase={voice.phase}>
       <a className="iri-brand" href="/" aria-label="이리 홈">
@@ -276,7 +280,8 @@ export default function App() {
         <form
           className="composer-sheet"
           onSubmit={(event) => {
-            void voice.send(event).then(() => setComposerOpen(false));
+            event.preventDefault();
+            void submitComposer();
           }}
         >
           <div className="composer-copy">
@@ -314,7 +319,7 @@ export default function App() {
                   !event.nativeEvent.isComposing
                 ) {
                   event.preventDefault();
-                  void voice.send().then(() => setComposerOpen(false));
+                  void submitComposer();
                 }
               }}
             />

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import type { FormEvent } from "react";
 import type { AudioSignal } from "./audio-level";
 import { amplitude, microphoneMotion, rmsLevel } from "./audio-level";
 import { ApiError, jsonRequest, request } from "./api";
@@ -435,8 +434,7 @@ export function useVoiceConversation() {
     }
   }
 
-  async function send(event?: FormEvent): Promise<boolean> {
-    event?.preventDefault();
+  async function send(): Promise<boolean> {
     if (!draft.trim() || busy) return false;
     const question = draft.trim();
     if (autoRead) await preparePlayback();
