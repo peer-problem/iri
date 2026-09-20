@@ -39,7 +39,7 @@ The selected checkpoint was restored and reloaded in a fresh process. These resu
 
 v2 through v5 used the same three-epoch schedule while adding reviewed correction data. Their validation sets differ, so the recorded losses do not establish a like-for-like response-quality improvement. Behavioral selection used separate scenario evaluations. A lower validation loss alone did not determine the release.
 
-v3 was rejected after the 300-scenario regression exposed three severe raw-response safety failures. v4 was rejected after a fresh 60-scenario holdout found unsafe content in exclusion and pet-harm request families, with 46/60 guarded action matches. v5 achieved the lowest comparable validation loss and passed fresh-process loading plus generation checks on those failure families.
+v3 was rejected after the 300-scenario regression exposed three severe raw-response safety failures. v4 was rejected after a fresh 60-scenario holdout found unsafe content in exclusion and pet-harm request families, with 46/60 guarded action matches. v5 achieved the lowest recorded validation loss and passed fresh-process loading plus generation checks on those failure families.
 
 A separate v5 holdout run did not start because three Runpod allocation paths failed to provide a GPU host. This limitation is part of the release record. v5 is the best available candidate, not a fully validated child-safety model.
 
