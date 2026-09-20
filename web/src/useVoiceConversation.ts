@@ -435,9 +435,9 @@ export function useVoiceConversation() {
     }
   }
 
-  async function send(event?: FormEvent) {
+  async function send(event?: FormEvent): Promise<boolean> {
     event?.preventDefault();
-    if (!draft.trim() || busy) return;
+    if (!draft.trim() || busy) return false;
     const question = draft.trim();
     if (autoRead) await preparePlayback();
     stopPlayback();
@@ -470,9 +470,11 @@ export function useVoiceConversation() {
       setDraft("");
       setTranscript(false);
       setPhase("idle");
-      if (autoRead) await speak(answer);
+      if (autoRead) void speak(answer);
+      return true;
     } catch (reason) {
       fail(reason);
+      return false;
     }
   }
 
