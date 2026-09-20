@@ -5,7 +5,7 @@ AGENTS.md
 .logs/
 
 # Secrets
-.keys/
+.keys
 /runpod/known_hosts
 .env
 .env.*

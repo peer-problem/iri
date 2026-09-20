@@ -13,6 +13,16 @@ def configuration(**updates):
     return Settings(_env_file=None, **updates)
 
 
+def test_default_speech_profile_favors_fewer_voice_resets():
+    settings = configuration()
+
+    assert settings.tts_voice == "marin"
+    assert settings.tts_speed == 1.0
+    assert settings.tts_segment_max_chars == 240
+    assert "캐릭터를 연기하지 말고" in settings.tts_instructions
+    assert "자음과 문장 끝을 세게 끊지 않는다" in settings.tts_instructions
+
+
 @pytest.mark.parametrize(
     "text",
     [
