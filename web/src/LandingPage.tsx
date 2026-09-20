@@ -79,7 +79,7 @@ export default function LandingPage() {
           <div className="section-heading"><h2 id="system-title">대화 처리 구조</h2><p>학습한 모델 앞뒤에 검사 단계를 두고 음성 인터페이스를 연결했습니다. 이 실행 구조가 대화 하네스입니다. 질문을 분류한 뒤 답변을 만들고, 생성된 답변을 다시 검사해 전달 여부를 정합니다.</p></div>
           <ResearchIllustration kind="inspection" paused={paused} caption="일반 답변 경로와 안내 응답 분기. 대체 모델도 입력 검사부터 전체 경로를 다시 수행합니다." />
           <table className="paper-table pipeline-table"><caption>대화 하네스의 다섯 단계</caption><thead><tr><th scope="col">단계</th><th scope="col">처리 내용</th><th scope="col">구성 요소</th></tr></thead><tbody>{steps.map(([stage, detail, runtime], i) => <tr key={stage}><th scope="row"><span className="step-index">{i + 1}.</span> {stage}</th><td>{detail}</td><td><code>{runtime}</code></td></tr>)}</tbody></table>
-          <div className="paper-columns findings"><section><h3>연결이 끊겼을 때의 대체 경로</h3><p>Kanana를 사용할 수 없으면 gpt-5.6-luna(high)가 입력 검사부터 전체 경로를 다시 수행합니다. 실제 답변에 사용된 제공자는 대화 화면에 표시합니다.</p></section><section><h3>검사를 통과한 답변만 음성으로</h3><p>출력 검사 이후 음성을 합성합니다. 다만 검사는 위험한 응답을 줄이기 위한 장치이며, 모든 오류를 차단하거나 답변의 안전성을 보장하지는 않습니다.</p></section></div>
+          <div className="paper-columns findings"><section><h3>연결이 끊겼을 때의 대체 경로</h3><p>Kanana를 사용할 수 없으면 대체 모델이 입력 검사부터 전체 경로를 다시 수행합니다. 이때도 같은 연령 설정과 응답 정책을 적용합니다.</p></section><section><h3>검사를 통과한 답변만 음성으로</h3><p>출력 검사 이후 음성을 합성합니다. 다만 검사는 위험한 응답을 줄이기 위한 장치이며, 모든 오류를 차단하거나 답변의 안전성을 보장하지는 않습니다.</p></section></div>
         </section>
         <section id="implementation" className="paper-section" aria-labelledby="implementation-title">
           <div className="section-heading"><h2 id="implementation-title">대화 기능과 데이터 보관</h2><p>음성으로 질문해도 전사문을 먼저 확인합니다. 연령을 바꾸거나 새 이야기를 시작하면 대화 문맥을 초기화하고, 이전 답변은 기록에서 다시 들을 수 있습니다.</p></div>

@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://iri.today"><img alt="Live demo" src="https://img.shields.io/badge/Try_the_demo-iri.today-A98BD4?style=flat-square"></a>
+  <a href="https://iri.today/chat"><img alt="Live demo" src="https://img.shields.io/badge/Try_the_demo-iri.today-A98BD4?style=flat-square"></a>
   <a href="https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA"><img alt="Hugging Face model" src="https://img.shields.io/badge/Model-Kanana_3B_%2B_QLoRA-F3C84B?style=flat-square&logo=huggingface&logoColor=111827"></a>
   <img alt="Python 3.12" src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white">
   <img alt="React 19" src="https://img.shields.io/badge/React-19-20232A?style=flat-square&logo=react&logoColor=61DAFB">
@@ -30,9 +30,13 @@ IRI is a research demo, not a safety-certified child product. The current model 
 
 ## Try the Demo
 
-Open **[iri.today](https://iri.today)** with a guardian and start talking or typing. No account, participant code, or login step is required.
+Open **[iri.today/chat](https://iri.today/chat)** with a guardian and start talking or typing. No account, participant code, or login step is required.
 
-The hosted GPU is normally stopped. When Kanana is unavailable, the API reruns the complete input, generation, and output-checking path with the configured Luna fallback. The demo never starts a GPU automatically.
+The hosted GPU is normally stopped. When Kanana is unavailable, the API reruns the complete input, generation, and output-checking path with the configured fallback model. The demo never starts a GPU automatically.
+
+The **[project landing page](https://iri.today)** introduces IRI in a paper-style layout with a chat preview and links to the source code and published adapters. Five interactive Three.js diagrams explain the conversation flow and QLoRA training alongside safety checks. They also show how age settings and temporary memory shape a conversation. Each diagram offers selectable views and supports enlargement with scrolling on mobile. Motion can be paused and respects the system's reduced-motion setting. Text descriptions remain available when WebGL is unavailable.
+
+The training table records the v1 through v5 experiments and their remaining evaluation gaps. The diagrams are conceptual illustrations, not live model measurements. The header's chat link and preview open `/chat` in a new tab.
 
 ## What IRI Does
 
@@ -43,7 +47,9 @@ The hosted GPU is normally stopped. When Kanana is unavailable, the API reruns t
 - Applies input and output safety checks around generation.
 - Reads approved answers with a consistent, warm Korean voice.
 - Keeps the six most recent turns in temporary server memory.
-- Supports replay, stop, mute, new-story, and age-change controls.
+- Replays individual assistant answers from conversation history with preparation and stop controls.
+- Caches speech for replay only after the complete stream passes byte-count and SHA-256 checks.
+- Supports mute, new-story, and age-change controls.
 - Reacts visually while listening, thinking, and speaking.
 
 ## How It Works
@@ -54,7 +60,7 @@ flowchart LR
     B --> C[Input safety check]
     C --> D{Kanana ready?}
     D -->|Yes| E[Kanana 3B and v5 QLoRA]
-    D -->|No| F[Luna high fallback]
+    D -->|No| F[Full guarded fallback path]
     E --> G[Output safety check]
     F --> G
     G --> H[Age-aware answer]
@@ -69,7 +75,7 @@ flowchart LR
 | --- | --- |
 | Primary generation | [Kanana 2 3B Instruct](https://huggingface.co/kakaocorp/kanana-2-3b-instruct/tree/6a5d7889964c4c590299d16e309eabab1f73f8a9) with the published [IRI v5 QLoRA adapter](https://huggingface.co/peerproblem/Kanana-IRI-3B-QLoRA) |
 | Input and output guards | The frozen Kanana base model plus the `kanana_v5` behavior profile |
-| Fallback | `gpt-5.6-luna` with high reasoning effort, running the full guarded path again |
+| Fallback | Configured provider, running the full guarded path again |
 | Speech to text | `gpt-4o-mini-transcribe` |
 | Text to speech | `gpt-4o-mini-tts-2025-12-15`, `coral`, speed `0.95` |
 | Product UI | React 19, TypeScript, Three.js, and Vite |
@@ -163,7 +169,7 @@ Start the API and web app together:
 .ops/run.sh
 ```
 
-Open [http://127.0.0.1:5173](http://127.0.0.1:5173). The API listens on `127.0.0.1:8000` by default.
+Open the landing page at [http://127.0.0.1:5173](http://127.0.0.1:5173) or go directly to the conversation at [http://127.0.0.1:5173/chat](http://127.0.0.1:5173/chat). The API listens on `127.0.0.1:8000` by default.
 
 > [!NOTE]
 > `.ops/run.sh` does not start a GPU model server. Connect `MODEL_BASE_URL` to an authenticated local tunnel when testing Kanana. If Kanana is not ready and `OPENAI_API_KEY` is configured, chat uses the fallback route.
@@ -188,6 +194,11 @@ released. The streaming endpoint finishes with an `audio.done` event containing
 the total byte count, segment count, and SHA-256 digest; incomplete streams end
 with `audio.error` and must not be cached by clients.
 
+The browser checks the final byte count and digest before caching audio for replay.
+Premature EOF, timeouts, and integrity failures discard the partial recording.
+If streaming is unavailable, the browser can request the same server-verified audio
+through the WAV endpoint. Text answers remain available when speech fails.
+
 The core request shape is intentionally small:
 
 ```json
@@ -202,6 +213,8 @@ The core request shape is intentionally small:
 | Area | Status |
 | --- | --- |
 | Voice demo | Deployed on Vercel with the API on Contabo |
+| Web routes | Paper-style project overview at `/`; Orb voice conversation at `/chat` |
+| Speech playback | Verified PCM streaming, WAV fallback, and per-answer history replay |
 | Kanana adapter | v5 selected and published with versions v1 through v5 preserved |
 | GPU policy | Off by default, one pod maximum, no automatic start |
 | v5 vLLM serving proof | Not run. The existing A40 vLLM receipt belongs to v1 |
@@ -254,7 +267,7 @@ Before starting a GPU, record its hourly price and expected duration. Save check
 
 ```text
 api/                 FastAPI product API, safety policy, and API tests
-web/                 React voice interface and audio controls
+web/                 Paper-style landing, interactive diagrams, and Orb voice chat
 runpod/              Training, serving, data preparation, and evaluation
 runpod/artifacts/    Selected evidence and summary reports
 .ops/                Run, serve, and production entrypoints
