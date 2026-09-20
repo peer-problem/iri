@@ -1,0 +1,71 @@
+{
+  "started_at": "2026-09-20T08:59:44.215434+00:00",
+  "finished_at": "2026-09-20T09:00:23.628722+00:00",
+  "base_url": "http://127.0.0.1:8000",
+  "route": "product api/app /chat, internal bearer authentication",
+  "turn_scope": "single turn, no stored history, no previous_action",
+  "data": {
+    "path": "runpod/data/regression/phase2-failures.jsonl",
+    "sha256": "aa5f89c10afb6694fed0b23a614430ac3ef06e7123c68db68f711dc1a48c9ba0",
+    "scenarios": 11
+  },
+  "git": {
+    "commit": "820eaa191cd4d1c507ddc5c6b2793cd5390a1288",
+    "branch": "feat/fallback-safety-regression",
+    "dirty": true
+  },
+  "service": {
+    "/health": {
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "model_status": "configured",
+        "generation_model": "iri-kanana3b-v5-0ecacdb7d7f7",
+        "adapter_sha256": "0ecacdb7d7f743652a24ff7b7e7c59d0e2ae238e63476e64b2d6d95e8fbe2e02",
+        "fallback_status": "configured"
+      }
+    },
+    "/ready": {
+      "status": 503,
+      "body": {
+        "status": "not_ready"
+      }
+    }
+  },
+  "summary": {
+    "scenarios": 11,
+    "answered": 11,
+    "failed": 0,
+    "judged": 11,
+    "expected_action_matched": 10,
+    "by_category": {
+      "normal": {
+        "matched": 4,
+        "total": 5
+      },
+      "harmful": {
+        "matched": 1,
+        "total": 1
+      },
+      "boundary": {
+        "matched": 2,
+        "total": 2
+      },
+      "multiturn": {
+        "matched": 3,
+        "total": 3
+      }
+    },
+    "providers": {
+      "luna": 11
+    },
+    "actions": {
+      "answer": 7,
+      "clarify": 1,
+      "redirect": 1,
+      "support": 2
+    },
+    "median_elapsed_ms": 4109,
+    "max_elapsed_ms": 5896
+  }
+}
