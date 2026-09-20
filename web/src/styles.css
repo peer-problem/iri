@@ -224,7 +224,7 @@ h2 {
 .answer-stage {
   position: absolute;
   z-index: 4;
-  top: 61.5%;
+  top: 68%;
   left: 50%;
   width: min(640px, calc(100vw - 48px));
   max-height: 18svh;
@@ -233,7 +233,6 @@ h2 {
   text-align: center;
   scrollbar-width: none;
   transform: translateX(-50%);
-  mask-image: linear-gradient(to bottom, transparent 0, black 10px, black 100%);
 }
 
 .answer-stage::-webkit-scrollbar {
@@ -898,7 +897,7 @@ h2 {
   }
 
   .answer-stage {
-    top: 58%;
+    top: 62%;
     width: calc(100vw - 42px);
     max-height: 17svh;
   }
@@ -951,7 +950,7 @@ h2 {
   }
 
   .answer-stage {
-    top: 54%;
+    top: 64%;
     max-height: 16svh;
   }
 
