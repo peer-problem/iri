@@ -16,7 +16,7 @@ const experiments = [
   ["v2", "268", "62", "2.247578", "어댑터 재로딩 확인. 전체 행동 평가 미완료"],
   ["v3", "332", "76", "2.145101", "평가 300건 중 행동 기준 충족 239건. 채택 제외"],
   ["v4", "372", "84", "2.146981", "독립 평가 60건 중 행동 기준 충족 46건. 채택 제외"],
-  ["v5", "412", "92", "2.103572", "현재 선택 버전. 독립 최종 평가 미완료"],
+  ["v5", "412", "92", "2.103572", "현재 채택. 새 프로세스 생성 5/5건 성공"],
 ];
 const features = [
   ["음성 및 텍스트 입력", "최대 60초 녹음. 전사문을 수정하고 확인한 뒤 전송", "마이크 / 키보드"],
@@ -73,7 +73,8 @@ export default function LandingPage() {
           <div className="table-heading"><h3 id="evaluation-title">다섯 버전의 학습 기록</h3><ExternalLink href={`${GITHUB}/blob/main/runpod/artifacts/kanana-performance-assessment-20260919/README.md`}>평가 기록 ↗</ExternalLink></div>
           <table className="paper-table results-table"><caption className="sr-only">버전별 학습 데이터와 평가 결과</caption><thead><tr><th scope="col">버전</th><th scope="col">학습 수</th><th scope="col">검증 수</th><th scope="col">검증 손실</th><th scope="col" className="result-wide">결과 및 상태</th></tr></thead><tbody>{experiments.map(([version, train, valid, loss, result]) => <Fragment key={version}><tr className={version === "v5" ? "selected" : undefined}><th scope="row" id={`experiment-${version}`}>{version}</th><td>{train}</td><td>{valid}</td><td>{loss}</td><td className="result-wide">{result}</td></tr><tr className={`result-narrow ${version === "v5" ? "selected" : ""}`}><td colSpan={4} headers={`experiment-${version}`}>{result}</td></tr></Fragment>)}</tbody></table>
           <p className="paper-note">v2~v5는 3 epochs로 학습했습니다. 검증 데이터 구성이 달라 손실값만으로 응답 품질을 비교할 수 없습니다. 행동 평가는 AI가 작성한 기준에 따른 판정이며 사람 대상 실험이 아닙니다.</p>
-          <p className="validation-note"><strong>확인한 것과 남은 것.</strong> v5는 새 프로세스에서 대표 답변 5건의 생성을 확인했습니다. 다만 독립 최종 평가와 vLLM 서빙 검증은 아직 끝나지 않았으며, 위 수치는 아동 대상 사용 적합성을 인증하지 않습니다.</p>
+          <p className="validation-note"><strong>v5 검증 결과.</strong> 학습 412건과 검증 92건으로 최저 검증 손실 2.103572를 기록했습니다. 새 프로세스에서 어댑터를 다시 불러 대표 답변 5/5건을 생성했고, 이 중 반려동물 위해와 장애 아동 배제 요청에 대한 교정 응답을 확인했습니다.</p>
+          <p className="paper-note">5/5건은 선택한 예시의 생성 동작 확인 수치이며 정답률이나 안전성 통과율이 아닙니다. 독립 최종 평가와 vLLM 서빙 검증은 아직 미완료입니다.</p>
         </section>
         <section id="system" className="paper-section" aria-labelledby="system-title">
           <div className="section-heading"><h2 id="system-title">대화 처리 구조</h2><p>학습한 모델 앞뒤에 검사 단계를 두고 음성 인터페이스를 연결했습니다. 이 실행 구조가 대화 하네스입니다. 질문을 분류한 뒤 답변을 만들고, 생성된 답변을 다시 검사해 전달 여부를 정합니다.</p></div>

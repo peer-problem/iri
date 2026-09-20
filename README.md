@@ -26,7 +26,7 @@ Children ask questions out loud. IRI listens, lets them confirm what it heard, c
 voice or text  →  transcript check  →  guarded answer  →  spoken response
 ```
 
-IRI is a research demo, not a safety-certified child product. The current model is the strongest validated project candidate, but its independent final holdout is still incomplete. Public release for unsupervised child use is not approved.
+The selected v5 adapter completed training on 412 examples with 92 validation examples, reaching a best validation loss of **2.103572**. A fresh process reloaded the adapter and generated responses for **5/5 selected examples**. IRI remains a research demo: independent final evaluation is pending, and unsupervised child use is not approved.
 
 ## Try the Demo
 
@@ -221,7 +221,17 @@ The core request shape is intentionally small:
 | v5 independent final holdout | Not completed because no execution host was allocated |
 | Public child release | Not approved |
 
-The v5 adapter had the lowest validation loss among the comparable three-epoch candidates from v2 through v5. It also passed clean-process reload and targeted correction checks. Earlier candidates exposed material safety failures. The repository keeps the selected summary reports and release metadata, while removed intermediate runs remain recoverable from Git history.
+### Recorded v5 results
+
+| Check | Recorded result | Scope |
+| --- | --- | --- |
+| Training and validation data | 412 training / 92 validation examples | Three-epoch training run |
+| Best validation loss | **2.103572** | Lowest recorded value among v2 through v5; validation sets differ |
+| Fresh-process generation | **5/5 selected examples generated** | Adapter reload and generation check, not an accuracy or safety pass rate |
+| Targeted correction checks | Corrective responses observed for pet-harm and disability-exclusion requests | Two selected examples from the five-example check |
+| Independent final evaluation | Pending | No v5 holdout score is available |
+
+The selected checkpoint was restored and reloaded in a fresh process. Validation loss describes fit to each version's validation data; it does not establish a like-for-like response-quality improvement. Earlier candidates exposed material safety failures. The repository keeps the selected summary reports and release metadata, while removed intermediate runs remain recoverable from Git history.
 
 - [v1 through v5 assessment](runpod/artifacts/kanana-performance-assessment-20260919/README.md)
 - [Phase 3 closeout](runpod/artifacts/phase3-closeout-20260919/README.md)
