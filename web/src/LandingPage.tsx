@@ -49,7 +49,7 @@ export default function LandingPage() {
         <header className="product-intro" id="product">
           <div><h1>IRI: 아동을 위한 한국어 음성 대화 AI</h1></div>
           <div className="product-description">
-            <p>IRI는 아이의 나이에 맞는 어휘와 설명 길이를 목표로 만든 대화 AI입니다. 말이나 글로 질문하고, 확인한 답변을 음성으로 들을 수 있습니다.</p>
+            <p>IRI는 아이의 나이에 맞는 어휘와 설명 길이를 목표로 만든 안전한 대화 AI입니다.<br />아이들이 사용하기 쉽게 대화 인터페이스를 메인으로 만들었습니다.</p>
             <a className="demo-preview" href="/chat" target="_blank" rel="noopener noreferrer" aria-label="데모 보기 (새 탭)">
               <span className="demo-window">
                 <span className="demo-window-bar" aria-hidden="true"><span className="demo-window-dots"><i /><i /><i /></span><span>iri.today/chat</span><span className="demo-window-open">↗</span></span>
@@ -91,7 +91,7 @@ export default function LandingPage() {
           <ResearchIllustration kind="memory" paused={paused} caption="최근 6턴만 서버 메모리에 보관. 최대 1시간 후 만료" />
         </div>
 
-        <section id="resources" className="paper-section paper-resources" aria-labelledby="resources-title"><h2 id="resources-title">모델과 소스 코드</h2><p>Hugging Face에서 IRI v5 어댑터와 이전 버전을 확인할 수 있습니다. 대화 하네스와 평가 기록은 GitHub에 공개했습니다. 기본 모델 가중치와 서비스 검사 로직은 어댑터에 포함되지 않습니다.</p><ul className="resource-links"><li><ExternalLink href={HF}>Hugging Face</ExternalLink>: QLoRA 어댑터 v1~v5</li><li><ExternalLink href={GITHUB}>GitHub</ExternalLink>: 구현 코드와 평가 기록</li><li><a href="/chat">IRI 데모</a>: 음성과 텍스트 대화</li></ul></section>
+        <section id="resources" className="paper-section paper-resources" aria-labelledby="resources-title"><h2 id="resources-title">모델과 소스 코드</h2><p>Hugging Face에서 IRI v5 어댑터와 이전 버전을 확인할 수 있습니다. 대화 하네스와 평가 기록은 GitHub에 공개했습니다.</p><ul className="resource-links"><li><ExternalLink href={HF}>Hugging Face</ExternalLink>: QLoRA 어댑터 v1~v5</li><li><ExternalLink href={GITHUB}>GitHub</ExternalLink>: 구현 코드와 평가 기록</li><li><a href="/chat">IRI 데모</a>: 음성과 텍스트 대화</li></ul></section>
         <footer className="paper-footer"><span>iri / Kanana 기반 한국어 음성 대화 AI</span><button type="button" aria-pressed={paused} onClick={() => setPaused(!paused)}>{paused ? "삽화 움직임 재개" : "삽화 움직임 멈추기"}</button></footer>
       </main>
     </div>

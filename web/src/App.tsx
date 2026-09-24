@@ -1,5 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InputMeter } from "./InputMeter";
 import { LiquidButtons } from "./LiquidButtons";
 import { Orb } from "./Orb";
@@ -47,7 +46,7 @@ function SettingsIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.82 2.82-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21H9.6v-.1A1.7 1.7 0 0 0 8 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.82-2.82.06-.06A1.7 1.7 0 0 0 3.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H2V9.6h-.1A1.7 1.7 0 0 0 3.6 8a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.82-2.82.06.06A1.7 1.7 0 0 0 8 3.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V2h4v-.1A1.7 1.7 0 0 0 15 3.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.82 2.82-.06.06A1.7 1.7 0 0 0 19.4 8a1.7 1.7 0 0 0 .6 1 1.7 1.7 0 0 0 1.1.4h.1v4h-.1a1.7 1.7 0 0 0-1.7 1.6Z" />
+      <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6" />
     </svg>
   );
 }
@@ -63,7 +62,7 @@ function HistoryIcon() {
 function PlusIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 5v14M5 12h14" />
+      <path d="M12 6v12M6 12h12" />
     </svg>
   );
 }
@@ -84,48 +83,30 @@ function SendIcon() {
   );
 }
 
-function Overlay({
-  title,
-  description,
-  onClose,
-  children,
-}: {
-  title: string;
-  description?: string;
-  onClose?: () => void;
-  children: ReactNode;
-}) {
-  const titleId = useId();
-  return (
-    <div className="overlay" role="presentation">
-      <section
-        className="overlay-panel"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-      >
-        <div className="overlay-heading">
-          <h2 id={titleId}>{title}</h2>
-          {onClose && (
-            <button className="plain-icon" onClick={onClose} aria-label="닫기">
-              <CloseIcon />
-            </button>
-          )}
-        </div>
-        {description && <p className="overlay-description">{description}</p>}
-        {children}
-      </section>
-    </div>
-  );
-}
+const invitations = [
+  "구를 눌러 말을 걸어보세요.",
+  "무엇이 궁금해?",
+  "오늘 무슨 일이 있었어?",
+  "좋아하는 걸 이야기해 볼래?",
+  "신기한 걸 물어봐도 좋아.",
+];
 
 export default function App() {
   const voice = useVoiceConversation();
   const selection = useRef(0);
   const textarea = useRef<HTMLTextAreaElement>(null);
+  const settingsAnchor = useRef<HTMLDivElement>(null);
+  const [settingsClosing, setSettingsClosing] = useState(false);
   const [shapeIndex, setShapeIndex] = useState(0);
   const [composerOpen, setComposerOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [invitationIndex, setInvitationIndex] = useState(0);
+  const invitationIndexRef = useRef(0);
+  const showingInvitation =
+    voice.phase !== "recording" &&
+    voice.phase !== "acquiring" &&
+    !voice.busy &&
+    !voice.error;
   const shapeLabels = [
     "육면체 꺼내기",
     "삼각형 꺼내기",
@@ -138,11 +119,46 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (!showingInvitation) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => {
+      invitationIndexRef.current = (invitationIndexRef.current + 1) % invitations.length;
+      setInvitationIndex(invitationIndexRef.current);
+    }, 5000);
+    return () => window.clearInterval(id);
+  }, [showingInvitation]);
+
+  useEffect(() => {
+    if (!voice.settingsOpen || settingsClosing) return;
+    const closeFromOutside = (event: PointerEvent) => {
+      if (!settingsAnchor.current?.contains(event.target as Node)) {
+        setSettingsClosing(true);
+      }
+    };
+    const closeFromEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSettingsClosing(true);
+    };
+    document.addEventListener("pointerdown", closeFromOutside);
+    document.addEventListener("keydown", closeFromEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeFromOutside);
+      document.removeEventListener("keydown", closeFromEscape);
+    };
+  }, [voice.settingsOpen, settingsClosing]);
+
+  useEffect(() => {
     if (voice.transcript) {
       setComposerOpen(true);
       window.setTimeout(() => textarea.current?.focus(), 0);
     }
   }, [voice.transcript]);
+
+  useEffect(() => {
+    const field = textarea.current;
+    if (!field || !composerOpen) return;
+    field.style.height = "0px";
+    field.style.height = `${field.scrollHeight}px`;
+  }, [composerOpen, voice.draft]);
 
   const toggleMicrophone = () => {
     if (voice.phase === "acquiring") {
@@ -159,7 +175,7 @@ export default function App() {
       ? "마이크 연결 취소"
       : voice.phase === "recording"
         ? "말하기 마치기"
-        : "구를 누르고 이야기를 시작해보세요";
+        : "구를 눌러 말을 걸어보세요.";
 
   const closeHistory = () => {
     if (voice.playbackMessageId) voice.stopSpeaking();
@@ -190,20 +206,74 @@ export default function App() {
           <HistoryIcon />
         </button>
         <button
-          className="plain-icon"
+          className="plain-icon chip-icon"
           aria-label="새 이야기"
           disabled={voice.busy}
           onClick={() => void voice.newConversation()}
         >
           <PlusIcon />
         </button>
-        <button
-          className="plain-icon"
-          aria-label="대화 설정"
-          onClick={() => voice.setSettingsOpen(true)}
-        >
-          <SettingsIcon />
-        </button>
+        <div className="menu-anchor" ref={settingsAnchor}>
+          <button
+            className="plain-icon chip-icon"
+            aria-label="대화 설정"
+            aria-expanded={voice.settingsOpen}
+            onClick={() => {
+              if (voice.settingsOpen) setSettingsClosing(true);
+              else voice.setSettingsOpen(true);
+            }}
+          >
+            <SettingsIcon />
+          </button>
+          {voice.settingsOpen && (
+            <section
+              className="menu-popover"
+              data-closing={settingsClosing || undefined}
+              role="dialog"
+              aria-label="대화 설정"
+              onAnimationEnd={(event) => {
+                if (event.target !== event.currentTarget || !settingsClosing) return;
+                setSettingsClosing(false);
+                voice.setSettingsOpen(false);
+              }}
+            >
+              <div className="overlay-heading">
+                <h2>대화 설정</h2>
+                <button
+                  className="plain-icon"
+                  onClick={() => setSettingsClosing(true)}
+                  aria-label="닫기"
+                >
+                  <CloseIcon />
+                </button>
+              </div>
+              <p className="overlay-description">아이의 나이에 맞춰 쉽게 설명해요.</p>
+              <fieldset className="setting-group" aria-label="대화 연령">
+                <div className="segmented-control">
+                  {["4-6", "7-10"].map((value) => (
+                    <button
+                      type="button"
+                      key={value}
+                      aria-pressed={voice.age === value}
+                      disabled={voice.busy}
+                      onClick={() => void voice.newConversation(value)}
+                    >
+                      {value.replace("-", "~")}세
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+              <label className="toggle-row">
+                <span>답변을 목소리로 듣기</span>
+                <input
+                  type="checkbox"
+                  checked={voice.autoRead}
+                  onChange={(event) => voice.setAutoRead(event.target.checked)}
+                />
+              </label>
+            </section>
+          )}
+        </div>
       </nav>
 
       <Orb
@@ -215,31 +285,29 @@ export default function App() {
           ? "다 이야기했다면 구를 다시 눌러주세요"
           : voice.phase === "acquiring"
             ? "구를 누르면 마이크 연결을 취소해요"
-            : voice.busy ? phaseLabels[voice.phase] : "구를 누르고 이야기를 시작해보세요"}
+            : voice.busy
+              ? phaseLabels[voice.phase]
+              : voice.error || invitations[invitationIndex]}
+        announce={Boolean(voice.error) && !voice.busy && voice.phase !== "recording" && voice.phase !== "acquiring"}
         recording={voice.phase === "recording"}
         disabled={voice.busy && !["recording", "acquiring"].includes(voice.phase)}
       />
 
-      <section className="answer-stage" aria-live="polite">
-        {voice.latestAnswer ? (
-          <>
-            {voice.latestUser && (
-              <p className="last-question">{voice.latestUser.text}</p>
-            )}
-            <p className="last-answer">{voice.latestAnswer.text}</p>
-          </>
-        ) : (
-          <p className="orb-prompt">무엇이 궁금해?</p>
-        )}
-      </section>
+      {voice.latestAnswer && (
+        <section className="answer-stage" aria-live="polite">
+          {voice.latestUser && (
+            <p className="last-question">{voice.latestUser.text}</p>
+          )}
+          <p className="last-answer">{voice.latestAnswer.text}</p>
+        </section>
+      )}
 
       <div className="voice-controls">
-        <p className="voice-status" role="status">
-          {phaseLabels[voice.phase]}
-          {voice.phase === "recording" && (
-            <span> {String(voice.seconds).padStart(2, "0")} / 60초</span>
-          )}
-        </p>
+        {(voice.phase === "acquiring" || voice.phase === "speaking") && (
+          <p className="voice-status" role="status">
+            {phaseLabels[voice.phase]}
+          </p>
+        )}
         {voice.phase === "recording" && <InputMeter signal={voice.signal} />}
         <LiquidButtons>
           <button
@@ -284,33 +352,21 @@ export default function App() {
             void submitComposer();
           }}
         >
-          <div className="composer-copy">
-            <label htmlFor="message">
-              {voice.transcript
-                ? "이렇게 들었어요. 맞는지 확인해 주세요."
-                : "글로 이야기하기"}
-            </label>
-            <button
-              type="button"
-              className="plain-icon sheet-close"
-              aria-label="입력 닫기"
-              onClick={() => {
-                setComposerOpen(false);
-                voice.setTranscript(false);
-              }}
-            >
-              <CloseIcon />
-            </button>
-          </div>
+          {voice.transcript && (
+            <div className="composer-copy">
+              <label htmlFor="message">이렇게 들었어요. 맞는지 확인해 주세요.</label>
+            </div>
+          )}
           <div className="composer-row">
             <textarea
               ref={textarea}
               id="message"
               value={voice.draft}
               onChange={(event) => voice.setDraft(event.target.value)}
+              aria-label={voice.transcript ? undefined : "글로 이야기하기"}
               placeholder="궁금한 것을 말하거나 적어 주세요"
               maxLength={1000}
-              rows={2}
+              rows={1}
               disabled={voice.busy}
               onKeyDown={(event) => {
                 if (
@@ -323,6 +379,17 @@ export default function App() {
                 }
               }}
             />
+            <button
+              type="button"
+              className="plain-icon sheet-close"
+              aria-label="입력 닫기"
+              onClick={() => {
+                setComposerOpen(false);
+                voice.setTranscript(false);
+              }}
+            >
+              <CloseIcon />
+            </button>
             <button
               className="send-button"
               type="submit"
@@ -338,55 +405,8 @@ export default function App() {
         </form>
       )}
 
-      {voice.error && (
-        <div className="error-toast" role="alert">
-          <span>{voice.error}</span>
-          <button
-            className="plain-icon"
-            aria-label="안내 닫기"
-            onClick={() => voice.setError("")}
-          >
-            <CloseIcon />
-          </button>
-        </div>
-      )}
-
       {voice.latestAnswer?.provider && (
         <p className="powered">{providerLabel(voice.latestAnswer.provider)}</p>
-      )}
-
-      {voice.settingsOpen && (
-        <Overlay
-          title="대화 설정"
-          description="아이의 나이에 맞춰 쉽게 설명해요."
-          onClose={() => voice.setSettingsOpen(false)}
-        >
-          <fieldset className="setting-group" aria-label="대화 연령">
-            <div className="segmented-control">
-              {["4-6", "7-10"].map((value) => (
-                <button
-                  type="button"
-                  key={value}
-                  aria-pressed={voice.age === value}
-                  disabled={voice.busy}
-                  onClick={() => void voice.newConversation(value)}
-                >
-                  {value.replace("-", "~")}세
-                </button>
-              ))}
-            </div>
-          </fieldset>
-          <label className="toggle-row">
-            <span>
-              답변을 목소리로 듣기
-            </span>
-            <input
-              type="checkbox"
-              checked={voice.autoRead}
-              onChange={(event) => voice.setAutoRead(event.target.checked)}
-            />
-          </label>
-        </Overlay>
       )}
 
       {historyOpen && (

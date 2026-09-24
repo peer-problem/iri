@@ -1,3 +1,7 @@
+# Local demos
+/frontend-orb-demo/
+/frontend-garden-demo/
+
 # Local guidance and operations (same convention as eden)
 AGENTS.md
 .agents/

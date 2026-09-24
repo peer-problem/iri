@@ -146,6 +146,23 @@ h2 {
   transform: translateY(-1px);
 }
 
+.chip-icon {
+  width: 44px;
+  height: 44px;
+  color: #777486;
+  background: #ffffffa6;
+  box-shadow:
+    inset 0 1px 1px #fff,
+    inset 0 -1px 2px #cdc3de80,
+    0 3px 12px #40304c14;
+  backdrop-filter: blur(12px);
+}
+
+.chip-icon:hover:not(:disabled) {
+  background: #ffffffd6;
+  color: #574370;
+}
+
 .orb {
   position: absolute;
   z-index: 1;
@@ -184,20 +201,30 @@ h2 {
 .orb-invitation {
   position: absolute;
   z-index: 3;
-  top: calc(50% - var(--orb-diameter, min(460px, 38vw, 61svh)) / 2 - 44px);
+  top: 50%;
   left: 50%;
   width: max-content;
-  max-width: calc(100vw - 40px);
-  color: #87818f;
-  font-size: clamp(12px, 1.2vw, 14px);
-  line-height: 1.6;
+  max-width: calc(var(--orb-diameter, min(460px, 38vw, 61svh)) * 0.72);
+  color: #5c5966;
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.45;
   text-align: center;
-  transform: translateX(-50%);
+  word-break: keep-all;
+  transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
+.orb-invitation-text {
+  display: block;
+  animation: invitation-arrive 500ms ease-out both;
+}
+
+@keyframes invitation-arrive {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .orb-fallback .orb-trigger { width: 100%; height: 100%; }
-.orb-fallback .orb-invitation { top: -44px; }
 
 .orb.orb-fallback {
   top: 16svh;
@@ -256,13 +283,6 @@ h2 {
   overflow-wrap: anywhere;
   text-wrap: pretty;
   animation: copy-arrive 500ms 80ms ease-out both;
-}
-
-.orb-prompt {
-  color: #8d929c;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  animation: copy-arrive 650ms 300ms ease-out both;
 }
 
 .voice-controls {
@@ -386,7 +406,7 @@ h2 {
   bottom: max(104px, calc(env(safe-area-inset-bottom) + 94px));
   left: 50%;
   width: min(560px, calc(100vw - 32px));
-  padding: 18px 20px 16px;
+  padding: 16px 20px;
   border: 1px solid #e7e1eb;
   border-radius: 22px;
   background: #fffffff0;
@@ -407,29 +427,41 @@ h2 {
 }
 
 .sheet-close {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
 }
 
 .composer-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 10px;
 }
 
 .composer-sheet textarea {
   width: 100%;
-  min-height: 56px;
-  max-height: 140px;
-  padding: 8px 0 0;
+  min-height: 40px;
+  padding: 8px 0;
+  overflow: hidden;
   resize: none;
+  scrollbar-width: none;
   border: 0;
-  outline: 0;
+  outline: none;
   background: transparent;
+  box-shadow: none;
   color: #354152;
   font-size: 16px;
   line-height: 24px;
+}
+
+.composer-sheet textarea::-webkit-scrollbar {
+  display: none;
+}
+
+.composer-sheet textarea:focus,
+.composer-sheet textarea:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .composer-sheet textarea::placeholder {
@@ -447,37 +479,12 @@ h2 {
   width: 40px;
   height: 40px;
   flex: 0 0 40px;
-  margin-bottom: 3px;
   padding: 0;
   place-items: center;
   border: 0;
   border-radius: 50%;
   background: #4c3e5e;
   color: #fff;
-}
-
-.error-toast {
-  position: absolute;
-  z-index: 18;
-  top: max(92px, calc(env(safe-area-inset-top) + 70px));
-  left: 50%;
-  display: flex;
-  width: min(520px, calc(100vw - 32px));
-  min-height: 48px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 7px 8px 7px 18px;
-  border: 1px solid #eadde4;
-  border-radius: 18px;
-  background: #fffafceF;
-  color: #835969;
-  font-size: 12px;
-  line-height: 18px;
-  box-shadow: 0 10px 40px #69435b14;
-  backdrop-filter: blur(18px);
-  transform: translateX(-50%);
-  animation: error-toast-arrive 200ms ease-out both;
 }
 
 .powered {
@@ -490,26 +497,27 @@ h2 {
   letter-spacing: 0.04em;
 }
 
-.overlay {
-  position: fixed;
-  z-index: 30;
-  inset: 0;
-  display: grid;
-  padding: 24px;
-  place-items: center;
-  background: #ffffff80;
-  backdrop-filter: blur(22px);
-  animation: overlay-arrive 180ms ease-out both;
+.menu-anchor {
+  position: relative;
 }
 
-.overlay-panel {
-  width: min(390px, 100%);
-  padding: 28px;
+.menu-popover {
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  right: 0;
+  width: min(300px, calc(100vw - 56px));
+  padding: 16px 16px 14px;
   border: 1px solid #e7e2ea;
-  border-radius: 28px;
-  background: #fffffff2;
-  box-shadow: 0 24px 80px #553f6b1c;
-  animation: dialog-arrive 260ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 50px #553f6b1c;
+  transform-origin: top right;
+  animation: menu-unfold 220ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.menu-popover[data-closing="true"] {
+  animation: menu-fold 160ms ease-in both;
 }
 
 .overlay-heading {
@@ -780,17 +788,6 @@ h2 {
   }
 }
 
-@keyframes error-toast-arrive {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 6px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-}
-
 @keyframes buttons-rise {
   from {
     opacity: 0;
@@ -831,23 +828,25 @@ h2 {
   }
 }
 
-@keyframes overlay-arrive {
+@keyframes menu-unfold {
   from {
     opacity: 0;
+    transform: scale(0.08);
   }
   to {
     opacity: 1;
+    transform: scale(1);
   }
 }
 
-@keyframes dialog-arrive {
+@keyframes menu-fold {
   from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.98);
+    opacity: 1;
+    transform: scale(1);
   }
   to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    opacity: 0;
+    transform: scale(0.08);
   }
 }
 
@@ -917,19 +916,8 @@ h2 {
 
   .composer-sheet {
     bottom: max(92px, calc(env(safe-area-inset-bottom) + 82px));
-    padding: 16px 17px 14px;
+    padding: 14px 17px;
     border-radius: 20px;
-  }
-
-  .overlay {
-    align-items: end;
-    padding: 12px;
-  }
-
-  .overlay-panel {
-    width: 100%;
-    padding: 24px 22px max(24px, env(safe-area-inset-bottom));
-    border-radius: 26px;
   }
 
   .history-overlay {

@@ -11,6 +11,21 @@ import {
   easing,
 } from "@liquid-dom/react";
 
+const glass = {
+  blur: 0,
+  spacing: 0,
+  bezelWidth: 2,
+  displacementFactor: 0,
+  reflectionOffset: 0,
+  tint: { r: 1, g: 1, b: 1, a: 0.92 },
+  specularStrength: 1.2,
+  specularWidth: 1,
+  shadowColor: { r: 0.23, g: 0.18, b: 0.35, a: 0.18 },
+  shadowBlur: 7,
+  shadowOffsetY: 3,
+  shadowSpread: 0,
+} as const;
+
 export function LiquidButtons({ children }: { children: ReactNode }) {
   const items = Children.toArray(children);
   const initialCount = useRef(items.length);
@@ -40,20 +55,7 @@ export function LiquidButtons({ children }: { children: ReactNode }) {
           onError={() => setFallback(true)}
         >
           <Padding insets={12}>
-            <GlassContainer
-              blur={0}
-              spacing={0}
-              bezelWidth={2}
-              displacementFactor={0}
-              reflectionOffset={0}
-              tint={{ r: 1, g: 1, b: 1, a: 0.92 }}
-              specularStrength={1.2}
-              specularWidth={1}
-              shadowColor={{ r: 0.23, g: 0.18, b: 0.35, a: 0.18 }}
-              shadowBlur={7}
-              shadowOffsetY={3}
-              shadowSpread={0}
-            >
+            <GlassContainer {...glass}>
               <HStack spacing={8}>
                 {items.map((_, index) => (
                   <Transform

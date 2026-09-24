@@ -84,6 +84,7 @@ export function Orb({
   onActivate,
   label,
   hint,
+  announce = false,
   recording,
   disabled,
 }: {
@@ -92,6 +93,7 @@ export function Orb({
   onActivate: () => void;
   label: string;
   hint: string;
+  announce?: boolean;
   recording: boolean;
   disabled: boolean;
 }) {
@@ -254,7 +256,11 @@ export function Orb({
       ref={host}
       className={`orb${failed ? " orb-fallback" : ""}`}
     >
-      <p className="orb-invitation">{hint}</p>
+      <p className="orb-invitation" role={announce ? "status" : undefined}>
+        <span key={hint} className="orb-invitation-text">
+          {hint}
+        </span>
+      </p>
       <button
         type="button"
         className="orb-trigger"
